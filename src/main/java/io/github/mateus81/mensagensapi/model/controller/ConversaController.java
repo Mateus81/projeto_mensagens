@@ -16,7 +16,7 @@ import io.github.mateus81.mensagensapi.model.entity.Conversa;
 import io.github.mateus81.mensagensapi.model.service.ConversaService;
 
 @RestController
-@CrossOrigin
+@CrossOrigin("*")
 public class ConversaController {
 
 	private final ConversaService conversaService;
