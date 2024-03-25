@@ -19,39 +19,40 @@ public class Arquivo {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
-	
+	private Integer id;
+
 	@Column(nullable = false)
 	private String nome;
-	
+
 	@Column(nullable = false)
 	private String tipo;
-	
+
 	@Column
 	private Long tamanho;
-	
+
 	@Lob
 	private byte[] conteudo;
-	
+
 	@Column(nullable = false)
 	@Temporal(TemporalType.DATE)
 	private LocalDateTime dataEnvio;
-	
-	//Objeto que envia o arquivo
+
+	// Objeto que envia o arquivo
 	@ManyToOne
 	@JoinColumn(name = "usuario_id", nullable = false)
 	private Usuario usuario;
-	
+
 	// Construtor Padrão
-	public Arquivo(){
-		
+	public Arquivo() {
+
 	}
+
 	// Getters & Setters
-	public Long getId() {
+	public Integer getId() {
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 
@@ -94,11 +95,11 @@ public class Arquivo {
 	public void setUsuario(Usuario usuario) {
 		this.usuario = usuario;
 	}
-	
+
 	public byte[] getConteudo() {
 		return conteudo;
 	}
-	
+
 	public void setConteudo(byte[] conteudo) {
 		this.conteudo = conteudo;
 	}

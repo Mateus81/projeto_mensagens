@@ -14,41 +14,42 @@ import io.github.mateus81.mensagensapi.model.repository.ArquivoRepository;
 public class ArquivoService {
 
 	private final ArquivoRepository arquivoRepository;
-	
+
 	public ArquivoService(ArquivoRepository arquivoRepository) {
 		this.arquivoRepository = arquivoRepository;
 	}
-	
+
 	// Vê todos os arquivos
 	public List<Arquivo> readAllArquivo() {
 		return arquivoRepository.findAll();
 	}
-	
+
 	// Vê arquivo
 	@Transactional(readOnly = true)
 	public Arquivo readArquivo(Integer arquivoId) {
 		return arquivoRepository.findById(arquivoId).orElseThrow(() -> new RuntimeException("Arquivo não encontrado"));
 	}
-	
+
 	// Envia e salva Arquivo
 	@Transactional
 	public Arquivo saveArquivo(Integer conversaId, MultipartFile file) {
 		// Cria objeto arquivo e busca nome original
 		Arquivo arquivo = new Arquivo();
 		arquivo.setNome(file.getOriginalFilename());
-		// Bloco try/catch 
+		// Bloco try/catch
 		try {
 			arquivo.setConteudo(file.getBytes());
-		} catch(IOException e) {
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		return arquivoRepository.save(arquivo);
 	}
-	
+
 	// Deleta Arquivo
 	@Transactional
 	public void deleteArquivo(Integer arquivoId) {
-		Arquivo arquivo = arquivoRepository.findById(arquivoId).orElseThrow(() -> new RuntimeException("Arquivo não encontrado"));
+		Arquivo arquivo = arquivoRepository.findById(arquivoId)
+				.orElseThrow(() -> new RuntimeException("Arquivo não encontrado"));
 		arquivoRepository.delete(arquivo);
 	}
 }

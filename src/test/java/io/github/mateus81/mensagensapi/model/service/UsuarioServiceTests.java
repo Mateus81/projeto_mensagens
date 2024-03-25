@@ -12,7 +12,7 @@ public class UsuarioServiceTests {
 
 	@InjectMocks
 	private UsuarioService usuarioService;
-	
+
 	@Mock
 	private UsuarioRepository usuarioRepository;
 }

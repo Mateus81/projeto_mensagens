@@ -22,38 +22,39 @@ import jakarta.persistence.TemporalType;
 public class Conversa {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
-	
+	private Integer id;
+
 	@Column(nullable = false)
 	@Temporal(TemporalType.TIMESTAMP)
 	@CreatedDate
 	private LocalDateTime data_inicio;
-	
+
 	@LastModifiedDate
 	@Temporal(TemporalType.TIMESTAMP)
 	private LocalDateTime data_termino;
-	
+
 	// Objeto Usuário
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "usuario_id", nullable = false)
 	private Usuario usuario;
-	
+
 	// Status
 	@Column
 	private StatusConversa status;
-	
+
 	// Construtor
 	public Conversa(Usuario usuario) {
 		this.usuario = usuario;
 		this.data_inicio = null;
-		
+
 	}
+
 	// Getters & Setters
-	public Long getId() {
+	public Integer getId() {
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 
@@ -72,11 +73,11 @@ public class Conversa {
 	public void setData_termino(LocalDateTime data_termino) {
 		this.data_termino = data_termino;
 	}
-	
+
 	public StatusConversa getStatus() {
 		return status;
 	}
-	
+
 	public void setStatus(StatusConversa status) {
 		this.status = status;
 	}

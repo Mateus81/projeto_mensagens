@@ -20,38 +20,38 @@ import io.github.mateus81.mensagensapi.model.service.ConversaService;
 public class ConversaController {
 
 	private final ConversaService conversaService;
-	
+
 	public ConversaController(ConversaService conversaService) {
 		this.conversaService = conversaService;
 	}
-	
+
 	// Exibe conversa
 	@GetMapping("/conversas/{id}")
 	public Conversa getConversaById(Integer id) {
 		return conversaService.readConversa(id);
 	}
-	
+
 	// Deleta conversa
 	@DeleteMapping("/conversas/{id}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void deleteConversaById(Integer id) {
 		conversaService.deleteConversa(id);
 	}
-	
+
 	// Inicia conversa
 	@PostMapping("/conversas")
 	@ResponseStatus(HttpStatus.CREATED)
 	public Conversa startConversa(@RequestBody Conversa novaConversa) {
 		return conversaService.startConversa(novaConversa);
 	}
-	
+
 	// Termina conversa
 	@PutMapping("/conversas/{id}")
 	public ResponseEntity<String> endConversa(@PathVariable Integer id) {
 		try {
 			conversaService.endConversa(id);
 			return new ResponseEntity<>("Conversa encerrada com sucesso", HttpStatus.OK);
-		} catch(RuntimeException e) {
+		} catch (RuntimeException e) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 	}

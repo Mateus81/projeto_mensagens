@@ -17,66 +17,77 @@ import jakarta.persistence.TemporalType;
 public class Mensagem {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
-	
+	private Integer id;
+
 	@Lob
 	private String texto;
-	
+
 	@Column(nullable = false)
 	@Temporal(TemporalType.TIMESTAMP)
 	private LocalDateTime dataHoraEnvio;
-	
+
 	// Objetos envolvidos
 	@ManyToOne
 	private Usuario usuario_remetente;
-	
+
 	@ManyToOne
 	private Usuario usuario_destino;
-	
+
 	@Column
 	private Boolean vista;
-	
+
 	// Construtor padrão
 	public Mensagem() {
-		
+
 	}
-	
+
 	// Getters & Setters
-	public Long getId() {
+	public Integer getId() {
 		return id;
 	}
-	public void setId(Long id) {
+
+	public void setId(Integer id) {
 		this.id = id;
 	}
+
 	public String getTexto() {
 		return texto;
 	}
+
 	public void setTexto(String texto) {
 		this.texto = texto;
 	}
+
 	public LocalDateTime getDataHoraEnvio() {
 		return dataHoraEnvio;
 	}
+
 	public void setData_hora_envio(LocalDateTime dataHoraEnvio) {
 		this.dataHoraEnvio = dataHoraEnvio;
 	}
+
 	public Usuario getUsuarioremetente() {
 		return usuario_remetente;
 	}
+
 	public void setUsuarioremetente(Usuario usuario_remetente) {
 		this.usuario_remetente = usuario_remetente;
 	}
+
 	public Usuario getUsuariodestino() {
 		return usuario_destino;
 	}
+
 	public void setUsuariodestino(Usuario usuario_destino) {
 		this.usuario_destino = usuario_destino;
 	}
+
 	public boolean isVista() {
 		return vista;
 	}
+
 	public void setVista(Boolean vista) {
 		this.vista = vista;
 	}
-	
+
 }

@@ -13,9 +13,9 @@ public class UsuarioControllerTests {
 
 	@InjectMocks
 	private UsuarioController usuarioController;
-	
+
 	@Mock
 	private UsuarioService usuarioService;
-	
+
 	MockMvc mockMvc;
 }

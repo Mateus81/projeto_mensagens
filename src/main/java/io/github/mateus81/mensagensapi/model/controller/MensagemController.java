@@ -18,63 +18,63 @@ import io.github.mateus81.mensagensapi.model.service.MensagemService;
 @CrossOrigin("*")
 @RestController
 public class MensagemController {
-	
+
 	private final MensagemService mensagemService;
-	
+
 	// Construtor
 	public MensagemController(MensagemService mensagemService) {
 		this.mensagemService = mensagemService;
 	}
-	
+
 	// Exibe mensagem
 	@GetMapping("conversas/{id}/mensagens/{id}")
 	public Mensagem readMessage(@PathVariable Integer id) {
 		return mensagemService.getMessage(id);
 	}
-	
+
 	// Cria/Salva mensagem
 	@PostMapping("conversas/{id}/mensagens")
 	@ResponseStatus(HttpStatus.CREATED)
 	public Mensagem createMessage(@RequestBody Mensagem mensagem) {
 		return mensagemService.createMessage(mensagem);
 	}
-	
+
 	// Deleta mensagem
 	@DeleteMapping("conversas/{id}/mensagens/{id}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void deleteMessageById(@PathVariable Integer id) {
 		mensagemService.deleteMessage(id);
 	}
-	
+
 	// Altera mensagem
 	@PutMapping("conversas/{id}/mensagens/{id}")
 	public ResponseEntity<Mensagem> updateMessage(@PathVariable Integer id, @RequestBody Mensagem mensagemAtualizada) {
 		try {
 			Mensagem mensagemAtualizar = mensagemService.updateMessage(id, mensagemAtualizada);
 			return new ResponseEntity<>(mensagemAtualizar, HttpStatus.OK);
-		} catch(RuntimeException e) {
+		} catch (RuntimeException e) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 	}
-	
+
 	// Marca mensagem como lida
 	@PutMapping("conversas/{id}/mensagens/{id}")
-	public ResponseEntity<String> markMessageAsRead(@PathVariable Integer id){
+	public ResponseEntity<String> markMessageAsRead(@PathVariable Integer id) {
 		try {
 			mensagemService.markAsRead(id);
 			return ResponseEntity.ok("Mensagem marcada como lida");
-		} catch(RuntimeException e) {
+		} catch (RuntimeException e) {
 			return ResponseEntity.notFound().build();
 		}
 	}
-	
+
 	// Marca todas como lidas
 	@PutMapping("conversas/{id}/mensagens")
-	public ResponseEntity<String> markAllAsRead(@PathVariable Integer id){
+	public ResponseEntity<String> markAllAsRead(@PathVariable Integer id) {
 		try {
 			mensagemService.markAllAsRead(id);
 			return ResponseEntity.ok("Todas as mensagens foram marcadas como lidas");
-		} catch(RuntimeException e) {
+		} catch (RuntimeException e) {
 			return ResponseEntity.notFound().build();
 		}
 	}

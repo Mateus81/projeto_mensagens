@@ -12,7 +12,7 @@ public class ConversaControllerTests {
 
 	@InjectMocks
 	private ConversaController conversaController;
-	
+
 	@Mock
 	private ConversaService conversaService;
 }

@@ -12,7 +12,7 @@ public class ContatoServiceTests {
 
 	@InjectMocks
 	private ContatoService contatoService;
-	
+
 	@Mock
 	private ContatoRepository contatoRepository;
 }

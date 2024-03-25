@@ -20,38 +20,38 @@ import io.github.mateus81.mensagensapi.model.service.ArquivoService;
 @CrossOrigin("*")
 @RestController
 public class ArquivoController {
-	
+
 	private final ArquivoService arquivoService;
-	
+
 	// Construtor
 	public ArquivoController(ArquivoService arquivoService) {
 		this.arquivoService = arquivoService;
 	}
-	
+
 	// Retorna lista de arquivos
 	@GetMapping("/arquivos")
-	public List<Arquivo> readAll(){
+	public List<Arquivo> readAll() {
 		return arquivoService.readAllArquivo();
 	}
-	
+
 	// Retorna um arquivo
 	@GetMapping("/arquivos/{id}")
 	public Arquivo readArquivo(@PathVariable Integer id) {
 		return arquivoService.readArquivo(id);
 	}
-	
+
 	// Deleta arquivo
 	@DeleteMapping("/arquivos/{id}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void deleteArquivo(@PathVariable Integer id) {
 		arquivoService.deleteArquivo(id);
 	}
-	
+
 	// Salva e envia arquivo
 	@PostMapping("/conversas/{id}/arquivos")
 	public ResponseEntity<String> saveArquivo(@PathVariable Integer id, @RequestParam("file") MultipartFile file) {
 		Arquivo arquivoSalvo = arquivoService.saveArquivo(id, file);
-		if(arquivoSalvo != null) {
+		if (arquivoSalvo != null) {
 			return ResponseEntity.ok("Arquivo enviado com sucesso");
 		} else {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ocorreu um erro ao enviar o arquivo");

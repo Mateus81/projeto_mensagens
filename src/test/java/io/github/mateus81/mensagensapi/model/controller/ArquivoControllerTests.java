@@ -12,7 +12,7 @@ public class ArquivoControllerTests {
 
 	@InjectMocks
 	private ArquivoController arquivoController;
-	
+
 	@Mock
 	private ArquivoService arquivoService;
 }

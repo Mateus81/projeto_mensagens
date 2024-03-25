@@ -12,7 +12,7 @@ public class MensagemServiceTests {
 
 	@InjectMocks
 	private MensagemService mensagemService;
-	
+
 	@Mock
 	private MensagemRepository mensagemRepository;
 }
