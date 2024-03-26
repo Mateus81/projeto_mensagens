@@ -1,6 +1,7 @@
 package io.github.mateus81.mensagensapi.model.service;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
+import java.util.Date;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,7 +37,7 @@ public class ConversaService {
 	// Inicia Conversa
 	public Conversa startConversa(Conversa conversa) {
 		conversa.setStatus(StatusConversa.OPEN);
-		conversa.setData_inicio(LocalDateTime.now());
+		conversa.setData_inicio(Date.from(Instant.now()));
 		// conversa.setData_termino(null);
 		return conversaRepository.save(conversa);
 	}
@@ -46,7 +47,7 @@ public class ConversaService {
 		Conversa conversa = conversaRepository.findById(conversaId)
 				.orElseThrow(() -> new RuntimeException("Conversa não encontrada"));
 		conversa.setStatus(StatusConversa.CLOSED);
-		conversa.setData_termino(LocalDateTime.now());
+		conversa.setData_termino(Date.from(Instant.now()));
 		return conversaRepository.save(conversa);
 	}
 

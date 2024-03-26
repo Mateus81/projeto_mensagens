@@ -1,6 +1,6 @@
 package io.github.mateus81.mensagensapi.model.entity;
 
-import java.time.LocalDateTime;
+import java.util.Date;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -24,7 +24,7 @@ public class Mensagem {
 
 	@Column(nullable = false)
 	@Temporal(TemporalType.TIMESTAMP)
-	private LocalDateTime dataHoraEnvio;
+	private Date dataHoraEnvio;
 
 	// Objetos envolvidos
 	@ManyToOne
@@ -58,11 +58,11 @@ public class Mensagem {
 		this.texto = texto;
 	}
 
-	public LocalDateTime getDataHoraEnvio() {
+	public Date getDataHoraEnvio() {
 		return dataHoraEnvio;
 	}
 
-	public void setData_hora_envio(LocalDateTime dataHoraEnvio) {
+	public void setData_hora_envio(Date dataHoraEnvio) {
 		this.dataHoraEnvio = dataHoraEnvio;
 	}
 

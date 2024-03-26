@@ -1,6 +1,6 @@
 package io.github.mateus81.mensagensapi.model.entity;
 
-import java.time.LocalDateTime;
+import java.util.Date;
 
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -27,11 +27,11 @@ public class Conversa {
 	@Column(nullable = false)
 	@Temporal(TemporalType.TIMESTAMP)
 	@CreatedDate
-	private LocalDateTime data_inicio;
+	private Date data_inicio;
 
 	@LastModifiedDate
 	@Temporal(TemporalType.TIMESTAMP)
-	private LocalDateTime data_termino;
+	private Date data_termino;
 
 	// Objeto Usuário
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -58,19 +58,19 @@ public class Conversa {
 		this.id = id;
 	}
 
-	public LocalDateTime getData_inicio() {
+	public Date getData_inicio() {
 		return data_inicio;
 	}
 
-	public void setData_inicio(LocalDateTime data_inicio) {
+	public void setData_inicio(Date data_inicio) {
 		this.data_inicio = data_inicio;
 	}
 
-	public LocalDateTime getData_termino() {
+	public Date getData_termino() {
 		return data_termino;
 	}
 
-	public void setData_termino(LocalDateTime data_termino) {
+	public void setData_termino(Date data_termino) {
 		this.data_termino = data_termino;
 	}
 

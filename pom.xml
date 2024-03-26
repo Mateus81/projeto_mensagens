@@ -8,7 +8,7 @@
 		<version>3.2.4</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.app</groupId>
+	<groupId>io.github.mateus81</groupId>
 	<artifactId>mensagens</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>mensagens</name>
@@ -68,6 +68,14 @@
     		<scope>test</scope>
 		</dependency>
 		
+		<!-- https://mvnrepository.com/artifact/org.hibernate/hibernate-core -->
+		<dependency>
+    		<groupId>org.hibernate</groupId>
+    		<artifactId>hibernate-core</artifactId>
+    		<version>6.4.4.Final</version>
+    		<type>pom</type>
+		</dependency>
+
 		<dependency>
     		<groupId>org.junit.jupiter</groupId>
     		<artifactId>junit-jupiter-engine</artifactId>

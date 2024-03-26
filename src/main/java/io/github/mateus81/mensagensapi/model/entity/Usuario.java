@@ -1,6 +1,7 @@
 package io.github.mateus81.mensagensapi.model.entity;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
+import java.util.Date;
 import java.util.List;
 
 import javax.validation.constraints.Email;
@@ -40,7 +41,7 @@ public class Usuario {
 
 	@NotNull
 	@Column(nullable = false, updatable = false)
-	private LocalDateTime dataCadastro;
+	private Date dataCadastro;
 
 	@Column(nullable = true)
 	@Lob
@@ -63,7 +64,7 @@ public class Usuario {
 
 	// Construtor
 	public Usuario() {
-		this.dataCadastro = LocalDateTime.now();
+		this.dataCadastro = Date.from(Instant.now());
 	}
 
 	// Obtém o ID
@@ -114,7 +115,7 @@ public class Usuario {
 	}
 
 	// Obtém a data de cadastro
-	public LocalDateTime getDataCadastro() {
+	public Date getDataCadastro() {
 		return dataCadastro;
 	}
 

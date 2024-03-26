@@ -1,6 +1,7 @@
 package io.github.mateus81.mensagensapi.model.entity;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -35,7 +36,7 @@ public class Arquivo {
 
 	@Column(nullable = false)
 	@Temporal(TemporalType.DATE)
-	private LocalDateTime dataEnvio;
+	private Date dataEnvio;
 
 	// Objeto que envia o arquivo
 	@ManyToOne
@@ -80,11 +81,11 @@ public class Arquivo {
 		this.tamanho = tamanho;
 	}
 
-	public LocalDateTime getDataEnvio() {
+	public Date getDataEnvio() {
 		return dataEnvio;
 	}
 
-	public void setDataEnvio(LocalDateTime dataEnvio) {
+	public void setDataEnvio(Date dataEnvio) {
 		this.dataEnvio = dataEnvio;
 	}
 
