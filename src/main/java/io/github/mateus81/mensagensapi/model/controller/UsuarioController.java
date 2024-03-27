@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
+import io.github.mateus81.mensagensapi.model.dto.UsuarioDTO;
 import io.github.mateus81.mensagensapi.model.entity.Usuario;
 import io.github.mateus81.mensagensapi.model.service.UsuarioService;
 
@@ -42,8 +43,11 @@ public class UsuarioController {
 	// Cria um usuário
 	@PostMapping("/usuarios")
 	@ResponseStatus(HttpStatus.CREATED)
-	public Usuario registerUser(@RequestBody Usuario usuario) {
-		return usuarioService.registerUser(usuario);
+	public Usuario registerUser(@RequestBody UsuarioDTO usuarioDto) {
+		Usuario usuario = new Usuario();
+		usuario.setNome(usuarioDto.getNome());
+		usuario.setEmail(usuarioDto.getEmail());
+		return usuarioService.registerUser(usuario, usuarioDto.getSenhaNaoProtegida());
 	}
 
 	// Deleta usuário por ID

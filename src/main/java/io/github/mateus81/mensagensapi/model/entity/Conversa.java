@@ -1,7 +1,9 @@
 package io.github.mateus81.mensagensapi.model.entity;
 
 import java.util.Date;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -10,6 +12,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
@@ -36,8 +39,12 @@ public class Conversa {
 
 	// Objeto Usuário
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "usuario_id", nullable = false)
+	@JoinColumn(name = "usuarioId", nullable = false)
 	private Usuario usuario;
+	
+	// Objeto Mensagens
+	@OneToMany(mappedBy = "conversa", cascade = CascadeType.ALL)
+	private List<Mensagem> mensagens;
 
 	// Status
 	@Column
@@ -48,6 +55,11 @@ public class Conversa {
 		this.usuario = usuario;
 		this.data_inicio = null;
 
+	}
+	
+	// Construtor padrão
+	public Conversa() {
+		
 	}
 
 	// Getters & Setters
@@ -81,6 +93,21 @@ public class Conversa {
 
 	public void setStatus(StatusConversa status) {
 		this.status = status;
+	}
+	public Usuario getUsuario() {
+		return usuario;
+	}
+
+	public void setUsuario(Usuario usuario) {
+		this.usuario = usuario;
+	}
+
+	public List<Mensagem> getMensagens() {
+		return mensagens;
+	}
+
+	public void setMensagens(List<Mensagem> mensagens) {
+		this.mensagens = mensagens;
 	}
 
 }

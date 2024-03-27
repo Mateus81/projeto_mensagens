@@ -36,7 +36,7 @@ public class Contato {
 
 	// Objeto Usuário
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "usuario_id", nullable = false)
+	@JoinColumn(name = "usuarioId", nullable = false)
 	private Usuario usuario;
 
 	@Column(nullable = true)

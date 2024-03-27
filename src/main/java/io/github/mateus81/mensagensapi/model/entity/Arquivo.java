@@ -40,7 +40,7 @@ public class Arquivo {
 
 	// Objeto que envia o arquivo
 	@ManyToOne
-	@JoinColumn(name = "usuario_id", nullable = false)
+	@JoinColumn(name = "usuarioId", nullable = false)
 	private Usuario usuario;
 
 	// Construtor Padrão

@@ -1,7 +1,9 @@
 package io.github.mateus81.mensagensapi.model.service;
 
-import java.util.List;
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -12,6 +14,9 @@ import io.github.mateus81.mensagensapi.model.repository.MensagemRepository;
 public class MensagemService {
 
 	private final MensagemRepository mensagemRepository;
+	
+	@Autowired
+	private EntityManager entityManager;
 
 	// Construtor
 	public MensagemService(MensagemRepository mensagemRepository) {
@@ -29,12 +34,14 @@ public class MensagemService {
 	}
 
 	// Marca todas as mensagens como lidas
+	@Transactional
 	public void markAllAsRead(Integer conversaId) {
-		List<Mensagem> mensagens = mensagemRepository.findByConversaId(conversaId);
-		mensagens.forEach(mensagem -> {
-			mensagem.setVista(true);
-			mensagemRepository.save(mensagem);
-		});
+		// Consulta com Java Persistency QUERY LANGUAGE
+		String jpql = "UPDATE Mensagem m SET m.vista = true WHERE m.conversa.id = conversaId";
+		// Executa
+		Query query = entityManager.createQuery(jpql);
+		query.setParameter("conversaId", conversaId);
+		query.executeUpdate();
 	}
 
 	// Exibe Mensagem

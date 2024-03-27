@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -27,27 +28,27 @@ public class MensagemController {
 	}
 
 	// Exibe mensagem
-	@GetMapping("conversas/{id}/mensagens/{id}")
+	@GetMapping("conversas/{conversaId}/mensagens/{id}")
 	public Mensagem readMessage(@PathVariable Integer id) {
 		return mensagemService.getMessage(id);
 	}
 
 	// Cria/Salva mensagem
-	@PostMapping("conversas/{id}/mensagens")
+	@PostMapping("conversas/{conversaId}/mensagens")
 	@ResponseStatus(HttpStatus.CREATED)
 	public Mensagem createMessage(@RequestBody Mensagem mensagem) {
 		return mensagemService.createMessage(mensagem);
 	}
 
 	// Deleta mensagem
-	@DeleteMapping("conversas/{id}/mensagens/{id}")
+	@DeleteMapping("conversas/{conversaId}/mensagens/{id}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void deleteMessageById(@PathVariable Integer id) {
 		mensagemService.deleteMessage(id);
 	}
 
 	// Altera mensagem
-	@PutMapping("conversas/{id}/mensagens/{id}")
+	@PutMapping("conversas/{conversaId}/mensagens/{id}")
 	public ResponseEntity<Mensagem> updateMessage(@PathVariable Integer id, @RequestBody Mensagem mensagemAtualizada) {
 		try {
 			Mensagem mensagemAtualizar = mensagemService.updateMessage(id, mensagemAtualizada);
@@ -58,7 +59,7 @@ public class MensagemController {
 	}
 
 	// Marca mensagem como lida
-	@PutMapping("conversas/{id}/mensagens/{id}")
+	@PatchMapping("conversas/{conversaId}/mensagens/{id}")
 	public ResponseEntity<String> markMessageAsRead(@PathVariable Integer id) {
 		try {
 			mensagemService.markAsRead(id);
@@ -69,7 +70,7 @@ public class MensagemController {
 	}
 
 	// Marca todas como lidas
-	@PutMapping("conversas/{id}/mensagens")
+	@PatchMapping("conversas/{conversaId}/mensagens")
 	public ResponseEntity<String> markAllAsRead(@PathVariable Integer id) {
 		try {
 			mensagemService.markAllAsRead(id);

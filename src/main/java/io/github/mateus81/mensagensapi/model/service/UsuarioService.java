@@ -2,6 +2,7 @@ package io.github.mateus81.mensagensapi.model.service;
 
 import java.util.List;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -12,10 +13,12 @@ import io.github.mateus81.mensagensapi.model.repository.UsuarioRepository;
 public class UsuarioService {
 
 	private final UsuarioRepository usuarioRepository;
+	private final PasswordEncoder passwordEncoder;
 
 	// Construtor
-	public UsuarioService(UsuarioRepository usuarioRepository) {
+	public UsuarioService(UsuarioRepository usuarioRepository, PasswordEncoder passwordEncoder) {
 		this.usuarioRepository = usuarioRepository;
+		this.passwordEncoder = passwordEncoder;
 	}
 
 	// Busca todos os usuários
@@ -45,7 +48,8 @@ public class UsuarioService {
 
 	// Cadastra um usuário
 	@Transactional
-	public Usuario registerUser(Usuario usuario) {
+	public Usuario registerUser(Usuario usuario, String senhaNaoProtegida) {
+		usuario.setSenha(passwordEncoder.encode(senhaNaoProtegida));
 		return usuarioRepository.save(usuario);
 	}
 

@@ -14,9 +14,6 @@ import javax.persistence.OneToMany;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
-
 // Este é o usuário do aplicativo
 @Entity
 public class Usuario {
@@ -95,22 +92,10 @@ public class Usuario {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-
-	// Autowired para injeção de dependencia
-	@Autowired
-	private PasswordEncoder passwordEncoder;
-
-	// Cria a senha
+	
+	// Insere a senha
 	public void setSenha(String senha) {
-		this.senha = encodePassword(senha);
-	}
-
-	// Protege e valida a senha
-	private String encodePassword(String senha) {
-		if (passwordEncoder != null && senha != null && !senha.isEmpty()) {
-			return passwordEncoder.encode(senha);
-		}
-		return senha;
+		this.senha = senha;
 	}
 
 	// Obtém a data de cadastro
