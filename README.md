@@ -6,4 +6,4 @@ Tecnologias usadas/ a utilizar:
 - Back-end: Java + Spring Boot + JPA + JUnit
 - Banco de dados - PostgreSQL
 
-* Pacotes criados no Back-end -> Controller, Service, Repository e Entity.
+* Pacotes criados no Back-end -> Controller, Service, Repository, Entity, DTO e Config.
