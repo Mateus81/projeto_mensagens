@@ -17,7 +17,11 @@ import javax.persistence.TemporalType;
 // Este é o arquivo que o usuário pode enviar
 @Entity
 public class Arquivo {
-
+	
+	// Construtor Padrão
+	public Arquivo() {}
+	
+	// Atributos
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
@@ -42,10 +46,30 @@ public class Arquivo {
 	@ManyToOne
 	@JoinColumn(name = "usuarioId", nullable = false)
 	private Usuario usuario;
-
-	// Construtor Padrão
-	public Arquivo() {
-
+	
+	//Construtor de teste
+	public Arquivo(Integer id, String nome, String tipo, Long tamanho) {
+		// Validações IF Statement
+		if(id <= 0) {
+			throw new IllegalArgumentException("Id inválido" + id);
+		}
+		
+		if(nome == null || nome.trim().isEmpty()) {
+			throw new IllegalArgumentException("Nome inválido" + nome);
+		}				
+		
+		if(tipo == null || tipo.trim().isEmpty()) {
+			throw new IllegalArgumentException("Tipo de arquivo inválido" + tipo);
+		}
+		
+		if(tamanho == null) {
+			throw new IllegalArgumentException("Tamanho não suportado" + tamanho);			
+		}
+		
+		this.id = id;			
+		this.nome = nome;
+		this.tipo = tipo;
+		this.tamanho = tamanho;
 	}
 
 	// Getters & Setters

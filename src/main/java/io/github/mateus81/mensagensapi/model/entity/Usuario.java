@@ -3,6 +3,9 @@ package io.github.mateus81.mensagensapi.model.entity;
 import java.time.Instant;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -61,6 +64,29 @@ public class Usuario {
 	// Construtor
 	public Usuario() {
 		this.dataCadastro = Date.from(Instant.now());
+	}
+	
+	// Construtor de teste
+	public Usuario(String nome, String email) {
+		// Validação Explícita
+		if(nome == null || nome.trim().isEmpty()) {
+			throw new IllegalArgumentException("Nome inválido" + nome);
+		}
+		
+		Pattern pattern = Pattern.compile("^(.+)@(.+)$");
+		Matcher matcher = pattern.matcher(email);
+		if(!matcher.find()) {
+			throw new IllegalArgumentException("Email inválido");
+		}
+		
+		this.nome = nome;
+		this.email = email;
+	}
+
+	// Sobrecarga de método
+	@Override
+	public int hashCode() {
+	    return Objects.hash(id, nome, email);
 	}
 
 	// Obtém o ID
