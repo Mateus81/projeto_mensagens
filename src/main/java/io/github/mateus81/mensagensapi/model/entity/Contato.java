@@ -1,5 +1,7 @@
 package io.github.mateus81.mensagensapi.model.entity;
 
+import java.util.Objects;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -44,8 +46,25 @@ public class Contato {
 	private byte[] foto;
 
 	// Construtor padrão
-	public Contato() {
-
+	public Contato() {}
+	
+	// Construtor de Teste
+	public Contato(String nome, String telefone) {
+		// IF Statement
+		if(nome == null || nome.trim().isEmpty()) {
+			throw new IllegalArgumentException("Nome inválido");
+		}
+		if(telefone == null || telefone.trim().isEmpty()) {
+			throw new IllegalArgumentException("Telefone inválido");
+		}
+		
+		this.nome = nome;
+		this.telefone = telefone;
+	}
+	
+	// Sobrecarga
+	public int hashCode() {
+		return Objects.hash(nome, email);
 	}
 
 	// Getters & Setters
