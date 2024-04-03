@@ -55,6 +55,6 @@ public class UsuarioService {
 
 	// Verifica se usuário existe pelo ID
 	public boolean existsById(Integer id) {
-		return usuarioRepository.existsById(id);
+		return usuarioRepository.findById(id).isPresent();
 	}
 }

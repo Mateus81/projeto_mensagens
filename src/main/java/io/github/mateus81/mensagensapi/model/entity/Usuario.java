@@ -82,6 +82,27 @@ public class Usuario {
 		this.nome = nome;
 		this.email = email;
 	}
+	
+	// Construtor para teste de ID
+	public Usuario(Integer id, String nome) {
+		// Validação Explícita
+		if(id <= 0) {
+			throw new IllegalArgumentException("ID inválido");
+		}
+		if(nome == null || nome.trim().isEmpty()) {
+			throw new IllegalArgumentException("Nome inválido" + nome);
+		}
+		
+		this.id = id;
+		this.nome = nome;
+	}
+	
+	// Construtor para teste de senha
+	public Usuario(Integer id, String nome, String senha) {
+		this.id = id;
+		this.nome = nome;
+		this.senha = senha;
+	}
 
 	// Sobrecarga de método
 	@Override
@@ -119,6 +140,10 @@ public class Usuario {
 		this.email = email;
 	}
 	
+	// Insere Senha
+	public String getSenha() {
+		return senha;
+	}
 	// Insere a senha
 	public void setSenha(String senha) {
 		this.senha = senha;
