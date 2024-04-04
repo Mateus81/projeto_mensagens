@@ -61,6 +61,14 @@ public class Conversa {
 	public Conversa() {
 		
 	}
+	
+	// Construtor de teste
+	public Conversa(Integer id) {
+		if(id <= 0) {
+			throw new IllegalArgumentException("Id inválido");
+		}
+		this.id = id;
+	}
 
 	// Getters & Setters
 	public Integer getId() {

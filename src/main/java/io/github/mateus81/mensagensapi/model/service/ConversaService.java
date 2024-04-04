@@ -2,6 +2,7 @@ package io.github.mateus81.mensagensapi.model.service;
 
 import java.time.Instant;
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,6 +20,12 @@ public class ConversaService {
 		this.conversaRepository = conversaRepository;
 	}
 
+	// Mostra todas as conversas
+	@Transactional(readOnly = true)
+	public List<Conversa> readAllConversas(){
+		return conversaRepository.findAll();
+	}
+	
 	// Lê conversa
 	@Transactional(readOnly = true)
 	public Conversa readConversaById(Integer conversaId) {
@@ -28,7 +35,7 @@ public class ConversaService {
 
 	// Deleta conversa
 	@Transactional
-	public void deleteConversa(Integer conversaId) {
+	public void deleteConversaById(Integer conversaId) {
 		Conversa conversa = conversaRepository.findById(conversaId)
 				.orElseThrow(() -> new RuntimeException("Conversa não encontrada"));
 		conversaRepository.delete(conversa);

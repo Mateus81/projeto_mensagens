@@ -32,7 +32,7 @@ public class UsuarioService {
 	}
 
 	// Salva/Atualiza um usuário - neste caso utilizamos o ID existente apesar do
-	// mesmo código de cadastro
+	// mesmo código de registerUser
 	@Transactional
 	public Usuario saveOrUpdateUser(Usuario usuario) {
 		return usuarioRepository.save(usuario);

@@ -1,5 +1,7 @@
 package io.github.mateus81.mensagensapi.model.controller;
 
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -25,17 +27,23 @@ public class ConversaController {
 		this.conversaService = conversaService;
 	}
 
+	// Exibe todas as conversas
+	@GetMapping("/conversas")
+	public List<Conversa> getAllConversas() {
+		return conversaService.readAllConversas();
+	}
+	
 	// Exibe conversa
 	@GetMapping("/conversas/{id}")
 	public Conversa getConversaById(Integer id) {
-		return conversaService.readConversa(id);
+		return conversaService.readConversaById(id);
 	}
 
 	// Deleta conversa
 	@DeleteMapping("/conversas/{id}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void deleteConversaById(Integer id) {
-		conversaService.deleteConversa(id);
+		conversaService.deleteConversaById(id);
 	}
 
 	// Inicia conversa
