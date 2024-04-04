@@ -37,14 +37,14 @@ public class ContatoController {
 	// Vê um contato
 	@GetMapping("/contatos/{id}")
 	public Contato getContato(Integer id) {
-		return contatoService.readContato(id);
+		return contatoService.readContatoById(id);
 	}
 
 	// Exclui contato
 	@DeleteMapping("/contatos/{id}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void deleteContatoById(@PathVariable Integer id) {
-		contatoService.deleteContato(id);
+		contatoService.deleteContatoById(id);
 	}
 
 	// Insere contato

@@ -62,6 +62,20 @@ public class Contato {
 		this.telefone = telefone;
 	}
 	
+	// Construtor para teste de ID
+		public Contato(Integer id, String nome) {
+			// Validação Explícita
+			if(id <= 0) {
+				throw new IllegalArgumentException("ID inválido");
+			}
+			if(nome == null || nome.trim().isEmpty()) {
+				throw new IllegalArgumentException("Nome inválido" + nome);
+			}
+			
+			this.id = id;
+			this.nome = nome;
+		}
+	
 	// Sobrecarga
 	public int hashCode() {
 		return Objects.hash(nome, email);

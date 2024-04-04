@@ -19,7 +19,7 @@ public class ContatoService {
 	}
 
 	// Vê Contato
-	public Contato readContato(Integer contatoId) {
+	public Contato readContatoById(Integer contatoId) {
 		return contatoRepository.findById(contatoId).orElseThrow(() -> new RuntimeException("Contato não encontrado"));
 	}
 
@@ -36,11 +36,9 @@ public class ContatoService {
 
 	// Excluir Contato
 	@Transactional
-	public void deleteContato(Integer contatoId) {
-		if (!contatoRepository.existsById(contatoId)) {
-			throw new RuntimeException("Contato não encontrado");
-		}
-		contatoRepository.deleteById(contatoId);
+	public void deleteContatoById(Integer contatoId) {
+		Contato contato = contatoRepository.findById(contatoId).orElseThrow(() -> new RuntimeException("Contato não encontrado"));
+		contatoRepository.delete(contato);
 	}
 
 	// Atualiza contato

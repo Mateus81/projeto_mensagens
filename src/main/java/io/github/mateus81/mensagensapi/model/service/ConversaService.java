@@ -21,7 +21,7 @@ public class ConversaService {
 
 	// Lê conversa
 	@Transactional(readOnly = true)
-	public Conversa readConversa(Integer conversaId) {
+	public Conversa readConversaById(Integer conversaId) {
 		return conversaRepository.findById(conversaId)
 				.orElseThrow(() -> new RuntimeException("Conversa não encontrada"));
 	}
