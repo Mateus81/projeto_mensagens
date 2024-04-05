@@ -47,6 +47,20 @@ public class Mensagem {
 	public Mensagem() {
 
 	}
+	
+	// Construtor de teste
+	public Mensagem(Integer id, String texto, Boolean vista) {
+		if(id <= 0) {
+			throw new IllegalArgumentException("Id inválido");
+		}
+		if(texto == null | texto.trim().isEmpty()) {
+			throw new IllegalArgumentException("Texto inválido");
+		}
+		
+		this.id = id;
+		this.texto = texto;
+		this.vista = false;
+	}
 
 	// Getters & Setters
 	public Integer getId() {

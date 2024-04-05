@@ -46,7 +46,7 @@ public class MensagemService {
 
 	// Exibe Mensagem
 	@Transactional(readOnly = true)
-	public Mensagem getMessage(Integer mensagemId) {
+	public Mensagem getMessageById(Integer mensagemId) {
 		return mensagemRepository.findById(mensagemId)
 				.orElseThrow(() -> new RuntimeException("Mensagem não encontrada"));
 	}
@@ -69,7 +69,7 @@ public class MensagemService {
 
 	// Exclui uma mensagem
 	@Transactional
-	public void deleteMessage(Integer mensagemId) {
+	public void deleteMessageById(Integer mensagemId) {
 		// Verifique se a mensagem existe antes de excluí-la
 		Mensagem existingMensagem = mensagemRepository.findById(mensagemId)
 				.orElseThrow(() -> new RuntimeException("Mensagem não encontrada"));

@@ -30,7 +30,7 @@ public class MensagemController {
 	// Exibe mensagem
 	@GetMapping("conversas/{conversaId}/mensagens/{id}")
 	public Mensagem readMessage(@PathVariable Integer id) {
-		return mensagemService.getMessage(id);
+		return mensagemService.getMessageById(id);
 	}
 
 	// Cria/Salva mensagem
@@ -44,7 +44,7 @@ public class MensagemController {
 	@DeleteMapping("conversas/{conversaId}/mensagens/{id}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void deleteMessageById(@PathVariable Integer id) {
-		mensagemService.deleteMessage(id);
+		mensagemService.deleteMessageById(id);
 	}
 
 	// Altera mensagem
