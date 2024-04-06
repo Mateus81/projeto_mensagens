@@ -26,7 +26,7 @@ public class ArquivoService {
 
 	// Vê arquivo
 	@Transactional(readOnly = true)
-	public Arquivo readArquivo(Integer arquivoId) {
+	public Arquivo readArquivoById(Integer arquivoId) {
 		return arquivoRepository.findById(arquivoId).orElseThrow(() -> new RuntimeException("Arquivo não encontrado"));
 	}
 
@@ -47,7 +47,7 @@ public class ArquivoService {
 
 	// Deleta Arquivo
 	@Transactional
-	public void deleteArquivo(Integer arquivoId) {
+	public void deleteArquivoById(Integer arquivoId) {
 		Arquivo arquivo = arquivoRepository.findById(arquivoId)
 				.orElseThrow(() -> new RuntimeException("Arquivo não encontrado"));
 		arquivoRepository.delete(arquivo);

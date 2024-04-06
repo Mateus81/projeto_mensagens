@@ -32,9 +32,6 @@ public class Arquivo {
 	@Column(nullable = false)
 	private String tipo;
 
-	@Column
-	private Long tamanho;
-
 	@Lob
 	private byte[] conteudo;
 
@@ -48,29 +45,29 @@ public class Arquivo {
 	private Usuario usuario;
 	
 	//Construtor de teste
-	public Arquivo(Integer id, String nome, String tipo, Long tamanho) {
-		// Validações IF Statement
-		if(id <= 0) {
-			throw new IllegalArgumentException("Id inválido" + id);
-		}
-		
-		if(nome == null || nome.trim().isEmpty()) {
-			throw new IllegalArgumentException("Nome inválido" + nome);
-		}				
-		
-		if(tipo == null || tipo.trim().isEmpty()) {
-			throw new IllegalArgumentException("Tipo de arquivo inválido" + tipo);
-		}
-		
-		if(tamanho == null) {
-			throw new IllegalArgumentException("Tamanho não suportado" + tamanho);			
-		}
-		
-		this.id = id;			
-		this.nome = nome;
-		this.tipo = tipo;
-		this.tamanho = tamanho;
-	}
+	public Arquivo(Integer id, String nome, String tipo, byte[] conteudo) {
+        // Validações IF Statement
+	       if(id <= 0) {
+	           throw new IllegalArgumentException("Id inválido" + id);
+	       }
+
+	       if(nome == null || nome.trim().isEmpty()) {
+	           throw new IllegalArgumentException("Nome inválido" + nome);
+	       }            
+
+	       if(tipo == null || tipo.trim().isEmpty()) {
+	           throw new IllegalArgumentException("Tipo de arquivo inválido" + tipo);
+           }
+	       
+	       if(conteudo == null) {
+	           throw new IllegalArgumentException("Conteúdo do arquivo inválido" + conteudo);
+	       }
+
+	       this.id = id;            
+	       this.nome = nome;
+	       this.tipo = tipo;
+	       this.conteudo = conteudo;
+	   }
 
 	// Getters & Setters
 	public Integer getId() {
@@ -98,11 +95,7 @@ public class Arquivo {
 	}
 
 	public Long getTamanho() {
-		return tamanho;
-	}
-
-	public void setTamanho(Long tamanho) {
-		this.tamanho = tamanho;
+		return (long) conteudo.length;
 	}
 
 	public Date getDataEnvio() {

@@ -34,7 +34,7 @@ public class ArquivoTests {
 
 	    @Test
 	    public void testInvalidValues() {
-	        assertThrows(IllegalArgumentException.class, () -> new Arquivo(-1, "arquivo", "png", (long) 3));
+	        assertThrows(IllegalArgumentException.class, () -> new Arquivo(-1, "arquivo", "png", "3".getBytes()));
 	    }
 	}
 

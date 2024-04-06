@@ -37,14 +37,14 @@ public class ArquivoController {
 	// Retorna um arquivo
 	@GetMapping("/arquivos/{id}")
 	public Arquivo readArquivo(@PathVariable Integer id) {
-		return arquivoService.readArquivo(id);
+		return arquivoService.readArquivoById(id);
 	}
 
 	// Deleta arquivo
 	@DeleteMapping("/arquivos/{id}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void deleteArquivo(@PathVariable Integer id) {
-		arquivoService.deleteArquivo(id);
+		arquivoService.deleteArquivoById(id);
 	}
 
 	// Salva e envia arquivo
