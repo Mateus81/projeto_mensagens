@@ -15,6 +15,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 import io.github.mateus81.mensagensapi.model.entity.Conversa;
 import io.github.mateus81.mensagensapi.model.service.ConversaService;
@@ -56,11 +58,19 @@ public class ConversaControllerTests {
 	
 	@Test
 	public void testStartConversa() {
-		
-	}
+		Conversa conversa = new Conversa();
+		when(conversaService.startConversa(conversa)).thenReturn(conversa);
+		Conversa conversaResult = conversaController.startConversa(conversa);
+		assertEquals(conversaResult, conversa);
+}
 	
 	@Test
 	public void testEndConversa() {
+		Conversa conversa = new Conversa(1);
+		when(conversaService.endConversa(conversa.getId())).thenReturn(conversa);
+		ResponseEntity<String> response = conversaController.endConversa(conversa.getId());
 		
+		assertEquals(HttpStatus.OK, response.getStatusCode());
+		assertEquals("Conversa encerrada com sucesso", response.getBody());
 	}
 }
