@@ -71,9 +71,9 @@ public class MensagemController {
 
 	// Marca todas como lidas
 	@PatchMapping("conversas/{conversaId}/mensagens")
-	public ResponseEntity<String> markAllAsRead(@PathVariable Integer id) {
+	public ResponseEntity<String> markAllAsRead(@PathVariable Integer conversaId) {
 		try {
-			mensagemService.markAllAsRead(id);
+			mensagemService.markAllAsRead(conversaId);
 			return ResponseEntity.ok("Todas as mensagens foram marcadas como lidas");
 		} catch (RuntimeException e) {
 			return ResponseEntity.notFound().build();

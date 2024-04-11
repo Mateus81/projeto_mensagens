@@ -13,11 +13,16 @@ public class UsuarioDTO {
 	@NotNull
 	private String senhaNaoProtegida;
 	
-	// Construtor
+	// Construtor de teste
 	public UsuarioDTO(String nome, String email, String senhaNaoProtegida) {
 		this.nome = nome;
 		this.email = email;
 		this.senhaNaoProtegida = senhaNaoProtegida;
+	}
+	
+	// Construtor padrão
+	public UsuarioDTO() {
+		
 	}
 	
 	// Getters & Setters

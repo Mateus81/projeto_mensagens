@@ -2,6 +2,7 @@ package io.github.mateus81.mensagensapi.model.controller;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -19,9 +20,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.RequestBuilder;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import io.github.mateus81.mensagensapi.model.entity.Conversa;
 import io.github.mateus81.mensagensapi.model.entity.Mensagem;
 import io.github.mateus81.mensagensapi.model.service.MensagemService;
 
@@ -88,8 +92,21 @@ public class MensagemControllerTests {
 	}
 	
 	@Test
-	public void testMarkAllAsRead() {
-		Conversa conversa = new Conversa();
-		
-	}
+	public void testMarkAllAsRead() throws Exception {
+        Integer conversaId = 1;
+        // Define a resposta esperada
+        String expectedResponse = "Todas as mensagens foram marcadas como lidas";
+        // Realiza a chamada para o endpoint
+        RequestBuilder requestBuilder = MockMvcRequestBuilders
+                .patch("/conversas/" + conversaId + "/mensagens", "");
+        // Verificações
+        mockMvc.perform(requestBuilder)
+        .andDo(MockMvcResultHandlers.print())
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.content().string(expectedResponse));
+
+        // Verifica se o método markAllAsRead foi chamado
+        verify(mensagemService, times(1)).markAllAsRead(eq(conversaId));
+    }
+
 }
