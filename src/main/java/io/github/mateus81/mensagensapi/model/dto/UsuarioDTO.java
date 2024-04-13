@@ -2,6 +2,8 @@ package io.github.mateus81.mensagensapi.model.dto;
 
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class UsuarioDTO {
 	
 	@NotNull
@@ -11,6 +13,7 @@ public class UsuarioDTO {
 	private String email;
 	
 	@NotNull
+	@JsonProperty("senha")
 	private String senhaNaoProtegida;
 	
 	// Construtor de teste

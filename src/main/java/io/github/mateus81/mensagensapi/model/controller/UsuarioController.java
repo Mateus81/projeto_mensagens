@@ -36,7 +36,7 @@ public class UsuarioController {
 
 	// Busca usuário por Id
 	@GetMapping("/usuarios/{id}")
-	public Usuario getUserById(Integer id) {
+	public Usuario getUserById(@PathVariable Integer id) {
 		return usuarioService.getUserById(id);
 	}
 

@@ -36,7 +36,7 @@ public class ContatoController {
 
 	// Vê um contato
 	@GetMapping("/contatos/{id}")
-	public Contato getContato(Integer id) {
+	public Contato getContato(@PathVariable Integer id) {
 		return contatoService.readContatoById(id);
 	}
 

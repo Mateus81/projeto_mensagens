@@ -49,6 +49,9 @@ public class UsuarioService {
 	// Cadastra um usuário
 	@Transactional
 	public Usuario registerUser(Usuario usuario, String senhaNaoProtegida) {
+		if(usuario == null) {
+			throw new IllegalArgumentException("Usuário não pode ser nulo");
+		}
 		usuario.setSenha(passwordEncoder.encode(senhaNaoProtegida));
 		return usuarioRepository.save(usuario);
 	}

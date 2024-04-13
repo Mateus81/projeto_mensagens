@@ -35,14 +35,14 @@ public class ConversaController {
 	
 	// Exibe conversa
 	@GetMapping("/conversas/{id}")
-	public Conversa getConversaById(Integer id) {
+	public Conversa getConversaById(@PathVariable Integer id) {
 		return conversaService.readConversaById(id);
 	}
 
 	// Deleta conversa
 	@DeleteMapping("/conversas/{id}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void deleteConversaById(Integer id) {
+	public void deleteConversaById(@PathVariable Integer id) {
 		conversaService.deleteConversaById(id);
 	}
 
