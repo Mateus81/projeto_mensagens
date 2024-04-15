@@ -17,7 +17,9 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import io.github.mateus81.mensagensapi.model.entity.Contato;
+import io.github.mateus81.mensagensapi.model.entity.Usuario;
 import io.github.mateus81.mensagensapi.model.repository.ContatoRepository;
+import io.github.mateus81.mensagensapi.model.repository.UsuarioRepository;
 
 @ExtendWith(MockitoExtension.class)
 public class ContatoServiceTests {
@@ -27,6 +29,9 @@ public class ContatoServiceTests {
 
 	@Mock
 	private ContatoRepository contatoRepository;
+	
+	@Mock
+	private UsuarioRepository usuarioRepository;
 	
 	@Test
 	public void testReadContatoById() {
@@ -52,13 +57,29 @@ public class ContatoServiceTests {
 	
 	@Test
 	public void testInsertContato() {
-		// Cria e salva contato
+	    // Cria e salva contato e o usuário
 		Contato contato = new Contato(4, "Leandro");
-		when(contatoRepository.save(contato)).thenReturn(contato);
-		// Verifica
-		Contato contatoResult = contatoService.insertContato(contato);
-		assertEquals(contatoResult, contato);
+	    Usuario usuario = new Usuario();
+	    usuario.setId(1); // Defina o id do usuário como Long
+	    contato.setUsuario(usuario);
+
+	    // Mocke o resultado do método findById do UsuarioRepository
+	    Optional<Usuario> usuarioOpt = Optional.of(usuario);
+	    when(usuarioRepository.findById(usuario.getId())).thenReturn(usuarioOpt);
+
+	    // Mocke o resultado do método save do ContatoRepository
+	    when(contatoRepository.save(contato)).thenReturn(contato);
+
+	    // Cria um novo serviço ContatoService usando os repositórios mocketados
+	    ContatoService contatoService = new ContatoService(contatoRepository, usuarioRepository);
+
+	    // Chame o método insertContato com o objeto Contato
+	    Contato contatoResult = contatoService.insertContato(contato);
+
+	    // Verifique se o resultado é igual ao objeto Contato esperado
+	    assertEquals(contatoResult.getUsuario().getId(), usuario.getId());
 	}
+
 	
 	@Test
 	public void testDeleteContato() {

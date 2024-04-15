@@ -14,7 +14,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.github.mateus81.mensagensapi.model.dto.ContatoDTO;
 import io.github.mateus81.mensagensapi.model.entity.Contato;
+import io.github.mateus81.mensagensapi.model.entity.Usuario;
 import io.github.mateus81.mensagensapi.model.service.ContatoService;
 
 @CrossOrigin("*")
@@ -50,7 +52,15 @@ public class ContatoController {
 	// Insere contato
 	@PostMapping("/contatos")
 	@ResponseStatus(HttpStatus.CREATED)
-	public Contato insertContato(@RequestBody Contato contato) {
+	public Contato insertContato(@RequestBody ContatoDTO contatoDto) {
+		Contato contato = new Contato();
+		contato.setNome(contatoDto.getNome());
+		contato.setEmail(contatoDto.getEmail());
+		contato.setTelefone(contatoDto.getTelefone());
+		
+		Usuario usuario = new Usuario();
+		usuario.setId(contatoDto.getUsuario());
+		contato.setUsuario(usuario);
 		return contatoService.insertContato(contato);
 	}
 

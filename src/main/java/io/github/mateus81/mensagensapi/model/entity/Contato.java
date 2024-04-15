@@ -121,4 +121,13 @@ public class Contato {
 	public void setFoto(byte[] foto) {
 		this.foto = foto;
 	}
+	
+	public Usuario getUsuario() {
+		return usuario;
+	}
+	
+	public void setUsuario(Usuario usuario) {
+		this.usuario = usuario;
+	}
+
 }

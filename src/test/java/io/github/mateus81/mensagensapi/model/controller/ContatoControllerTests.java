@@ -1,6 +1,7 @@
 package io.github.mateus81.mensagensapi.model.controller;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.times;
@@ -18,7 +19,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import io.github.mateus81.mensagensapi.model.dto.ContatoDTO;
 import io.github.mateus81.mensagensapi.model.entity.Contato;
+import io.github.mateus81.mensagensapi.model.entity.Usuario;
 import io.github.mateus81.mensagensapi.model.service.ContatoService;
 
 @ExtendWith(MockitoExtension.class)
@@ -58,10 +61,30 @@ public class ContatoControllerTests {
 	
 	@Test
 	public void testInsertContato() {
-		Contato contato = new Contato(1, "Felipe");
-		when(contatoService.insertContato(contato)).thenReturn(contato);
-		Contato contatoResult = contatoController.insertContato(contato);
-		assertEquals(contatoResult, contato);
+		 // Crie um objeto ContatoDTO
+	    ContatoDTO contatoDto = new ContatoDTO();
+	    contatoDto.setNome("Felipe");
+	    contatoDto.setEmail("Felipe@gmail.com");
+	    contatoDto.setTelefone("123456789");
+	    contatoDto.setUsuario(1); // Use o id do usuário
+
+	    // Crie um objeto Contato
+	    Contato contato = new Contato();
+	    contato.setNome(contatoDto.getNome());
+	    contato.setEmail(contatoDto.getEmail());
+	    contato.setTelefone(contatoDto.getTelefone());
+	    Usuario usuario = new Usuario();
+	    usuario.setId(1); // Use o id do usuário
+	    contato.setUsuario(usuario);
+
+	    // Mocke o serviço ContatoService
+	    when(contatoService.insertContato(any(Contato.class))).thenReturn(contato);
+	    
+	    // Chame o método insertContato com o objeto ContatoDTO
+	    Contato contatoResult = contatoController.insertContato(contatoDto);
+
+	    // Verifique se o resultado é igual ao objeto Contato esperado
+	    assertEquals(contatoResult, contato);
 	}
 	
 	@Test 

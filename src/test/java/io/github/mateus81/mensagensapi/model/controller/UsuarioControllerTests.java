@@ -88,7 +88,6 @@ public class UsuarioControllerTests {
 		
 		String jsonResult = result.getResponse().getContentAsString();
 		Usuario usuarioResult = objectMapper.readValue(jsonResult, Usuario.class);
-		// Usuario usuarioResult = usuarioController.registerUser(usuario);
 		assertEquals(usuarioEsperado.getNome(), usuarioResult.getNome());
 		assertEquals(usuarioEsperado.getEmail(), usuarioResult.getEmail());
 	}

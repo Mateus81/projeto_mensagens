@@ -104,6 +104,11 @@ public class Usuario {
 		this.senha = senha;
 	}
 
+	// Construtor para teste integrado
+	public Usuario(Integer id) {
+		this.id = id;
+	}
+
 	// Sobrecarga de método
 	@Override
 	public int hashCode() {
