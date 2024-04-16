@@ -17,8 +17,12 @@ import javax.persistence.OneToMany;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
 // Este é o usuário do aplicativo
 @Entity
+@JsonInclude(Include.NON_NULL)
 public class Usuario {
 	// ID auto-incrementado não precisará do setter
 	@Id

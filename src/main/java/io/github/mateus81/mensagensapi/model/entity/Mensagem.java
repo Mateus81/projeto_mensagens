@@ -14,9 +14,14 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
 
 // Esta é a Mensagem que estará presente na conversa dos usuários.
 @Entity
+@JsonInclude(Include.NON_NULL)
 public class Mensagem {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,15 +30,16 @@ public class Mensagem {
 	@Lob
 	private String texto;
 
-	@Column(nullable = false)
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date dataHoraEnvio;
 
 	// Objetos envolvidos
 	@ManyToOne
+	@JsonBackReference
 	private Usuario usuario_remetente;
 
 	@ManyToOne
+	@JsonBackReference
 	private Usuario usuario_destino;
 
 	@Column
@@ -44,11 +50,14 @@ public class Mensagem {
 	private Conversa conversa;
 
 	// Construtor padrão
-	public Mensagem() {
-
+	public Mensagem() {}
+	
+	// Construtor teste integrado
+	public Mensagem(Date dataHoraEnvio) {
+		this.dataHoraEnvio = (dataHoraEnvio != null) ? dataHoraEnvio : new Date();
 	}
 	
-	// Construtor de teste
+	// Construtor de teste unitário
 	public Mensagem(Integer id, String texto, Boolean vista) {
 		if(id <= 0) {
 			throw new IllegalArgumentException("Id inválido");
@@ -84,7 +93,7 @@ public class Mensagem {
 	}
 
 	public void setData_hora_envio(Date dataHoraEnvio) {
-		this.dataHoraEnvio = dataHoraEnvio;
+		this.dataHoraEnvio = (dataHoraEnvio != null) ? dataHoraEnvio : new Date();
 	}
 
 	public Usuario getUsuarioremetente() {
