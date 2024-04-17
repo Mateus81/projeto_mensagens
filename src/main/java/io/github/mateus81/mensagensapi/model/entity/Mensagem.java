@@ -35,7 +35,7 @@ public class Mensagem {
 
 	// Objetos envolvidos
 	@ManyToOne
-	@JsonBackReference
+	@JsonBackReference(value = "usuario-mensagens")
 	private Usuario usuario_remetente;
 
 	@ManyToOne

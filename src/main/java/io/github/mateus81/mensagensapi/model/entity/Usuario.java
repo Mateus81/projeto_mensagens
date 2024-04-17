@@ -19,6 +19,7 @@ import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 // Este é o usuário do aplicativo
 @Entity
@@ -58,6 +59,7 @@ public class Usuario {
 	private List<Conversa> conversas;
 	// Mensagens também...
 	@OneToMany(mappedBy = "usuario_remetente")
+	@JsonManagedReference(value = "usuario-mensagens")
 	private List<Mensagem> mensagensEnviadas;
 	@OneToMany(mappedBy = "usuario_destino")
 	private List<Mensagem> mensagensRecebidas;
