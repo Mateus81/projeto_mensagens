@@ -1,6 +1,7 @@
 package io.github.mateus81.mensagensapi.model.controller;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -30,14 +31,26 @@ public class UsuarioController {
 
 	// Busca todos os usuários
 	@GetMapping("/usuarios")
-	public List<Usuario> getAllUsers() {
-		return usuarioService.getAllUsers();
+	public List<UsuarioDTO> getAllUsers() {
+		List<Usuario> usuarios = usuarioService.getAllUsers();
+		return usuarios.stream().map(usuario -> {
+			UsuarioDTO dto = new UsuarioDTO();
+			dto.setId(usuario.getId());
+			dto.setEmail(usuario.getEmail());
+			dto.setNome(usuario.getNome());
+			return dto;
+		}).collect(Collectors.toList());
 	}
 
 	// Busca usuário por Id
 	@GetMapping("/usuarios/{id}")
-	public Usuario getUserById(@PathVariable Integer id) {
-		return usuarioService.getUserById(id);
+	public UsuarioDTO getUserById(@PathVariable Integer id) {
+		Usuario usuario = usuarioService.getUserById(id);
+		UsuarioDTO dto = new UsuarioDTO();
+		dto.setId(usuario.getId());
+		dto.setNome(usuario.getNome());
+		dto.setEmail(usuario.getEmail());
+		return dto;
 	}
 
 	// Cria um usuário

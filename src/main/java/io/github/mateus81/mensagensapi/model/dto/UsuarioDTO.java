@@ -1,10 +1,15 @@
 package io.github.mateus81.mensagensapi.model.dto;
 
+import java.util.Objects;
+
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class UsuarioDTO {
+	
+	@NotNull
+	private Integer id;
 	
 	@NotNull
 	private String nome;
@@ -28,7 +33,20 @@ public class UsuarioDTO {
 		
 	}
 	
+	// Construtor de teste de ID
+	public UsuarioDTO(Integer id) {
+		this.id = id;
+	}
+	
 	// Getters & Setters
+	public Integer getId() {
+		return id;
+	}
+	
+	public void setId(Integer id) {
+		this.id = id;
+	}
+	
 	public String getNome() {
 		return nome;
 	}
@@ -51,6 +69,25 @@ public class UsuarioDTO {
 	
 	public void setEmail(String email) {
 		this.email = email;
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+	    if (this == obj) {
+	        return true;
+	    }
+	    if (obj == null || getClass() != obj.getClass()) {
+	        return false;
+	    }
+
+	    UsuarioDTO other = (UsuarioDTO) obj;
+	    return Objects.equals(this.nome, other.nome) && 
+	    		Objects.equals(this.email, other.email) && Objects.equals(this.id, other.id);
+	}
+	
+	@Override
+	public int hashCode() {
+	    return Objects.hash(this.nome, this.email);
 	}
 	
 }

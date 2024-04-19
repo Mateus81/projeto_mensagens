@@ -14,7 +14,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
@@ -35,11 +34,10 @@ public class Mensagem {
 
 	// Objetos envolvidos
 	@ManyToOne
-	@JsonBackReference(value = "usuario-mensagens")
 	private Usuario usuario_remetente;
 
 	@ManyToOne
-	@JsonBackReference
+	@JoinColumn(name = "usuario_destino")
 	private Usuario usuario_destino;
 
 	@Column

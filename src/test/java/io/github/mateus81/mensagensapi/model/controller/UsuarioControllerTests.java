@@ -13,6 +13,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -30,6 +31,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.github.mateus81.mensagensapi.model.dto.UsuarioDTO;
 import io.github.mateus81.mensagensapi.model.entity.Usuario;
+import io.github.mateus81.mensagensapi.model.entity.UsuarioView;
 import io.github.mateus81.mensagensapi.model.service.UsuarioService;
 
 @ExtendWith(MockitoExtension.class)
@@ -56,17 +58,33 @@ public class UsuarioControllerTests {
 		Usuario usuario = new Usuario();
 		Usuario usuario2 = new Usuario();
 		List<Usuario> usuarios = Arrays.asList(usuario, usuario2);
+		List<UsuarioDTO> Dtos = usuarios.stream().map(usuarioEntity -> {
+			UsuarioDTO dto = new UsuarioDTO();
+			dto.setId(usuarioEntity.getId());
+			dto.setNome(usuarioEntity.getNome());
+			dto.setEmail(usuarioEntity.getEmail());
+			return dto;
+		}).collect(Collectors.toList());
+		
 		when(usuarioService.getAllUsers()).thenReturn(usuarios);
-		List<Usuario> usuarioResult = usuarioController.getAllUsers();
-		assertEquals(usuarioResult, usuarios);
+		List<UsuarioDTO> usuarioResult = usuarioController.getAllUsers();
+		assertEquals(usuarioResult, Dtos);
 	}
 	
 	@Test
-	public void testGetUserById() {
-		Usuario usuario = new Usuario(1, "Renan");
-		when(usuarioService.getUserById(anyInt())).thenReturn(usuario);
-		Usuario usuarioResult = usuarioController.getUserById(1);
-		assertEquals(usuarioResult, usuario);
+	public void testGetUserById() throws Exception {
+		Usuario usuario = new Usuario(1);
+		UsuarioDTO usuarioDto = new UsuarioDTO();
+		usuarioDto.setId(usuario.getId());
+
+	    // Mocke o comportamento do método getUserDtoById do UsuarioService
+	    when(usuarioService.getUserById(anyInt())).thenReturn(usuario);
+
+	    // Chame o método getUserById com o ID 1
+	    UsuarioDTO usuarioResult = usuarioController.getUserById(1);
+
+	    // Verifique se o resultado corresponde ao usuarioDto fictício
+	    assertEquals(usuarioResult, usuarioDto);
 	}
 	
 	@Test
@@ -87,7 +105,7 @@ public class UsuarioControllerTests {
 				.content(objectMapper.writeValueAsString(usuarioDTO))).andExpect(status().isCreated()).andReturn();
 		
 		String jsonResult = result.getResponse().getContentAsString();
-		Usuario usuarioResult = objectMapper.readValue(jsonResult, Usuario.class);
+		Usuario usuarioResult = objectMapper.readerWithView(UsuarioView.Basic.class).readValue(jsonResult, Usuario.class);
 		assertEquals(usuarioEsperado.getNome(), usuarioResult.getNome());
 		assertEquals(usuarioEsperado.getEmail(), usuarioResult.getEmail());
 	}

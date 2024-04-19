@@ -6,6 +6,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import io.github.mateus81.mensagensapi.model.dto.UsuarioDTO;
 import io.github.mateus81.mensagensapi.model.entity.Usuario;
 import io.github.mateus81.mensagensapi.model.repository.UsuarioRepository;
 
@@ -30,7 +31,7 @@ public class UsuarioService {
 	public Usuario getUserById(Integer id) {
 		return usuarioRepository.findById(id).orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
 	}
-
+	        
 	// Salva/Atualiza um usuário - neste caso utilizamos o ID existente apesar do
 	// mesmo código de registerUser
 	@Transactional
