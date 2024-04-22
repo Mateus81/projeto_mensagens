@@ -1,6 +1,7 @@
 package io.github.mateus81.mensagensapi.model.controller;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,14 +33,30 @@ public class ContatoController {
 
 	// Vê lista de contatos
 	@GetMapping("/contatos")
-	public List<Contato> getAllContatos() {
-		return contatoService.readAllContatos();
+	public List<ContatoDTO> getAllContatos() {
+		List<Contato> contatos = contatoService.readAllContatos();
+		return contatos.stream().map(contato -> {
+			ContatoDTO dto = new ContatoDTO();
+			dto.setId(contato.getId());
+			dto.setNome(contato.getNome());
+			dto.setEmail(contato.getEmail());
+			dto.setTelefone(contato.getTelefone());
+			dto.setUsuario(contato.getUsuario());
+			return dto;
+		}).collect(Collectors.toList());
 	}
 
 	// Vê um contato
 	@GetMapping("/contatos/{id}")
-	public Contato getContato(@PathVariable Integer id) {
-		return contatoService.readContatoById(id);
+	public ContatoDTO getContato(@PathVariable Integer id) {
+		Contato contato = contatoService.readContatoById(id);
+		ContatoDTO dto = new ContatoDTO();
+		dto.setId(contato.getId());
+		dto.setNome(contato.getNome());
+		dto.setEmail(contato.getEmail());
+		dto.setTelefone(contato.getTelefone());
+		dto.setUsuario(contato.getUsuario());
+		return dto;
 	}
 
 	// Exclui contato
@@ -54,12 +71,12 @@ public class ContatoController {
 	@ResponseStatus(HttpStatus.CREATED)
 	public Contato insertContato(@RequestBody ContatoDTO contatoDto) {
 		Contato contato = new Contato();
+		contato.setId(contatoDto.getId());
 		contato.setNome(contatoDto.getNome());
 		contato.setEmail(contatoDto.getEmail());
 		contato.setTelefone(contatoDto.getTelefone());
 		
 		Usuario usuario = new Usuario();
-		usuario.setId(contatoDto.getUsuario());
 		contato.setUsuario(usuario);
 		return contatoService.insertContato(contato);
 	}

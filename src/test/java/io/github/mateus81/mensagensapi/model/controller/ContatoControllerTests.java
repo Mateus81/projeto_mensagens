@@ -10,6 +10,7 @@ import static org.mockito.Mockito.when;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,6 +21,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import io.github.mateus81.mensagensapi.model.dto.ContatoDTO;
+import io.github.mateus81.mensagensapi.model.dto.UsuarioDTO;
 import io.github.mateus81.mensagensapi.model.entity.Contato;
 import io.github.mateus81.mensagensapi.model.entity.Usuario;
 import io.github.mateus81.mensagensapi.model.service.ContatoService;
@@ -38,17 +40,32 @@ public class ContatoControllerTests {
 		Contato contato = new Contato();
 		Contato contato2 = new Contato();
 		List<Contato> contatos = Arrays.asList(contato, contato2);
+		List<ContatoDTO> Dtos = contatos.stream().map(contatoEntity -> {
+			ContatoDTO dto = new ContatoDTO();
+			dto.setId(contatoEntity.getId());
+			dto.setNome(contatoEntity.getNome());
+			dto.setEmail(contatoEntity.getEmail());
+			dto.setTelefone(contatoEntity.getTelefone());
+			dto.setUsuario(contatoEntity.getUsuario());
+			return dto;
+		}).collect(Collectors.toList());
+		
 		when(contatoService.readAllContatos()).thenReturn(contatos);
-		List<Contato> contatoResult = contatoController.getAllContatos();
-		assertEquals(contatoResult, contatos);
+		List<ContatoDTO> contatoResult = contatoController.getAllContatos();
+		assertEquals(contatoResult, Dtos);
 	}
 	
 	@Test
 	public void testGetContatoById() {
+		// Cria contato
 		Contato contato = new Contato(1, "Matt");
+		ContatoDTO contatoDto = new ContatoDTO();
+		contatoDto.setId(contato.getId());
+		contatoDto.setNome(contato.getNome());
+		// Valida
 		when(contatoService.readContatoById(anyInt())).thenReturn(contato);
-		Contato contatoResult = contatoController.getContato(1);
-		assertEquals(contatoResult, contato);
+		ContatoDTO contatoResult = contatoController.getContato(1);
+		assertEquals(contatoResult, contatoDto);
 	}
 	
 	@Test
@@ -66,7 +83,7 @@ public class ContatoControllerTests {
 	    contatoDto.setNome("Felipe");
 	    contatoDto.setEmail("Felipe@gmail.com");
 	    contatoDto.setTelefone("123456789");
-	    contatoDto.setUsuario(1); // Use o id do usuário
+	    contatoDto.setUsuario(null);
 
 	    // Crie um objeto Contato
 	    Contato contato = new Contato();

@@ -71,6 +71,7 @@ public class UsuarioDTO {
 		this.email = email;
 	}
 	
+	// Tratamento do AssertionFailedError no JUnit
 	@Override
 	public boolean equals(Object obj) {
 	    if (this == obj) {

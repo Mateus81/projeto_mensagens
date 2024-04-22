@@ -14,9 +14,13 @@ import javax.persistence.ManyToOne;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
 
 // Este é o contato que conversa com o Usuário
 @Entity
+@JsonInclude(Include.NON_NULL)
 public class Contato {
 	// Campo auto-incremento
 	@Id
