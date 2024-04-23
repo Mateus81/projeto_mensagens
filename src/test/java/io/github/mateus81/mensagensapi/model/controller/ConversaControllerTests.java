@@ -9,6 +9,7 @@ import static org.mockito.Mockito.when;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,7 +19,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import io.github.mateus81.mensagensapi.model.dto.ConversaDTO;
 import io.github.mateus81.mensagensapi.model.entity.Conversa;
+import io.github.mateus81.mensagensapi.model.entity.Usuario;
 import io.github.mateus81.mensagensapi.model.service.ConversaService;
 
 @ExtendWith(MockitoExtension.class)
@@ -32,20 +35,39 @@ public class ConversaControllerTests {
 	
 	@Test
 	public void testGetAllConversas() {
+		// Criação do usuario e inserindo ele nas conversas
+		Usuario usuario = new Usuario(1);
 		Conversa conversa = new Conversa();
+		conversa.setUsuario(usuario);
 		Conversa conversa2 = new Conversa();
+		conversa2.setUsuario(usuario);
 		List<Conversa> conversas = Arrays.asList(conversa, conversa2);
+		// Validação
+		List<ConversaDTO> dtos = conversas.stream().map(conversaEntity -> {
+			ConversaDTO dto = new ConversaDTO();
+			dto.setId(conversaEntity.getId());
+			dto.setUsuarioId(conversaEntity.getUsuario().getId());
+			return dto;
+		}).collect(Collectors.toList());
+		
 		when(conversaService.readAllConversas()).thenReturn(conversas);
-		List<Conversa> conversaResult = conversaController.getAllConversas();	
-		assertEquals(conversaResult, conversas);
+		List<ConversaDTO> conversaResult = conversaController.getAllConversas();	
+		assertEquals(conversaResult, dtos);
 	}
 	
 	@Test
 	public void testGetConversaById() {
+		// Define usuario, conversa e dto da conversa
+		Usuario usuario = new Usuario(1);
 		Conversa conversa = new Conversa(1);
+		conversa.setUsuario(usuario);
+		ConversaDTO dto = new ConversaDTO();
+		dto.setId(conversa.getId());
+		dto.setUsuarioId(usuario.getId());
+		
 		when(conversaService.readConversaById(anyInt())).thenReturn(conversa);
-		Conversa conversaResult = conversaController.getConversaById(1);
-		assertEquals(conversaResult, conversa);
+		ConversaDTO conversaResult = conversaController.getConversaById(1);
+		assertEquals(conversaResult, dto);
 	}
 	
 	@Test

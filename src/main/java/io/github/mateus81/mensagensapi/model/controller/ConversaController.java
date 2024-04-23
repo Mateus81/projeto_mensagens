@@ -1,6 +1,7 @@
 package io.github.mateus81.mensagensapi.model.controller;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.github.mateus81.mensagensapi.model.dto.ConversaDTO;
 import io.github.mateus81.mensagensapi.model.entity.Conversa;
 import io.github.mateus81.mensagensapi.model.service.ConversaService;
 
@@ -29,14 +31,24 @@ public class ConversaController {
 
 	// Exibe todas as conversas
 	@GetMapping("/conversas")
-	public List<Conversa> getAllConversas() {
-		return conversaService.readAllConversas();
+	public List<ConversaDTO> getAllConversas() {
+		List<Conversa> conversas = conversaService.readAllConversas();
+		return conversas.stream().map(conversa -> {
+			ConversaDTO dto = new ConversaDTO();
+			dto.setId(conversa.getId());
+			dto.setUsuarioId(conversa.getUsuario().getId());
+			return dto;
+		}).collect(Collectors.toList());
 	}
 	
 	// Exibe conversa
 	@GetMapping("/conversas/{id}")
-	public Conversa getConversaById(@PathVariable Integer id) {
-		return conversaService.readConversaById(id);
+	public ConversaDTO getConversaById(@PathVariable Integer id) {
+		Conversa conversa =  conversaService.readConversaById(id);
+		ConversaDTO dto = new ConversaDTO();
+		dto.setId(conversa.getId());
+		dto.setUsuarioId(conversa.getUsuario().getId());
+		return dto;
 	}
 
 	// Deleta conversa
