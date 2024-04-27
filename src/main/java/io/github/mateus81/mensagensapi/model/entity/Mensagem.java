@@ -111,7 +111,7 @@ public class Mensagem {
 	}
 
 	public boolean isVista() {
-		return vista;
+		return vista != null && vista.booleanValue();
 	}
 
 	public void setVista(Boolean vista) {

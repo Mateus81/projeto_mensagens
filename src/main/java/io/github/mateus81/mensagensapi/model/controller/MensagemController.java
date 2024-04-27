@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.github.mateus81.mensagensapi.model.dto.MensagemDTO;
 import io.github.mateus81.mensagensapi.model.entity.Mensagem;
 import io.github.mateus81.mensagensapi.model.service.MensagemService;
 
@@ -29,8 +30,19 @@ public class MensagemController {
 
 	// Exibe mensagem
 	@GetMapping("conversas/{conversaId}/mensagens/{id}")
-	public Mensagem readMessage(@PathVariable Integer id) {
-		return mensagemService.getMessageById(id);
+	public MensagemDTO readMessage(@PathVariable Integer id) {
+		Mensagem mensagem = mensagemService.getMessageById(id);
+		MensagemDTO dto = new MensagemDTO();
+		dto.setId(mensagem.getId());
+		dto.setTexto(mensagem.getTexto());
+		if (mensagem.getUsuarioremetente() != null) {
+			dto.setIdUsuarioRemetente(mensagem.getUsuarioremetente().getId());
+		}
+	    if (mensagem.getUsuariodestino() != null) {
+	        dto.setIdUsuarioDestino(mensagem.getUsuariodestino().getId());	
+	    }
+		dto.setVista(mensagem.isVista());
+		return dto;
 	}
 
 	// Cria/Salva mensagem

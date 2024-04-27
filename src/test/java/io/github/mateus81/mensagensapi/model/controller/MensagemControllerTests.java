@@ -26,6 +26,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import io.github.mateus81.mensagensapi.model.dto.MensagemDTO;
 import io.github.mateus81.mensagensapi.model.entity.Mensagem;
 import io.github.mateus81.mensagensapi.model.service.MensagemService;
 
@@ -48,10 +49,16 @@ public class MensagemControllerTests {
 	
 	@Test
 	public void TestReadMessageById() {
-		Mensagem mensagem = new Mensagem(1, "Olá", false);
+		Mensagem mensagem = new Mensagem();
+		mensagem.setId(1);
+		mensagem.setTexto("Olá");
+		MensagemDTO dto = new MensagemDTO();
+		dto.setId(mensagem.getId());
+		dto.setTexto(mensagem.getTexto());
 		when(mensagemService.getMessageById(anyInt())).thenReturn(mensagem);
-		Mensagem mensagemResult = mensagemController.readMessage(1);
-		assertEquals(mensagemResult, mensagem);
+		MensagemDTO mensagemResult = mensagemController.readMessage(1);
+		assertEquals(mensagemResult.getId(), dto.getId());
+		assertEquals(mensagemResult.getTexto(), dto.getTexto());
 	}
 	
 	@Test
