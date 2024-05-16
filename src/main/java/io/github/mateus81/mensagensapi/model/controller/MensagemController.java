@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import io.github.mateus81.mensagensapi.model.dto.MensagemDTO;
 import io.github.mateus81.mensagensapi.model.entity.Mensagem;
@@ -31,24 +32,33 @@ public class MensagemController {
 	// Exibe mensagem
 	@GetMapping("conversas/{conversaId}/mensagens/{id}")
 	public MensagemDTO readMessage(@PathVariable Integer id) {
+		// Declara mensagem que será buscada no service e atribui seus valores a seu DTO
 		Mensagem mensagem = mensagemService.getMessageById(id);
+		if (mensagem != null) {
 		MensagemDTO dto = new MensagemDTO();
 		dto.setId(mensagem.getId());
 		dto.setTexto(mensagem.getTexto());
-		if (mensagem.getUsuarioremetente() != null) {
-			dto.setIdUsuarioRemetente(mensagem.getUsuarioremetente().getId());
-		}
-	    if (mensagem.getUsuariodestino() != null) {
-	        dto.setIdUsuarioDestino(mensagem.getUsuariodestino().getId());	
-	    }
+		dto.setUsuarioRemetente(mensagem.getUsuarioremetente());
+		dto.setUsuarioDestino(mensagem.getUsuariodestino());
+		dto.setconversa(mensagem.getConversa());
 		dto.setVista(mensagem.isVista());
-		return dto;
+		return dto; 
+	} else {
+		throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Mensagem não encontrada");
+		}
 	}
 
 	// Cria/Salva mensagem
 	@PostMapping("conversas/{conversaId}/mensagens")
 	@ResponseStatus(HttpStatus.CREATED)
-	public Mensagem createMessage(@RequestBody Mensagem mensagem) {
+	public Mensagem createMessage(@RequestBody MensagemDTO dto) {
+		Mensagem mensagem = new Mensagem();
+		mensagem.setConversa(dto.getConversa());
+		mensagem.setId(dto.getId());
+		mensagem.setTexto(dto.getTexto());
+		mensagem.setUsuariodestino(dto.getUsuarioDestino());
+		mensagem.setUsuarioremetente(dto.getUsuarioRemetente());
+		mensagem.setVista(dto.getVista());
 		return mensagemService.createMessage(mensagem);
 	}
 

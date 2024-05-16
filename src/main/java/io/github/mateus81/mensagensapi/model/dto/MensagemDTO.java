@@ -4,6 +4,9 @@ import java.util.Objects;
 
 import javax.validation.constraints.NotNull;
 
+import io.github.mateus81.mensagensapi.model.entity.Conversa;
+import io.github.mateus81.mensagensapi.model.entity.Usuario;
+
 public class MensagemDTO {
 	
 	@NotNull
@@ -13,10 +16,13 @@ public class MensagemDTO {
 	private String texto;
 	
 	@NotNull
-    private Integer idUsuarioRemetente;
+    private Usuario usuarioRemetente;
 	
 	@NotNull
-    private Integer idUsuarioDestino;
+    private Usuario usuarioDestino;
+	
+	@NotNull
+	private Conversa conversa;
 	
     private Boolean vista;
     
@@ -40,22 +46,30 @@ public class MensagemDTO {
 		this.texto = texto;
 	}
 
-	public Integer getIdUsuarioRemetente() {
-		return idUsuarioRemetente;
+	public Usuario getUsuarioRemetente() {
+		return usuarioRemetente;
 	}
 
-	public void setIdUsuarioRemetente(Integer idUsuarioRemetente) {
-		this.idUsuarioRemetente = idUsuarioRemetente;
+	public void setUsuarioRemetente(Usuario UsuarioRemetente) {
+		this.usuarioRemetente = UsuarioRemetente;
 	}
 
-	public Integer getIdUsuarioDestino() {
-		return idUsuarioDestino;
+	public Usuario getUsuarioDestino() {
+		return usuarioDestino;
 	}
 
-	public void setIdUsuarioDestino(Integer idUsuarioDestino) {
-		this.idUsuarioDestino = idUsuarioDestino;
+	public void setUsuarioDestino(Usuario usuarioDestino) {
+		this.usuarioDestino = usuarioDestino;
 	}
 
+	public Conversa getConversa() {
+		return conversa;
+	}
+	
+	public void setconversa(Conversa conversa) {
+		this.conversa = conversa;
+	}
+	
 	public Boolean getVista() {
 		return vista;
 	}
@@ -72,13 +86,14 @@ public class MensagemDTO {
 	    MensagemDTO that = (MensagemDTO) o;
 	    return Objects.equals(id, that.id) &&
 	           Objects.equals(texto, that.texto) &&
-	           Objects.equals(idUsuarioDestino, that.idUsuarioDestino) &&
-	    	   Objects.equals(idUsuarioRemetente, that.idUsuarioRemetente) &&
+	           Objects.equals(usuarioDestino, that.usuarioDestino) &&
+	    	   Objects.equals(usuarioRemetente, that.usuarioRemetente) &&
+	    	   Objects.equals(conversa, that.conversa) &&
 	    	   Objects.equals(vista, that.vista);
 	}
 
 	@Override
 	public int hashCode() {
-	    return Objects.hash(id, texto, idUsuarioDestino, idUsuarioRemetente, vista);
+	    return Objects.hash(id, texto, usuarioDestino, usuarioRemetente, conversa, vista);
 	}
 }

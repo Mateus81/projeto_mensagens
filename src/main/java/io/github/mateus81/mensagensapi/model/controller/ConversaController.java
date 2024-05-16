@@ -36,7 +36,7 @@ public class ConversaController {
 		return conversas.stream().map(conversa -> {
 			ConversaDTO dto = new ConversaDTO();
 			dto.setId(conversa.getId());
-			dto.setUsuarioId(conversa.getUsuario().getId());
+			dto.setUsuario(conversa.getUsuario());
 			return dto;
 		}).collect(Collectors.toList());
 	}
@@ -47,7 +47,7 @@ public class ConversaController {
 		Conversa conversa =  conversaService.readConversaById(id);
 		ConversaDTO dto = new ConversaDTO();
 		dto.setId(conversa.getId());
-		dto.setUsuarioId(conversa.getUsuario().getId());
+		dto.setUsuario(conversa.getUsuario());
 		return dto;
 	}
 
@@ -61,8 +61,11 @@ public class ConversaController {
 	// Inicia conversa
 	@PostMapping("/conversas")
 	@ResponseStatus(HttpStatus.CREATED)
-	public Conversa startConversa(@RequestBody Conversa novaConversa) {
-		return conversaService.startConversa(novaConversa);
+	public Conversa startConversa(@RequestBody ConversaDTO novaConversa) {
+		Conversa conversa = new Conversa();
+		conversa.setId(novaConversa.getId());
+		conversa.setUsuario(novaConversa.getUsuario());	
+		return conversaService.startConversa(conversa);
 	}
 
 	// Termina conversa

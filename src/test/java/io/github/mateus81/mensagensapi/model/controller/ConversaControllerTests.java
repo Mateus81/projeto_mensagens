@@ -1,6 +1,7 @@
 package io.github.mateus81.mensagensapi.model.controller;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.times;
@@ -46,7 +47,7 @@ public class ConversaControllerTests {
 		List<ConversaDTO> dtos = conversas.stream().map(conversaEntity -> {
 			ConversaDTO dto = new ConversaDTO();
 			dto.setId(conversaEntity.getId());
-			dto.setUsuarioId(conversaEntity.getUsuario().getId());
+			dto.setUsuario(conversaEntity.getUsuario());
 			return dto;
 		}).collect(Collectors.toList());
 		
@@ -63,7 +64,7 @@ public class ConversaControllerTests {
 		conversa.setUsuario(usuario);
 		ConversaDTO dto = new ConversaDTO();
 		dto.setId(conversa.getId());
-		dto.setUsuarioId(usuario.getId());
+		dto.setUsuario(conversa.getUsuario());
 		
 		when(conversaService.readConversaById(anyInt())).thenReturn(conversa);
 		ConversaDTO conversaResult = conversaController.getConversaById(1);
@@ -80,10 +81,19 @@ public class ConversaControllerTests {
 	
 	@Test
 	public void testStartConversa() {
+		// Cria um DTO de exemplo
+		ConversaDTO dto = new ConversaDTO();
+		dto.setId(1);
+		dto.setUsuario(new Usuario());
+		// Cria um objeto conversa
 		Conversa conversa = new Conversa();
-		when(conversaService.startConversa(conversa)).thenReturn(conversa);
-		Conversa conversaResult = conversaController.startConversa(conversa);
-		assertEquals(conversaResult, conversa);
+		conversa.setId(dto.getId());
+		conversa.setUsuario(dto.getUsuario());
+		
+		when(conversaService.startConversa(any(Conversa.class))).thenReturn(conversa);
+		Conversa createdConversa = conversaController.startConversa(dto);
+		verify(conversaService).startConversa(any(Conversa.class));
+		assertEquals(createdConversa, conversa);
 }
 	
 	@Test

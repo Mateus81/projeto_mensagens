@@ -38,6 +38,7 @@ public class UsuarioController {
 			dto.setId(usuario.getId());
 			dto.setEmail(usuario.getEmail());
 			dto.setNome(usuario.getNome());
+			dto.setSenhaNaoProtegida(usuario.getSenha());
 			return dto;
 		}).collect(Collectors.toList());
 	}
@@ -50,6 +51,7 @@ public class UsuarioController {
 		dto.setId(usuario.getId());
 		dto.setNome(usuario.getNome());
 		dto.setEmail(usuario.getEmail());
+		dto.setSenhaNaoProtegida(usuario.getSenha());
 		return dto;
 	}
 
@@ -60,6 +62,7 @@ public class UsuarioController {
 		Usuario usuario = new Usuario();
 		usuario.setNome(usuarioDto.getNome());
 		usuario.setEmail(usuarioDto.getEmail());
+		usuario.setSenha(usuarioDto.getSenhaNaoProtegida());
 		return usuarioService.registerUser(usuario, usuarioDto.getSenhaNaoProtegida());
 	}
 

@@ -63,6 +63,7 @@ public class UsuarioControllerTests {
 			dto.setId(usuarioEntity.getId());
 			dto.setNome(usuarioEntity.getNome());
 			dto.setEmail(usuarioEntity.getEmail());
+			dto.setSenhaNaoProtegida(usuarioEntity.getSenha());
 			return dto;
 		}).collect(Collectors.toList());
 		

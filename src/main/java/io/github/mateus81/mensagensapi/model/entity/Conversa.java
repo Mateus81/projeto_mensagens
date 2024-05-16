@@ -102,6 +102,7 @@ public class Conversa {
 	public void setStatus(StatusConversa status) {
 		this.status = status;
 	}
+	
 	public Usuario getUsuario() {
 		return usuario;
 	}

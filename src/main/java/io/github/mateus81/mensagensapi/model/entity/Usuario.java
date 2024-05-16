@@ -17,6 +17,8 @@ import javax.persistence.OneToMany;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonView;
@@ -24,6 +26,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 // Este é o usuário do aplicativo
 @Entity
 @JsonView(UsuarioView.Basic.class)
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @JsonInclude(Include.NON_NULL)
 public class Usuario {
 	// ID auto-incrementado não precisará do setter
@@ -54,17 +57,22 @@ public class Usuario {
 
 	// Um usuário pode ter vários contatos
 	@OneToMany(mappedBy = "usuario")
+	@JsonIgnore
 	private List<Contato> contatos;
 	// E Também conversas!
 	@OneToMany(mappedBy = "usuario")
+	@JsonIgnore
 	private List<Conversa> conversas;
 	// Mensagens também...
 	@OneToMany(mappedBy = "usuario_remetente")
+	@JsonIgnore
 	private List<Mensagem> mensagensEnviadas;
 	@OneToMany(mappedBy = "usuario_destino")
+	@JsonIgnore
 	private List<Mensagem> mensagensRecebidas;
 	// E arquivos
 	@OneToMany(mappedBy = "usuario")
+	@JsonIgnore
 	private List<Arquivo> arquivos;
 
 	// Construtor

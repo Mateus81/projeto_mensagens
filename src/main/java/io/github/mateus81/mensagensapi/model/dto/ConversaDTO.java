@@ -4,13 +4,15 @@ import java.util.Objects;
 
 import javax.validation.constraints.NotNull;
 
+import io.github.mateus81.mensagensapi.model.entity.Usuario;
+
 public class ConversaDTO {
 
 	@NotNull
 	private Integer id;
 	
 	@NotNull
-	private Integer usuarioId;
+	private Usuario usuario;
 	
 	// Construtor padrão
 	public ConversaDTO() {}
@@ -24,12 +26,12 @@ public class ConversaDTO {
 		this.id = id;
 	}
 	
-	public Integer getUsuarioId() {
-		return usuarioId;
+	public Usuario getUsuario() {
+		return usuario;
 	}
 	
-	public void setUsuarioId(Integer usuarioId) {
-		this.usuarioId = usuarioId;
+	public void setUsuario(Usuario usuario) {
+		this.usuario = usuario;
 	}
 		
 	// Tratamento do erro AssertionFailed
@@ -39,11 +41,11 @@ public class ConversaDTO {
 		    if (o == null || getClass() != o.getClass()) return false;
 		    ConversaDTO that = (ConversaDTO) o;
 		    return Objects.equals(id, that.id) &&
-		           Objects.equals(usuarioId, that.usuarioId);
+		           Objects.equals(usuario, that.usuario);
 		}
 
 		@Override
 		public int hashCode() {
-		    return Objects.hash(id, usuarioId);
+		    return Objects.hash(id, usuario);
 		}
 }

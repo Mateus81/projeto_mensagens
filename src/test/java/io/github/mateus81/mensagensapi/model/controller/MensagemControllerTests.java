@@ -1,6 +1,7 @@
 package io.github.mateus81.mensagensapi.model.controller;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doNothing;
@@ -63,10 +64,26 @@ public class MensagemControllerTests {
 	
 	@Test
 	public void testCreateMessage() {
-		Mensagem mensagem = new Mensagem();
-		when(mensagemService.createMessage(mensagem)).thenReturn(mensagem);
-		Mensagem mensagemResult = mensagemController.createMessage(mensagem);
-		assertEquals(mensagemResult, mensagem);
+		// Crie um DTO de exemplo
+		 MensagemDTO dto = new MensagemDTO();
+		 dto.setId(1);
+	     dto.setTexto("Teste de mensagem");
+	     
+	    // Crie um objeto Mensagem esperado
+	    Mensagem expectedMensagem = new Mensagem();
+	    expectedMensagem.setId(dto.getId());
+		expectedMensagem.setTexto(dto.getTexto());
+		
+	    // Stub o método createMessage do MensagemService
+	    when(mensagemService.createMessage(any(Mensagem.class))).thenReturn(expectedMensagem);
+	    
+	    // Chame o método createMessage do controller
+	    Mensagem createdMessage = mensagemController.createMessage(dto);
+	    // Verifique se o mensagemService.createMessage foi chamado com o argumento correto
+	    verify(mensagemService).createMessage(any(Mensagem.class));
+	    
+	    // Compare o objeto Mensagem recebido com o objeto Mensagem esperado
+	    assertEquals(expectedMensagem, createdMessage);
 	}
 	
 	@Test
