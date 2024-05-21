@@ -18,9 +18,6 @@ import javax.persistence.TemporalType;
 @Entity
 public class Arquivo {
 	
-	// Construtor Padrão
-	public Arquivo() {}
-	
 	// Atributos
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -43,6 +40,16 @@ public class Arquivo {
 	@ManyToOne
 	@JoinColumn(name = "usuarioId", nullable = false)
 	private Usuario usuario;
+	
+	// Construtor padrão
+	public Arquivo() {
+		this.dataEnvio = new Date();
+	}
+	
+	// Construtor de teste simples
+	public Arquivo(Integer id) {
+		this.id = id;
+	}
 	
 	//Construtor de teste
 	public Arquivo(Integer id, String nome, String tipo, byte[] conteudo) {
