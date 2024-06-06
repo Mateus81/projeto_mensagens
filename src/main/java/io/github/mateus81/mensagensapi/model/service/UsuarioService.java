@@ -2,11 +2,12 @@ package io.github.mateus81.mensagensapi.model.service;
 
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
-import io.github.mateus81.mensagensapi.model.dto.UsuarioDTO;
 import io.github.mateus81.mensagensapi.model.entity.Usuario;
 import io.github.mateus81.mensagensapi.model.repository.UsuarioRepository;
 
@@ -60,5 +61,14 @@ public class UsuarioService {
 	// Verifica se usuário existe pelo ID
 	public boolean existsById(Integer id) {
 		return usuarioRepository.findById(id).isPresent();
+	}
+	
+	// Autentica usuario
+	public Usuario auth(String email, String senhaNaoProtegida) {
+		Usuario usuario = usuarioRepository.findByEmail(email);
+		if(usuario != null && usuario.getSenha().equals(senhaNaoProtegida)) {
+			return usuario;
+		}
+		throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Credenciais inválidas");
 	}
 }

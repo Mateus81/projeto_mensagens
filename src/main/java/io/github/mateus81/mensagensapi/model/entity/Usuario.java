@@ -117,6 +117,13 @@ public class Usuario {
 		this.nome = nome;
 		this.senha = senha;
 	}
+	
+	// Construtor para teste de autenticação
+	public Usuario(String nome, String email, String senha) {
+		this.nome = nome;
+		this.email = email;
+		this.senha = senha;
+	}
 
 	// Construtor para teste integrado
 	public Usuario(Integer id) {

@@ -36,7 +36,7 @@ public class UsuarioServiceTests {
 	private PasswordEncoder passwordEncoder;
 	
 	@Test
-	public void testGetAllUser() {
+	public void testGetAllUsers() {
 		// Cria usuarios e os coloca na lista
 		Usuario usuario1 = new Usuario("user1", "user@email.com");
 		Usuario usuario2 = new Usuario("user2", "user2@email.com");
@@ -79,7 +79,7 @@ public class UsuarioServiceTests {
 	@Test
 	public void testRegisterUser() {
 		// Define usuário para registro
-		Usuario usuario = new Usuario(null, "Felipe", "Senha_do_felipe");
+		Usuario usuario = new Usuario(6, "Felipe", "Senha_do_felipe");
 		Usuario usuarioSalvo = new Usuario(6, "Felipe", "SenhaProtegida");
 		
 		// Moca o Password Encoder
@@ -115,5 +115,13 @@ public class UsuarioServiceTests {
 		// Verifica
 		assertTrue(usuarioService.existsById(9));
 		assertFalse(usuarioService.existsById(10));
+	}
+	
+	@Test 
+	public void testAuthUser() {
+		Usuario usuario = new Usuario("Ana", "ana@gmail.com", "ana890");
+		when(usuarioRepository.findByEmail(usuario.getEmail())).thenReturn(usuario);
+		Usuario usuarioResult = usuarioService.auth(usuario.getEmail(), usuario.getSenha());
+		assertEquals(usuarioResult, usuario);
 	}
 }

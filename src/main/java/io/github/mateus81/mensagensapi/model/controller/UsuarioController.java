@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
+import io.github.mateus81.mensagensapi.model.dto.LoginRequest;
 import io.github.mateus81.mensagensapi.model.dto.UsuarioDTO;
 import io.github.mateus81.mensagensapi.model.entity.Usuario;
 import io.github.mateus81.mensagensapi.model.service.UsuarioService;
@@ -64,6 +65,17 @@ public class UsuarioController {
 		usuario.setEmail(usuarioDto.getEmail());
 		usuario.setSenha(usuarioDto.getSenhaNaoProtegida());
 		return usuarioService.registerUser(usuario, usuarioDto.getSenhaNaoProtegida());
+	}
+	
+	// Autentica usuário
+	@PostMapping("/usuarios/login")
+	public UsuarioDTO login(@RequestBody LoginRequest login) {
+		Usuario usuario = usuarioService.auth(login.getEmail(), login.getSenha());
+		UsuarioDTO dto = new UsuarioDTO();
+		dto.setId(usuario.getId());
+		dto.setEmail(usuario.getEmail());
+		dto.setNome(usuario.getNome());
+		return dto;
 	}
 
 	// Deleta usuário por ID

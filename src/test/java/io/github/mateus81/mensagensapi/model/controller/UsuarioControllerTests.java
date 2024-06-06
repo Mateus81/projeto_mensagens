@@ -25,10 +25,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import io.github.mateus81.mensagensapi.model.dto.LoginRequest;
 import io.github.mateus81.mensagensapi.model.dto.UsuarioDTO;
 import io.github.mateus81.mensagensapi.model.entity.Usuario;
 import io.github.mateus81.mensagensapi.model.entity.UsuarioView;
@@ -120,4 +123,30 @@ public class UsuarioControllerTests {
 		Usuario response = usuarioController.updateUser(1, usuarioAtualizado);
 		assertEquals(response, usuarioAtualizado);
 	}
+	
+	@Test
+	public void testLogin() throws Exception {
+        String email = "test@example.com";
+        String senha = "password";
+        Usuario usuario = new Usuario();
+        usuario.setId(1);
+        usuario.setEmail(email);
+        usuario.setNome("Test User");
+        usuario.setSenha(senha);
+
+        when(usuarioService.auth(email, senha)).thenReturn(usuario);
+
+        LoginRequest loginRequest = new LoginRequest();
+        loginRequest.setEmail(email);
+        loginRequest.setSenha(senha);
+
+        // Act & Assert
+        mockMvc.perform(MockMvcRequestBuilders.post("/usuarios/login")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(loginRequest)))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(1))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.email").value(email))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.nome").value("Test User"));
+    }
 }
