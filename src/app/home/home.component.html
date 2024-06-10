@@ -1,0 +1,25 @@
+<div class="container">
+    <header>
+        <nav>
+            <ul class="nav-links">
+                <li><a routerLink="/login" routerLinkActive="active">Home</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="hero-content">
+                <h1>Bem-vindo ao Mensagens App</h1>
+                <p>Conecte-se com seus amigos e familiares de forma rápida e fácil!</p>
+                <div class="hero-buttons">
+                    <button (click)="navigateTo('login')">Login</button>
+                    <button (click)="navigateTo('cadastro')">Cadastro</button>
+                </div>
+            </div>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2024 Mensagens App. Todos os direitos reservados.</p>
+    </footer>
+</div>

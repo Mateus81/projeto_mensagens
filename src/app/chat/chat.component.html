@@ -1,0 +1,11 @@
+<div class="chat-container">
+    <h2>Chats</h2>
+    <div *ngIf="conversas && conversas.length > 0; else noConversations">
+      <div *ngFor="let conversa of conversas" class="conversa">
+        <p>{{conversa.id}}</p>
+      </div>
+    </div>
+    <ng-template #noConversations>
+       <p>Você não possui conversas</p>
+    </ng-template>
+</div>
