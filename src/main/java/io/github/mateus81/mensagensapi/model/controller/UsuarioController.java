@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,9 +26,11 @@ import io.github.mateus81.mensagensapi.model.service.UsuarioService;
 public class UsuarioController {
 
 	private final UsuarioService usuarioService;
-
-	public UsuarioController(UsuarioService usuarioService) {
+	private final PasswordEncoder passwordEncoder;
+	
+	public UsuarioController(UsuarioService usuarioService,PasswordEncoder passwordEncoder) {
 		this.usuarioService = usuarioService;
+		this.passwordEncoder = passwordEncoder;
 	}
 
 	// Busca todos os usuários

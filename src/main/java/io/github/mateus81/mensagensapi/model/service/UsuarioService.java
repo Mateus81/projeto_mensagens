@@ -15,6 +15,7 @@ import io.github.mateus81.mensagensapi.model.repository.UsuarioRepository;
 public class UsuarioService {
 
 	private final UsuarioRepository usuarioRepository;
+	
 	private final PasswordEncoder passwordEncoder;
 
 	// Construtor
@@ -66,7 +67,7 @@ public class UsuarioService {
 	// Autentica usuario
 	public Usuario auth(String email, String senhaNaoProtegida) {
 		Usuario usuario = usuarioRepository.findByEmail(email);
-		if(usuario != null && usuario.getSenha().equals(senhaNaoProtegida)) {
+		if(usuario != null && passwordEncoder.matches(senhaNaoProtegida, usuario.getSenha())) {
 			return usuario;
 		}
 		throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Credenciais inválidas");

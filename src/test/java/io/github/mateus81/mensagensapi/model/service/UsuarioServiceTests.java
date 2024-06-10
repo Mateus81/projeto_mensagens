@@ -19,6 +19,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.stubbing.Answer;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import io.github.mateus81.mensagensapi.model.entity.Usuario;
@@ -33,6 +34,8 @@ public class UsuarioServiceTests {
 	@Mock
 	private UsuarioRepository usuarioRepository;
 	
+	@Mock
+	@Autowired
 	private PasswordEncoder passwordEncoder;
 	
 	@Test
@@ -119,9 +122,20 @@ public class UsuarioServiceTests {
 	
 	@Test 
 	public void testAuthUser() {
-		Usuario usuario = new Usuario("Ana", "ana@gmail.com", "ana890");
-		when(usuarioRepository.findByEmail(usuario.getEmail())).thenReturn(usuario);
-		Usuario usuarioResult = usuarioService.auth(usuario.getEmail(), usuario.getSenha());
-		assertEquals(usuarioResult, usuario);
+		 // Arrange
+		String email = "test@example.com";
+		String senha = "password";
+		Usuario usuario = new Usuario();
+		usuario.setEmail(email);
+		usuario.setSenha(passwordEncoder.encode(senha));
+
+		when(usuarioRepository.findByEmail(email)).thenReturn(usuario);
+		when(passwordEncoder.matches(senha, usuario.getSenha())).thenReturn(true);
+
+		// Act
+		Usuario result = usuarioService.auth(email, senha);
+
+		// Assert
+		assertEquals(usuario, result);
 	}
 }
