@@ -1,15 +1,49 @@
 .chat-container {
-    padding: 20px;
+    padding: 20px; /*Ordem para padding e margin: top, bottom, right, left*/
     max-width: 800px;
-    margin: auto;
+    margin: 0 auto;
+    border-radius: 8px;
+    border: 1px solid #ccc; /*Ordem para border: width, style e color*/
+    background-color: #f9f9f9; /*Ordem para background: color, image, repeat, position*/
+}
+
+.chat-container form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.chat-container form input[type="text"] {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+.chat-container form button {
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+}
+
+.chat-container form button:hover {
+    background-color: #0056b3;
 }
 
 h2 {
     text-align: center;
     margin-bottom: 20px;
+    color: #333;
 }
 
 .conversa {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     padding: 10px;
     border: 1px solid #ccc;
     margin-bottom: 10px;
@@ -30,6 +64,46 @@ p {
     color: #888;
     font-size: 18px;
 }
+
+.conversa button {
+    padding: 5px 10px;
+    border: none;
+    border-radius: 4px;
+    background-color: #dc3545;
+    color: white;
+    font-size: 14px;
+    cursor: pointer;
+    margin-left: 5px;
+}
+
+.conversa button:hover {
+    background-color: #c82333;
+}
+
+.chat-container p {
+    text-align: center;
+    color: #666;
+}
+
+.logout p {
+    text-align: center;
+    font-size: 15px;
+    font-weight: bold;
+}
+
+.logout button {
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: chocolate;
+    color: white;
+    cursor: pointer; 
+}
+
+.logout button:hover {
+    background-color: #ea6f18;
+}
+
 /* Responsividade */
 /* Tablets e acima */
 @media (min-width: 600px) {
@@ -44,6 +118,10 @@ p {
 
     p {
         font-size: 15px;
+    }
+
+    .logout p {
+        font-size: 12px;
     }
 }
 /* Laptops e acima */
@@ -60,6 +138,10 @@ p {
     p {
         font-size: 22px;
     }
+
+    .logout p {
+        font-size: 18px;
+    }
 }
 /* Mobile */
 @media (max-width: 599px){
@@ -74,5 +156,9 @@ p {
 
     p {
         font-size: 16px;
+    }
+
+    .logout p {
+        font-size: 10px;
     }
 }

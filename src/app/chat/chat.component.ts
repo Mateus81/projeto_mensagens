@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ChatService } from '../chat.service';
-import { Conversa } from './conversa';
+import { Conversa } from '../model/conversa';
+import { AuthService } from '../auth.service';
 
 @Component({
   selector: 'app-chat',
@@ -9,9 +10,9 @@ import { Conversa } from './conversa';
 })
 export class ChatComponent implements OnInit {
   conversas: Conversa[] = [];
-  conversa!: Conversa;
+  novaConversa: Conversa = new Conversa();
 
-  constructor(private chatService: ChatService){}
+  constructor(private chatService: ChatService, private authService: AuthService){}
 
   ngOnInit(): void {
     this.loadConversas();
@@ -27,4 +28,46 @@ export class ChatComponent implements OnInit {
       }
     )
   };
+
+  deleteConversa(id: number): void {
+    this.chatService.deleteConversa(id).subscribe(
+      () => {
+        console.log("Conversa deletada com sucesso!")
+        this.loadConversas();
+      },
+      error => {
+        console.error("Erro ao deletar conversa", error);
+      }
+    );
+  }
+
+  startConversa(): void {
+    this.chatService.startConversa(this.novaConversa).subscribe(
+      (conversa: Conversa) => {
+        console.log("Conversa iniciada", conversa);
+        this.conversas.push(conversa);
+        this.novaConversa = new Conversa();
+      },
+      error => {
+        console.error("Erro ao iniciar conversa", error)
+      }
+    )
+  };
+
+  endConversa(id: number): void {
+    this.chatService.endConversa(id).subscribe(
+      response => {
+        console.log(response);
+        this.loadConversas();
+      },
+      error => {
+        console.error("Erro ao encerrar conversas", error)
+      }
+    )
+  };
+
+  logout(): void {
+    this.authService.logout();
+  }
 }
+
