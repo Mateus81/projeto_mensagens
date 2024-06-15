@@ -31,8 +31,8 @@ public class ConversaController {
 
 	// Exibe todas as conversas
 	@GetMapping("/conversas")
-	public List<ConversaDTO> getAllConversas() {
-		List<Conversa> conversas = conversaService.readAllConversas();
+	public List<ConversaDTO> getConversasByUser() {
+		List<Conversa> conversas = conversaService.readAllConversasByUser();
 		return conversas.stream().map(conversa -> {
 			ConversaDTO dto = new ConversaDTO();
 			dto.setId(conversa.getId());

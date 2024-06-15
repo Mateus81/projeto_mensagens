@@ -1,6 +1,7 @@
 package io.github.mateus81.mensagensapi.model.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -9,14 +10,22 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import io.github.mateus81.mensagensapi.model.entity.Conversa;
+import io.github.mateus81.mensagensapi.model.entity.Usuario;
 import io.github.mateus81.mensagensapi.model.repository.ConversaRepository;
+import io.github.mateus81.mensagensapi.model.repository.UsuarioRepository;
 
 @ExtendWith(MockitoExtension.class)
 public class ConversaServiceTests {
@@ -27,35 +36,98 @@ public class ConversaServiceTests {
 	@Mock
 	private ConversaRepository conversaRepository;
 	
+	@Mock
+	private UsuarioRepository usuarioRepository;
+	
+	@Mock
+	private SecurityContext security;
+	
+	@Mock
+	private Authentication auth;
+	
+	@BeforeEach
+	public void setUp() {
+		SecurityContextHolder.setContext(security);
+		when(security.getAuthentication()).thenReturn(auth);
+	    }
+
 	@Test
-	public void testReadAllConversas() {
+	public void testGetLoggedUserEmail() {
+		
+		UserDetails userDetails = User.withUsername("test@example.com").password("password").authorities("USER").build();
+		when(auth.getPrincipal()).thenReturn(userDetails);
+		
+		String email = conversaService.getLoggedUserEmail();
+		assertEquals("test@example.com", email);
+	}
+	
+	@Test
+	public void testReadAllConversasByUser() {
+		// Cria email e autentica
+		String email = "test@example.com";
+		UserDetails userDetails = User.withUsername(email).password("password").authorities("USER").build();
+		when(auth.getPrincipal()).thenReturn(userDetails);
+		// Cria usuario e associa-o as conversas
+		Usuario usuario = new Usuario(1);
+		usuario.setEmail(email);
 		Conversa conversa = new Conversa();
 		Conversa conversa2 = new Conversa();
+		conversa.setUsuario(usuario);
+		conversa2.setUsuario(usuario);
 		List<Conversa> conversas = Arrays.asList(conversa, conversa2);
-		when(conversaRepository.findAll()).thenReturn(conversas);
-		List<Conversa> conversaResult = conversaService.readAllConversas();
+		
+		when(usuarioRepository.findByEmail(email)).thenReturn(usuario);
+		when(conversaRepository.findByUsuario(any(Usuario.class))).thenReturn(conversas);
+		List<Conversa> conversaResult = conversaService.readAllConversasByUser();
 		assertEquals(conversaResult, conversas);
 	}
 	
 	@Test
 	public void testReadConversaById() {
+		// Cria email e autentica
+		String email = "test@example.com";
+		UserDetails userDetails = User.withUsername(email).password("password").authorities("USER").build();
+		when(auth.getPrincipal()).thenReturn(userDetails);
+		// Associa usuario a conversa
 		Conversa conversa = new Conversa(1);
-		when(conversaRepository.findById(anyInt())).thenReturn(Optional.of((conversa)));
+		Usuario usuario = new Usuario(1);
+		usuario.setEmail(email);
+		conversa.setUsuario(usuario);
+		// Verifica
+		when(conversaRepository.findById((conversa.getId()))).thenReturn(Optional.of((conversa)));
 		Conversa conversaResult = conversaService.readConversaById(1);
 		assertEquals(conversaResult, conversa);
 	}
 	
 	@Test
 	public void testDeleteConversaById() {
+		// Cria email e autentica
+		String email = "test@example.com";
+		UserDetails userDetails = User.withUsername(email).password("password").authorities("USER").build();
+		when(auth.getPrincipal()).thenReturn(userDetails);
+		// Cria conversa e usuario associados
 		Conversa conversa = new Conversa(2);
+		Usuario usuario = new Usuario(1);
+		usuario.setEmail(email);
+		conversa.setUsuario(usuario);
+		// Verifica
 		when(conversaRepository.findById(anyInt())).thenReturn(Optional.of(conversa));
+		// Deleta
 		conversaService.deleteConversaById(2);
 		verify(conversaRepository).delete(conversa);
 	}
 	
 	@Test 
 	public void testStartConversa() {
+		// Cria email e autentica
+		String email = "test@example.com";
+		UserDetails userDetails = User.withUsername(email).password("password").authorities("USER").build();
+		when(auth.getPrincipal()).thenReturn(userDetails);
+		// Associa usuario a conversa
+		Usuario usuario = new Usuario(1);
 		Conversa conversa = new Conversa(3);
+		usuario.setEmail(email);
+		conversa.setUsuario(usuario);
 		when(conversaRepository.save(conversa)).thenReturn(conversa);
 		Conversa conversaResult = conversaService.startConversa(conversa);
 		assertEquals(conversaResult, conversa);
@@ -63,7 +135,15 @@ public class ConversaServiceTests {
 	
 	@Test
 	public void testEndConversa() {
+		// Cria email e autentica
+		String email = "test@example.com";
+		UserDetails userDetails = User.withUsername(email).password("password").authorities("USER").build();
+		when(auth.getPrincipal()).thenReturn(userDetails);
+		// Associa usuario a conversa
 		Conversa conversa = new Conversa(4);
+		Usuario usuario = new Usuario(1);
+		usuario.setEmail(email);
+		conversa.setUsuario(usuario);
 		when(conversaRepository.findById(anyInt())).thenReturn(Optional.of(conversa));
 		when(conversaRepository.save(conversa)).thenReturn(conversa);
 		Conversa conversaResult = conversaService.endConversa(4);

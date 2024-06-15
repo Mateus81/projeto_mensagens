@@ -4,33 +4,58 @@ import java.time.Instant;
 import java.util.Date;
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import io.github.mateus81.mensagensapi.model.entity.Conversa;
+import io.github.mateus81.mensagensapi.model.entity.Usuario;
 import io.github.mateus81.mensagensapi.model.repository.ConversaRepository;
+import io.github.mateus81.mensagensapi.model.repository.UsuarioRepository;
 
 @Service
 public class ConversaService {
 
 	private final ConversaRepository conversaRepository;
+	private final UsuarioRepository usuarioRepository;
 
 	// Construtor
-	public ConversaService(ConversaRepository conversaRepository) {
+	public ConversaService(ConversaRepository conversaRepository, UsuarioRepository usuarioRepository) {
 		this.conversaRepository = conversaRepository;
+		this.usuarioRepository = usuarioRepository;
 	}
 
-	// Mostra todas as conversas
+	// Lê email do usuario logado para operações em conversa
+	public String getLoggedUserEmail() {
+		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+			if(principal instanceof UserDetails) {
+				return ((UserDetails) principal).getUsername();
+			} else {
+				return principal.toString();
+		}
+	}
+	
+	// Mostra todas as conversas do Usuário
 	@Transactional(readOnly = true)
-	public List<Conversa> readAllConversas(){
-		return conversaRepository.findAll();
+	public List<Conversa> readAllConversasByUser(){
+		String email = getLoggedUserEmail();
+		Usuario usuario = usuarioRepository.findByEmail(email);
+		return conversaRepository.findByUsuario(usuario);
 	}
 	
 	// Lê conversa
 	@Transactional(readOnly = true)
 	public Conversa readConversaById(Integer conversaId) {
-		return conversaRepository.findById(conversaId)
+		Conversa conversa = conversaRepository.findById(conversaId)
 				.orElseThrow(() -> new RuntimeException("Conversa não encontrada"));
+		String email = getLoggedUserEmail();
+		if(!conversa.getUsuario().getEmail().equals(email)) {
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Acesso negado");
+		}
+		return conversa;
 	}
 
 	// Deleta conversa
@@ -38,11 +63,18 @@ public class ConversaService {
 	public void deleteConversaById(Integer conversaId) {
 		Conversa conversa = conversaRepository.findById(conversaId)
 				.orElseThrow(() -> new RuntimeException("Conversa não encontrada"));
+		String email = getLoggedUserEmail();
+		if(!conversa.getUsuario().getEmail().equals(email)) {
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Acesso negado");
+		}
 		conversaRepository.delete(conversa);
 	}
 
 	// Inicia Conversa
 	public Conversa startConversa(Conversa conversa) {
+		String email = getLoggedUserEmail();
+		Usuario usuario = usuarioRepository.findByEmail(email);
+		conversa.setUsuario(usuario);
 		conversa.setStatus(StatusConversa.OPEN);
 		conversa.setData_inicio(Date.from(Instant.now()));
 		// conversa.setData_termino(null);
@@ -53,6 +85,10 @@ public class ConversaService {
 	public Conversa endConversa(Integer conversaId) {
 		Conversa conversa = conversaRepository.findById(conversaId)
 				.orElseThrow(() -> new RuntimeException("Conversa não encontrada"));
+		String email = getLoggedUserEmail();
+		if(!conversa.getUsuario().getEmail().equals(email)) {
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Acesso negado");
+		}
 		conversa.setStatus(StatusConversa.CLOSED);
 		conversa.setData_termino(Date.from(Instant.now()));
 		return conversaRepository.save(conversa);

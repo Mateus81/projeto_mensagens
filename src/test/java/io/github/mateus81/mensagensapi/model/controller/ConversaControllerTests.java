@@ -35,7 +35,7 @@ public class ConversaControllerTests {
 	private ConversaService conversaService;
 	
 	@Test
-	public void testGetAllConversas() {
+	public void testGetConversasByUser() {
 		// Criação do usuario e inserindo ele nas conversas
 		Usuario usuario = new Usuario(1);
 		Conversa conversa = new Conversa();
@@ -51,8 +51,8 @@ public class ConversaControllerTests {
 			return dto;
 		}).collect(Collectors.toList());
 		
-		when(conversaService.readAllConversas()).thenReturn(conversas);
-		List<ConversaDTO> conversaResult = conversaController.getAllConversas();	
+		when(conversaService.readAllConversasByUser()).thenReturn(conversas);
+		List<ConversaDTO> conversaResult = conversaController.getConversasByUser();	
 		assertEquals(conversaResult, dtos);
 	}
 	
