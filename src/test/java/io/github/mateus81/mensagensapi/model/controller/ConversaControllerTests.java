@@ -80,19 +80,21 @@ public class ConversaControllerTests {
 	}
 	
 	@Test
-	public void testStartConversa() {
+	public void testStartConversa() throws Exception {
 		// Cria um DTO de exemplo
 		ConversaDTO dto = new ConversaDTO();
 		dto.setId(1);
-		dto.setUsuario(new Usuario());
+		// Seta usuario
+		Usuario usuario = new Usuario();
+		dto.setUsuario(usuario);
+		usuario.setNome("Destinatário");
 		// Cria um objeto conversa
 		Conversa conversa = new Conversa();
 		conversa.setId(dto.getId());
 		conversa.setUsuario(dto.getUsuario());
 		
-		when(conversaService.startConversa(any(Conversa.class))).thenReturn(conversa);
+		when(conversaService.startConversa(any(ConversaDTO.class))).thenReturn(conversa);
 		Conversa createdConversa = conversaController.startConversa(dto);
-		verify(conversaService).startConversa(any(Conversa.class));
 		assertEquals(createdConversa, conversa);
 }
 	

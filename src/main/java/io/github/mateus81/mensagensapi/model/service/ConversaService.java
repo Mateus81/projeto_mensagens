@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import io.github.mateus81.mensagensapi.model.dto.ConversaDTO;
 import io.github.mateus81.mensagensapi.model.entity.Conversa;
 import io.github.mateus81.mensagensapi.model.entity.Usuario;
 import io.github.mateus81.mensagensapi.model.repository.ConversaRepository;
@@ -71,10 +72,16 @@ public class ConversaService {
 	}
 
 	// Inicia Conversa
-	public Conversa startConversa(Conversa conversa) {
+	public Conversa startConversa(ConversaDTO conversaDTO) throws Exception {
+		// Busca usuario que inicia conversa e busca o contato(usuarioDestino)
 		String email = getLoggedUserEmail();
-		Usuario usuario = usuarioRepository.findByEmail(email);
-		conversa.setUsuario(usuario);
+		Usuario usuarioInit = usuarioRepository.findByEmail(email);
+		Usuario usuarioDest = usuarioRepository.findByNome(conversaDTO.getUsuario().getNome());
+		if(usuarioDest == null) {
+			throw new Exception("Usuario não encontrado");
+		}
+		Conversa conversa = new Conversa();
+		conversa.setUsuario(usuarioDest);
 		conversa.setStatus(StatusConversa.OPEN);
 		conversa.setData_inicio(Date.from(Instant.now()));
 		// conversa.setData_termino(null);

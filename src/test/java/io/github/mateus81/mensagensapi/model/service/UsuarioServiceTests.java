@@ -60,6 +60,15 @@ public class UsuarioServiceTests {
 	}
 	
 	@Test
+	public void testGetUserByNome() {
+		// Cria usuario e o resultado esperado
+		Usuario usuarioMock = new Usuario(1, "Matt");
+		when(usuarioRepository.findOptionalByNome(usuarioMock.getNome())).thenReturn(Optional.of(usuarioMock));
+		Usuario result = usuarioService.getUserByNome(usuarioMock.getNome());
+		assertEquals(result, usuarioMock);
+	}
+	
+	@Test
 	public void testSaveOrUpdateUser() {
 		// Cria usuario e salva
 		Usuario usuario = new Usuario("user", "user@gmail.com");

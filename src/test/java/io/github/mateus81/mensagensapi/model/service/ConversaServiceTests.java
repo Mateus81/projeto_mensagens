@@ -1,12 +1,15 @@
 package io.github.mateus81.mensagensapi.model.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.time.Instant;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,10 +25,12 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import io.github.mateus81.mensagensapi.model.dto.ConversaDTO;
 import io.github.mateus81.mensagensapi.model.entity.Conversa;
 import io.github.mateus81.mensagensapi.model.entity.Usuario;
 import io.github.mateus81.mensagensapi.model.repository.ConversaRepository;
 import io.github.mateus81.mensagensapi.model.repository.UsuarioRepository;
+import io.github.mateus81.mensagensapi.model.service.ConversaService.StatusConversa;
 
 @ExtendWith(MockitoExtension.class)
 public class ConversaServiceTests {
@@ -118,20 +123,38 @@ public class ConversaServiceTests {
 	}
 	
 	@Test 
-	public void testStartConversa() {
-		// Cria email e autentica
-		String email = "test@example.com";
-		UserDetails userDetails = User.withUsername(email).password("password").authorities("USER").build();
-		when(auth.getPrincipal()).thenReturn(userDetails);
-		// Associa usuario a conversa
-		Usuario usuario = new Usuario(1);
-		Conversa conversa = new Conversa(3);
-		usuario.setEmail(email);
-		conversa.setUsuario(usuario);
-		when(conversaRepository.save(conversa)).thenReturn(conversa);
-		Conversa conversaResult = conversaService.startConversa(conversa);
-		assertEquals(conversaResult, conversa);
-	}
+	public void testStartConversa() throws Exception {
+		// Mesmo procedimento dos outros testes para evitar Potential Stubbing Problem
+		UserDetails userDetails = User.withUsername("loggedUserEmail").password("password").authorities("USER").build();
+        when(auth.getPrincipal()).thenReturn(userDetails);
+		// Inicia usuario logado com seu email
+        Usuario loggedUser = new Usuario();
+        loggedUser.setEmail("loggedUserEmail");
+        // Inicia usuario destino com seu nome 
+        Usuario destinatario = new Usuario();
+        destinatario.setNome("destinatarioNome");
+        // Verifica se ambos existem e os retorna
+        when(usuarioRepository.findByEmail("loggedUserEmail")).thenReturn(loggedUser);
+        when(usuarioRepository.findByNome("destinatarioNome")).thenReturn(destinatario);
+        // Cria DTO de conversa e destinatário e os anexa
+        ConversaDTO conversaDTO = new ConversaDTO();
+        Usuario destinatarioDto = new Usuario();
+        destinatarioDto.setNome("destinatarioNome");
+        conversaDTO.setUsuario(destinatarioDto);
+        // Salva e inicia conversa e seta usuario predefinido (destino)
+        Conversa savedConversa = new Conversa();
+        savedConversa.setUsuario(destinatario);
+        savedConversa.setStatus(StatusConversa.OPEN);
+        savedConversa.setData_inicio(Date.from(Instant.now()));
+        // Salva no repositorio
+        when(conversaRepository.save(any(Conversa.class))).thenReturn(savedConversa);
+        // Cria o resultado e manda ao service que inicie
+        Conversa result = conversaService.startConversa(conversaDTO);
+        // Compara
+        assertNotNull(result);
+        assertEquals(destinatario, result.getUsuario());
+        assertEquals(StatusConversa.OPEN, result.getStatus());
+    }
 	
 	@Test
 	public void testEndConversa() {

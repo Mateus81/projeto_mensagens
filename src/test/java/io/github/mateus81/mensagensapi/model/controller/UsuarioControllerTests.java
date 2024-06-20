@@ -68,6 +68,18 @@ public class UsuarioControllerTests {
 	}
 	
 	@Test
+	public void testGetUserByNome() throws Exception {
+		Usuario usuario = new Usuario(1, "Daniel");
+		UsuarioDTO dto = new UsuarioDTO();
+		dto.setNome(usuario.getNome());
+		dto.setId(usuario.getId());
+		when(usuarioService.getUserByNome("Daniel")).thenReturn(usuario);
+		UsuarioDTO result = usuarioController.getUserByNome("Daniel");
+		assertEquals(result.getId(), dto.getId());
+		assertEquals(result.getNome(), dto.getNome());
+	}
+	
+	@Test
 	public void testDeleteUserById() {
 		Usuario usuario = new Usuario(1, "Marcos");
 		doNothing().when(usuarioService).deleteUserById(anyInt());

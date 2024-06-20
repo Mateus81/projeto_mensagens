@@ -33,6 +33,11 @@ public class UsuarioService {
 	public Usuario getUserById(Integer id) {
 		return usuarioRepository.findById(id).orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
 	}
+	
+	// Busca um usuário pelo nome
+	public Usuario getUserByNome(String nome) {
+		 return usuarioRepository.findOptionalByNome(nome).orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+	}
 	        
 	// Salva/Atualiza um usuário - neste caso utilizamos o ID existente apesar do
 	// mesmo código de registerUser

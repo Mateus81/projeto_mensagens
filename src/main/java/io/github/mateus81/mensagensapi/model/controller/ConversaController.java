@@ -61,11 +61,8 @@ public class ConversaController {
 	// Inicia conversa
 	@PostMapping("/conversas")
 	@ResponseStatus(HttpStatus.CREATED)
-	public Conversa startConversa(@RequestBody ConversaDTO novaConversa) {
-		Conversa conversa = new Conversa();
-		conversa.setId(novaConversa.getId());
-		conversa.setUsuario(novaConversa.getUsuario());	
-		return conversaService.startConversa(conversa);
+	public Conversa startConversa(@RequestBody ConversaDTO novaConversa) throws Exception {
+		return conversaService.startConversa(novaConversa);
 	}
 
 	// Termina conversa
