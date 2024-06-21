@@ -13,23 +13,23 @@ export class ChatService {
 
   constructor(private http: HttpClient) { }
 
-  getConversas(): Observable<any[]> {
+  getConversas(): Observable<Conversa[]> {
     return this.http.get<Conversa[]>(`${this.apiUrl}/conversas`);
   }
 
-  getConversa(id: number): Observable<any> {
+  getConversa(id: number): Observable<Conversa> {
     return this.http.get<Conversa>(`${this.apiUrl}/conversas/${id}`);
   }
 
   deleteConversa(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/conversas/${id}`)
+    return this.http.delete<void>(`${this.apiUrl}/conversas/${id}`);
   }
 
   startConversa(conversa: Conversa): Observable<Conversa> {
-    return this.http.post<Conversa>(`${this.apiUrl}/conversas`, conversa)
+    return this.http.post<Conversa>(`${this.apiUrl}/conversas`, conversa);
   }
 
   endConversa(id: number): Observable<string> {
-    return this.http.put<string>(`${this.apiUrl}/conversas/${id}`, null)
+    return this.http.put<string>(`${this.apiUrl}/conversas/${id}`, {});
   }
 }

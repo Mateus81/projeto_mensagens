@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { ChatService } from '../chat.service';
 import { Conversa } from '../model/conversa';
+import { Usuario } from '../model/usuario';
 import { AuthService } from '../auth.service';
+import { ChatService } from '../chat.service';
+import { UserService } from '../user.service';
 
 @Component({
   selector: 'app-chat',
@@ -11,8 +13,9 @@ import { AuthService } from '../auth.service';
 export class ChatComponent implements OnInit {
   conversas: Conversa[] = [];
   novaConversa: Conversa = new Conversa();
+  usuario: Usuario = new Usuario();
 
-  constructor(private chatService: ChatService, private authService: AuthService){}
+  constructor(private chatService: ChatService, private authService: AuthService, private userService: UserService){}
 
   ngOnInit(): void {
     this.loadConversas();
@@ -42,17 +45,29 @@ export class ChatComponent implements OnInit {
   }
 
   startConversa(): void {
-    this.chatService.startConversa(this.novaConversa).subscribe(
+    this.userService.getUsuarioByNome(this.usuario.nome).subscribe(
+      (usuario: Usuario) => {
+        if(usuario){
+          const novaConversa = new Conversa();
+          novaConversa.usuario = usuario;
+   
+    this.chatService.startConversa(novaConversa).subscribe(
       (conversa: Conversa) => {
         console.log("Conversa iniciada", conversa);
         this.conversas.push(conversa);
         this.novaConversa = new Conversa();
       },
       error => {
-        console.error("Erro ao iniciar conversa", error)
+        console.error("Erro ao iniciar conversa", error);
       }
-    )
-  };
+    );
+  }
+},
+    error => {
+      console.error("Erro ao buscar usuário", error);
+    }
+  );
+}
 
   endConversa(id: number): void {
     this.chatService.endConversa(id).subscribe(
