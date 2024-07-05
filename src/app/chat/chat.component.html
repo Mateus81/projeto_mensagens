@@ -1,13 +1,14 @@
 <div class="chat-container">
-    <h2>Chats</h2>
+    <h1>Conversas</h1>
+    <h2>Olá, {{ usuario.nome }}!</h2>
     <form (ngSubmit)="startConversa()">
-      <input type="text" [(ngModel)]="usuario.nome" name="usuario" placeholder="Nome do Usuário" required>
+      <input type="text" id="usuarioDest" [(ngModel)]="usuarioDest.nome" name="usuarioDest" placeholder="Nome do usuário destino" required>
       <button type="submit">Iniciar conversa</button>
     </form>
     <div *ngIf="conversas && conversas.length > 0; else noConversations">
       <div *ngFor="let conversa of conversas" class="conversa">
         <p>{{ conversa.id }}</p>
-        <p *ngIf="conversa.usuario">Usuário: {{ conversa.usuario.nome }}</p>
+        <p *ngIf="conversa.usuarioDest">Usuário: {{ conversa.usuarioDest.nome }}</p>
         <button (click)="deleteConversa(conversa.id)">Deletar</button>
         <button (click)="endConversa(conversa.id)">Encerrar</button>
       </div>

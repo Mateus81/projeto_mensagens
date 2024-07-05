@@ -14,11 +14,11 @@ export class UserService {
     constructor(private http: HttpClient){}
 
     getUsuarioByNome(nome: String): Observable<Usuario> {
-        return this.http.get<Usuario>(`${this.apiUrl}/usuarios/nome/${nome}`)
+        return this.http.get<Usuario>(`${this.apiUrl}/usuarios/nome/${nome}`,  {withCredentials: true})
     }
 
     getUsuarioById(id: number): Observable<Usuario> {
-        return this.http.get<Usuario>(`${this.apiUrl}/usuarios/${id}`)
+        return this.http.get<Usuario>(`${this.apiUrl}/usuarios/${id}`,  {withCredentials: true})
     }
 }
 

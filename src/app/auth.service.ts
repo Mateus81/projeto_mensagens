@@ -13,7 +13,7 @@ export class AuthService {
   constructor(private http: HttpClient, private router: Router) {}
   
   login(email: string, senha: string): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/usuarios/login`, { email, senha });
+    return this.http.post<any>(`${this.apiUrl}/usuarios/login`, { email, senha }, {withCredentials: true});
   }
   
   cadastro(nome: string, email: string, senha: string): Observable<any> {
@@ -26,5 +26,10 @@ export class AuthService {
     }, error => {
         console.error("Erro ao sair", error);
     });
+  }
+
+  // Para fins de teste
+  getUser() {
+    return this.http.get(`${this.apiUrl}/user`)
   }
 }

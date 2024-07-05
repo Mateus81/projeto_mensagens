@@ -14,10 +14,12 @@ export class ChatComponent implements OnInit {
   conversas: Conversa[] = [];
   novaConversa: Conversa = new Conversa();
   usuario: Usuario = new Usuario();
+  usuarioDest: Usuario = new Usuario();
 
   constructor(private chatService: ChatService, private authService: AuthService, private userService: UserService){}
 
   ngOnInit(): void {
+    this.loadLoggedUser();
     this.loadConversas();
   }
 
@@ -32,6 +34,24 @@ export class ChatComponent implements OnInit {
     )
   };
 
+  loadLoggedUser(): void {
+    const currentUserString = localStorage.getItem('currentUser');
+    if(currentUserString){
+      const currentUser = JSON.parse(currentUserString);
+    if(currentUser && currentUser.id){
+      this.userService.getUsuarioById(currentUser.id).subscribe(
+        (user: Usuario) => {
+          this.usuario = user;
+        },
+        error => {
+          console.error("Erro ao carregar usuário logado", error);
+        }
+      );
+    } else {
+      console.error("Usuário logado não encontrado");
+    }}
+  }
+
   deleteConversa(id: number): void {
     this.chatService.deleteConversa(id).subscribe(
       () => {
@@ -45,17 +65,22 @@ export class ChatComponent implements OnInit {
   }
 
   startConversa(): void {
-    this.userService.getUsuarioByNome(this.usuario.nome).subscribe(
-      (usuario: Usuario) => {
-        if(usuario){
+    if(this.usuario && this.usuario.nome && this.usuarioDest && this.usuarioDest.nome){
+    this.userService.getUsuarioByNome(this.usuarioDest.nome).subscribe(
+      (destinatario: Usuario) => {
+        if(destinatario){
           const novaConversa = new Conversa();
-          novaConversa.usuario = usuario;
+          novaConversa.usuario = this.usuario; // usuário inicial
+          novaConversa.usuarioDest = destinatario; // usuário destino
+
+          console.log("Usuário destino: ", destinatario); // log
    
     this.chatService.startConversa(novaConversa).subscribe(
       (conversa: Conversa) => {
         console.log("Conversa iniciada", conversa);
         this.conversas.push(conversa);
         this.novaConversa = new Conversa();
+        this.usuarioDest = new Usuario();
       },
       error => {
         console.error("Erro ao iniciar conversa", error);
@@ -64,9 +89,10 @@ export class ChatComponent implements OnInit {
   }
 },
     error => {
-      console.error("Erro ao buscar usuário", error);
+      console.error("Erro ao buscar usuário destinatário", error);
     }
   );
+  }
 }
 
   endConversa(id: number): void {
