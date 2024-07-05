@@ -1,9 +1,12 @@
 package io.github.mateus81.mensagensapi.model.service;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -22,6 +25,8 @@ public class ConversaService {
 
 	private final ConversaRepository conversaRepository;
 	private final UsuarioRepository usuarioRepository;
+	// Atributo de verificação
+	private static final Logger log = LoggerFactory.getLogger(ConversaService.class);
 
 	// Construtor
 	public ConversaService(ConversaRepository conversaRepository, UsuarioRepository usuarioRepository) {
@@ -43,8 +48,16 @@ public class ConversaService {
 	@Transactional(readOnly = true)
 	public List<Conversa> readAllConversasByUser(){
 		String email = getLoggedUserEmail();
+		log.info("Email do usuário logado: {}",email);
+		
 		Usuario usuario = usuarioRepository.findByEmail(email);
-		return conversaRepository.findByUsuario(usuario);
+		if(usuario == null) {
+			log.error("Usuário não encontrado: {}", email);
+			return new ArrayList<>();
+		}
+		List<Conversa> conversas = conversaRepository.findByUsuario(usuario);
+		log.info("Conversas encontradas: {}", conversas.size());
+		return conversas;
 	}
 	
 	// Lê conversa
@@ -76,12 +89,17 @@ public class ConversaService {
 		// Busca usuario que inicia conversa e busca o contato(usuarioDestino)
 		String email = getLoggedUserEmail();
 		Usuario usuarioInit = usuarioRepository.findByEmail(email);
-		Usuario usuarioDest = usuarioRepository.findByNome(conversaDTO.getUsuario().getNome());
+		Usuario usuarioDest = usuarioRepository.findByNome(conversaDTO.getUsuarioDest().getNome());
 		if(usuarioDest == null) {
 			throw new Exception("Usuario não encontrado");
 		}
+		// Logs de verificação
+		System.out.println("Usuário inicial: " + usuarioInit.getNome());
+		System.out.println("Usuário destino: " + usuarioDest.getNome());
+		
 		Conversa conversa = new Conversa();
-		conversa.setUsuario(usuarioDest);
+		conversa.setUsuario(usuarioInit); // Define usuario inicial
+		conversa.setUsuarioDest(usuarioDest); // Define usuario destino
 		conversa.setStatus(StatusConversa.OPEN);
 		conversa.setData_inicio(Date.from(Instant.now()));
 		// conversa.setData_termino(null);

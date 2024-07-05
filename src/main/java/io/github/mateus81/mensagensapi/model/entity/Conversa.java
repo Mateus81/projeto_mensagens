@@ -37,10 +37,15 @@ public class Conversa {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date data_termino;
 
-	// Objeto Usuário
+	// Objeto Usuário Inicial
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "usuarioId", nullable = false)
 	private Usuario usuario;
+	
+	//Objeto Usuário Destino
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "usuariodest_id", nullable = false)
+	private Usuario usuarioDest;
 	
 	// Objeto Mensagens
 	@OneToMany(mappedBy = "conversa", cascade = CascadeType.ALL)
@@ -60,6 +65,12 @@ public class Conversa {
 	// Construtor padrão
 	public Conversa() {
 		
+	}
+	
+	// Construtor de teste de dois usuários
+	public Conversa(Usuario usuario, Usuario usuarioDest) {
+		this.usuario = usuario;
+		this.usuario = usuarioDest;
 	}
 	
 	// Construtor de teste
@@ -109,6 +120,14 @@ public class Conversa {
 
 	public void setUsuario(Usuario usuario) {
 		this.usuario = usuario;
+	}
+	
+	public Usuario getUsuarioDest() {
+		return usuarioDest;
+	}
+	
+	public void setUsuarioDest(Usuario usuarioDest) {
+		this.usuarioDest = usuarioDest;
 	}
 
 	public List<Mensagem> getMensagens() {

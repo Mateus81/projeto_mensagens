@@ -1,7 +1,11 @@
 package io.github.mateus81.mensagensapi.model.entity;
 
+import java.util.Date;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+
+import io.github.mateus81.mensagensapi.model.service.ConversaService.StatusConversa;
 
 public class ConversaTests {
 	
@@ -30,5 +34,26 @@ public class ConversaTests {
 		Conversa conversa = new Conversa();
 		conversa.setId(1);
 		Assertions.assertEquals(1, conversa.getId());
+	}
+	
+	// Testa conversa com dois usuários
+	@Test
+	public void testConversa() {
+		Usuario usuarioInit = new Usuario();
+		usuarioInit.setNome("Mateus");
+		
+		Usuario usuarioDest = new Usuario();
+		usuarioDest.setNome("Renan");
+		
+		Conversa conversa = new Conversa();
+		conversa.setUsuario(usuarioInit);
+		conversa.setUsuarioDest(usuarioDest);
+		conversa.setStatus(StatusConversa.OPEN);
+		conversa.setData_inicio(new Date());
+		
+		Assertions.assertEquals(usuarioInit, conversa.getUsuario());
+		Assertions.assertEquals(usuarioDest, conversa.getUsuarioDest());
+		Assertions.assertEquals(StatusConversa.OPEN, conversa.getStatus());
+		Assertions.assertNotNull(conversa.getData_inicio());
 	}
 }

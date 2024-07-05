@@ -14,6 +14,9 @@ public class ConversaDTO {
 	@NotNull
 	private Usuario usuario;
 	
+	@NotNull
+	private Usuario usuarioDest;
+	
 	// Construtor padrão
 	public ConversaDTO() {}
 	
@@ -33,7 +36,15 @@ public class ConversaDTO {
 	public void setUsuario(Usuario usuario) {
 		this.usuario = usuario;
 	}
-		
+	
+	public Usuario getUsuarioDest() {
+		return usuarioDest;
+	}	
+	
+	public void setUsuarioDest(Usuario usuarioDest) {
+		this.usuarioDest = usuarioDest;
+	}
+	
 	// Tratamento do erro AssertionFailed
 		@Override
 		public boolean equals(Object o) {
@@ -41,11 +52,12 @@ public class ConversaDTO {
 		    if (o == null || getClass() != o.getClass()) return false;
 		    ConversaDTO that = (ConversaDTO) o;
 		    return Objects.equals(id, that.id) &&
-		           Objects.equals(usuario, that.usuario);
+		           Objects.equals(usuario, that.usuario) &&
+		           Objects.equals(usuarioDest, that.usuarioDest);
 		}
 
 		@Override
 		public int hashCode() {
-		    return Objects.hash(id, usuario);
+		    return Objects.hash(id, usuario, usuarioDest);
 		}
 }

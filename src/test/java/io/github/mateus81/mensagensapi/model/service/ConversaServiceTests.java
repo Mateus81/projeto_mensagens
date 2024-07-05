@@ -140,10 +140,10 @@ public class ConversaServiceTests {
         ConversaDTO conversaDTO = new ConversaDTO();
         Usuario destinatarioDto = new Usuario();
         destinatarioDto.setNome("destinatarioNome");
-        conversaDTO.setUsuario(destinatarioDto);
+        conversaDTO.setUsuarioDest(destinatarioDto);
         // Salva e inicia conversa e seta usuario predefinido (destino)
         Conversa savedConversa = new Conversa();
-        savedConversa.setUsuario(destinatario);
+        savedConversa.setUsuarioDest(destinatario);
         savedConversa.setStatus(StatusConversa.OPEN);
         savedConversa.setData_inicio(Date.from(Instant.now()));
         // Salva no repositorio
@@ -152,8 +152,9 @@ public class ConversaServiceTests {
         Conversa result = conversaService.startConversa(conversaDTO);
         // Compara
         assertNotNull(result);
-        assertEquals(destinatario, result.getUsuario());
+        assertEquals(destinatario, result.getUsuarioDest());
         assertEquals(StatusConversa.OPEN, result.getStatus());
+        assertNotNull(result.getData_inicio());
     }
 	
 	@Test

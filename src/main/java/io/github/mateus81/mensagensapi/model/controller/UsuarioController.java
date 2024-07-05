@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -20,7 +19,6 @@ import org.springframework.web.server.ResponseStatusException;
 import io.github.mateus81.mensagensapi.model.dto.LoginRequest;
 import io.github.mateus81.mensagensapi.model.dto.UsuarioDTO;
 import io.github.mateus81.mensagensapi.model.entity.Usuario;
-import io.github.mateus81.mensagensapi.model.repository.UsuarioRepository;
 import io.github.mateus81.mensagensapi.model.service.UsuarioService;
 
 @CrossOrigin("*")
