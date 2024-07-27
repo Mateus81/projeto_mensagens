@@ -9,6 +9,5 @@ Tecnologias usadas/ a utilizar:
 * Pacotes criados no Back-end -> Controller, Service, Repository, Entity, DTO e Config.
 
 Correções/Implementações a fazer:
-1. Criar conversationComponent que é a tela da conversa em si; (Agora que a conversa existe, ela pode ser acessada)
-2. Adicionar link para tela de contatos no ChatComponent;
-3. Criar ContatoComponent. (A partir do momento que eu crio uma conversa com um usuário cadastrado, ele se torna meu contato) 
+1. Adicionar link para tela de contatos no ChatComponent;
+2. Criar ContatoComponent. (A partir do momento que eu crio uma conversa com um usuário cadastrado, ele se torna meu contato) 
