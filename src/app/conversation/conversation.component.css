@@ -1,0 +1,98 @@
+.conversation-component {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    max-width: 800px;
+    margin: 0 auto;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    background-color: #f9f9f9;
+}
+
+h2 {
+    text-align: left;
+    margin-bottom: 25px;
+    color: #0056b3;
+}
+
+.mensagem-texto {
+    flex-grow: 1;
+}
+
+.mensagens-acoes button {
+    margin-left: 10px;
+}
+
+.nova-mensagem {
+    display: flex;
+    flex-direction: column;
+    margin-top: 20px;
+}
+
+button {
+    align-self: flex-end;
+}
+
+textarea {
+    width: 100%;
+    height: 60px;
+    margin-bottom: 10px;
+}
+
+.marcar-todas-como-lida {
+    margin-top: 20px
+}
+
+/*Responsividade*/
+@media (max-width: 768px) {
+    .conversation-component {
+        padding: 10px;
+        max-width: 100%;
+    }
+
+    .mensagem-texto {
+        flex-direction: column;
+    }
+
+    .mensagens-acoes button {
+        margin-left: 0;
+        margin-top: 5px;
+    }
+
+    button {
+        align-self: center;
+        margin-top: 10px;
+    }
+
+    textarea {
+        height: 100px;
+    }
+}
+
+@media(max-width: 480px){
+    .conversation-component {
+        padding: 5px;
+        max-width: 100%;
+    }
+
+    h2 {
+        font-size: 1.2rem;
+    }
+
+    .mensagem-texto {
+        font-size: 0.9rem;
+    }
+
+    .mensagens-acoes button {
+        font-size: 0.8rem;
+        margin-top: 5px;
+    }
+
+    textarea {
+        height: 80px;
+    }
+
+    button {
+        font-size: 0.9rem;
+    }
+}
