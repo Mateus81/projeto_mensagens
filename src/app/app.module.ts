@@ -12,6 +12,8 @@ import { AuthService } from './auth.service';
 import { ChatComponent } from './chat/chat.component';
 import { ChatService } from './chat.service';
 import { UserService } from './user.service';
+import { ConversationComponent } from './conversation/conversation.component';
+import { MensagemService } from './mensagem.service';
 
 @NgModule({
   declarations: [
@@ -19,7 +21,8 @@ import { UserService } from './user.service';
     HomeComponent,
     LoginComponent,
     CadastroComponent,
-    ChatComponent
+    ChatComponent,
+    ConversationComponent
   ],
   imports: [
     BrowserModule,
@@ -27,7 +30,7 @@ import { UserService } from './user.service';
     FormsModule,
     HttpClientModule,
   ],
-  providers: [AuthService, ChatService, UserService],
+  providers: [AuthService, ChatService, UserService, MensagemService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

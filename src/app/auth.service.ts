@@ -1,19 +1,27 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, tap, BehaviorSubject } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Router } from '@angular/router';
+import { Usuario } from './model/usuario';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
   private apiUrl = environment.apiUrl;
+  private currentUserSubject: BehaviorSubject<Usuario | null> = new BehaviorSubject<Usuario | null>(null);
+  public currentUser: Observable<Usuario | null> = this.currentUserSubject.asObservable();
 
   constructor(private http: HttpClient, private router: Router) {}
   
   login(email: string, senha: string): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/usuarios/login`, { email, senha }, {withCredentials: true});
+    return this.http.post<any>(`${this.apiUrl}/usuarios/login`, { email, senha }, {withCredentials: true}).pipe(
+      tap(user => {
+        this.currentUserSubject.next(user);
+        localStorage.setItem('currentUser', JSON.stringify(user))
+      })
+    );
   }
   
   cadastro(nome: string, email: string, senha: string): Observable<any> {
@@ -21,7 +29,9 @@ export class AuthService {
   }
 
   logout(): void {
-    this.http.delete(`${this.apiUrl}/logout`, {}).subscribe(() => {
+    this.http.delete(`${this.apiUrl}/logout`, {withCredentials: true}).subscribe(() => {
+      this.currentUserSubject.next(null);
+      localStorage.removeItem('currentUser');
       this.router.navigate(['/home']);
     }, error => {
         console.error("Erro ao sair", error);
@@ -29,7 +39,10 @@ export class AuthService {
   }
 
   // Para fins de teste
-  getUser() {
-    return this.http.get(`${this.apiUrl}/user`)
+  getUser(): Observable<Usuario> {
+    return this.http.get<Usuario>(`${this.apiUrl}/user`, {withCredentials : true}).pipe(tap(user => {
+      this.currentUserSubject.next(user);
+      localStorage.setItem('currentUser', JSON.stringify(user));
+    }))
   }
 }

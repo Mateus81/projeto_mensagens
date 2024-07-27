@@ -13,17 +13,17 @@ import { UserService } from '../user.service';
 export class ChatComponent implements OnInit {
   conversas: Conversa[] = [];
   novaConversa: Conversa = new Conversa();
-  usuario: Usuario = new Usuario();
+  usuario: Usuario | null = new Usuario();
   usuarioDest: Usuario = new Usuario();
 
   constructor(private chatService: ChatService, private authService: AuthService, private userService: UserService){}
 
   ngOnInit(): void {
     this.loadLoggedUser();
-    this.loadConversas();
   }
 
   loadConversas(): void {
+    if(this.usuario){
     this.chatService.getConversas().subscribe(
       (data: Conversa[]) => {
         this.conversas = data;
@@ -31,27 +31,29 @@ export class ChatComponent implements OnInit {
       (error) => {
         console.error('Erro ao carregar as conversas', error);
       }
-    )
+    )}
   };
 
   loadLoggedUser(): void {
-    const currentUserString = localStorage.getItem('currentUser');
-    if(currentUserString){
-      const currentUser = JSON.parse(currentUserString);
-    if(currentUser && currentUser.id){
-      this.userService.getUsuarioById(currentUser.id).subscribe(
-        (user: Usuario) => {
-          this.usuario = user;
+    this.authService.currentUser.subscribe(
+      (user: Usuario | null) => {
+        if(user){
+        this.usuario = user;
+         this.loadConversas();
+        } else {
+          const currentUserString = localStorage.getItem('currentUser');
+          if(currentUserString){
+            this.usuario = JSON.parse(currentUserString);
+            this.loadConversas();
+          }
+        }
         },
         error => {
           console.error("Erro ao carregar usuário logado", error);
         }
       );
-    } else {
-      console.error("Usuário logado não encontrado");
-    }}
-  }
-
+    }
+  
   deleteConversa(id: number): void {
     this.chatService.deleteConversa(id).subscribe(
       () => {
@@ -70,7 +72,7 @@ export class ChatComponent implements OnInit {
       (destinatario: Usuario) => {
         if(destinatario){
           const novaConversa = new Conversa();
-          novaConversa.usuario = this.usuario; // usuário inicial
+          novaConversa.usuario = this.usuario as Usuario; // usuário inicial
           novaConversa.usuarioDest = destinatario; // usuário destino
 
           console.log("Usuário destino: ", destinatario); // log
