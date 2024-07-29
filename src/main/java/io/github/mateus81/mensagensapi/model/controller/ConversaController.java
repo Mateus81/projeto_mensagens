@@ -29,7 +29,7 @@ public class ConversaController {
 		this.conversaService = conversaService;
 	}
 
-	// Exibe todas as conversas
+	// Exibe todas as conversas do usuário
 	@GetMapping("/conversas")
 	public List<ConversaDTO> getConversasByUser() {
 		List<Conversa> conversas = conversaService.readAllConversasByUser();
@@ -37,6 +37,8 @@ public class ConversaController {
 			ConversaDTO dto = new ConversaDTO();
 			dto.setId(conversa.getId());
 			dto.setUsuario(conversa.getUsuario());
+			dto.setUsuarioDest(conversa.getUsuarioDest());
+			dto.setMensagens(conversa.getMensagens());
 			return dto;
 		}).collect(Collectors.toList());
 	}
@@ -48,6 +50,8 @@ public class ConversaController {
 		ConversaDTO dto = new ConversaDTO();
 		dto.setId(conversa.getId());
 		dto.setUsuario(conversa.getUsuario());
+		dto.setUsuarioDest(conversa.getUsuarioDest());
+		dto.setMensagens(conversa.getMensagens());
 		return dto;
 	}
 

@@ -1,9 +1,11 @@
 package io.github.mateus81.mensagensapi.model.dto;
 
+import java.util.List;
 import java.util.Objects;
 
 import javax.validation.constraints.NotNull;
 
+import io.github.mateus81.mensagensapi.model.entity.Mensagem;
 import io.github.mateus81.mensagensapi.model.entity.Usuario;
 
 public class ConversaDTO {
@@ -16,6 +18,8 @@ public class ConversaDTO {
 	
 	@NotNull
 	private Usuario usuarioDest;
+	
+	private List<Mensagem> mensagens;
 	
 	// Construtor padrão
 	public ConversaDTO() {}
@@ -45,6 +49,14 @@ public class ConversaDTO {
 		this.usuarioDest = usuarioDest;
 	}
 	
+	public List<Mensagem> getMensagens(){
+		return mensagens;
+	}
+	
+	public void setMensagens(List<Mensagem> mensagens) {
+		this.mensagens = mensagens;
+	}
+	
 	// Tratamento do erro AssertionFailed
 		@Override
 		public boolean equals(Object o) {
@@ -53,11 +65,12 @@ public class ConversaDTO {
 		    ConversaDTO that = (ConversaDTO) o;
 		    return Objects.equals(id, that.id) &&
 		           Objects.equals(usuario, that.usuario) &&
-		           Objects.equals(usuarioDest, that.usuarioDest);
+		           Objects.equals(usuarioDest, that.usuarioDest) &&
+		           Objects.equals(mensagens, that.mensagens);
 		}
 
 		@Override
 		public int hashCode() {
-		    return Objects.hash(id, usuario, usuarioDest);
+		    return Objects.hash(id, usuario, usuarioDest, mensagens);
 		}
 }

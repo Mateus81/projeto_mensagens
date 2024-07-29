@@ -44,7 +44,7 @@ public class ConversaService {
 		}
 	}
 	
-	// Mostra todas as conversas do Usuário
+	// Mostra todas as conversas onde o Usuário está envolvido (remetente ou destinatário)
 	@Transactional(readOnly = true)
 	public List<Conversa> readAllConversasByUser(){
 		String email = getLoggedUserEmail();
@@ -55,7 +55,7 @@ public class ConversaService {
 			log.error("Usuário não encontrado: {}", email);
 			return new ArrayList<>();
 		}
-		List<Conversa> conversas = conversaRepository.findByUsuario(usuario);
+		List<Conversa> conversas = conversaRepository.findByUsuarioOrUsuarioDest(usuario, usuario);
 		log.info("Conversas encontradas: {}", conversas.size());
 		return conversas;
 	}
@@ -66,7 +66,7 @@ public class ConversaService {
 		Conversa conversa = conversaRepository.findById(conversaId)
 				.orElseThrow(() -> new RuntimeException("Conversa não encontrada"));
 		String email = getLoggedUserEmail();
-		if(!conversa.getUsuario().getEmail().equals(email)) {
+		if(!conversa.getUsuario().getEmail().equals(email) && !conversa.getUsuarioDest().getEmail().equals(email)) {
 			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Acesso negado");
 		}
 		return conversa;
@@ -78,7 +78,7 @@ public class ConversaService {
 		Conversa conversa = conversaRepository.findById(conversaId)
 				.orElseThrow(() -> new RuntimeException("Conversa não encontrada"));
 		String email = getLoggedUserEmail();
-		if(!conversa.getUsuario().getEmail().equals(email)) {
+		if(!conversa.getUsuario().getEmail().equals(email)&& !conversa.getUsuarioDest().getEmail().equals(email)) {
 			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Acesso negado");
 		}
 		conversaRepository.delete(conversa);
@@ -102,6 +102,7 @@ public class ConversaService {
 		conversa.setUsuarioDest(usuarioDest); // Define usuario destino
 		conversa.setStatus(StatusConversa.OPEN);
 		conversa.setData_inicio(Date.from(Instant.now()));
+		conversa.setMensagens(null);
 		// conversa.setData_termino(null);
 		return conversaRepository.save(conversa);
 	}
@@ -111,7 +112,7 @@ public class ConversaService {
 		Conversa conversa = conversaRepository.findById(conversaId)
 				.orElseThrow(() -> new RuntimeException("Conversa não encontrada"));
 		String email = getLoggedUserEmail();
-		if(!conversa.getUsuario().getEmail().equals(email)) {
+		if(!conversa.getUsuario().getEmail().equals(email) && !conversa.getUsuarioDest().getEmail().equals(email)) {
 			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Acesso negado");
 		}
 		conversa.setStatus(StatusConversa.CLOSED);

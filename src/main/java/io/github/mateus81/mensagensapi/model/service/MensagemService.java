@@ -1,5 +1,8 @@
 package io.github.mateus81.mensagensapi.model.service;
 
+import java.util.Date;
+import java.util.List;
+
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
@@ -7,20 +10,30 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import io.github.mateus81.mensagensapi.model.dto.MensagemDTO;
+import io.github.mateus81.mensagensapi.model.entity.Conversa;
 import io.github.mateus81.mensagensapi.model.entity.Mensagem;
+import io.github.mateus81.mensagensapi.model.entity.Usuario;
+import io.github.mateus81.mensagensapi.model.repository.ConversaRepository;
 import io.github.mateus81.mensagensapi.model.repository.MensagemRepository;
+import io.github.mateus81.mensagensapi.model.repository.UsuarioRepository;
 
 @Service
 public class MensagemService {
 
 	private final MensagemRepository mensagemRepository;
+	private final UsuarioRepository usuarioRepository;
+	private final ConversaRepository conversaRepository;
 	
 	@Autowired
 	private EntityManager entityManager;
 
 	// Construtor
-	public MensagemService(MensagemRepository mensagemRepository) {
+	public MensagemService(MensagemRepository mensagemRepository, UsuarioRepository usuarioRepository, 
+			ConversaRepository conversaRepository) {
 		this.mensagemRepository = mensagemRepository;
+		this.usuarioRepository = usuarioRepository;
+		this.conversaRepository = conversaRepository;
 	}
 
 	// Marca mensagem como lida
@@ -47,13 +60,32 @@ public class MensagemService {
 	// Exibe Mensagem
 	@Transactional(readOnly = true)
 	public Mensagem getMessageById(Integer mensagemId) {
-		return mensagemRepository.findById(mensagemId)
+		 return mensagemRepository.findById(mensagemId)
 				.orElseThrow(() -> new RuntimeException("Mensagem não encontrada"));
+		
+	}
+	
+	// Exibe mensagem pelo ID da conversa
+	public List<Mensagem> getMensagensByConversaId(Integer conversaId){
+		List<Mensagem> mensagens = mensagemRepository.findByConversaId(conversaId);
+		return mensagens;
 	}
 
 	// Cria uma nova mensagem - Transactional -> Atomicidade
 	@Transactional
-	public Mensagem createMessage(Mensagem mensagem) {
+	public Mensagem createMessage(MensagemDTO dto) throws Exception {
+		Usuario remetente = usuarioRepository.findByEmail(dto.getUsuarioRemetente().getEmail());
+		Conversa conversa = conversaRepository.findById(dto.getConversa().getId()).orElseThrow((
+				) -> new Exception("Conversa não encontrada."));
+		Usuario destinatario = conversa.getUsuarioDest();
+		
+		Mensagem mensagem = new Mensagem();
+		mensagem.setData_hora_envio(new Date());
+		mensagem.setTexto(dto.getTexto());
+		mensagem.setUsuarioremetente(remetente);
+		mensagem.setUsuariodestino(destinatario);
+		mensagem.setConversa(conversa);
+		mensagem.setVista(false);
 		return mensagemRepository.save(mensagem);
 	}
 

@@ -10,6 +10,10 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -28,6 +32,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import io.github.mateus81.mensagensapi.model.dto.MensagemDTO;
+import io.github.mateus81.mensagensapi.model.entity.Conversa;
 import io.github.mateus81.mensagensapi.model.entity.Mensagem;
 import io.github.mateus81.mensagensapi.model.service.MensagemService;
 
@@ -63,7 +68,22 @@ public class MensagemControllerTests {
 	}
 	
 	@Test
-	public void testCreateMessage() {
+	public void testGetMensagensByConversaId() {
+		// Criação da conversa e das mensagens
+		Conversa conversa = new Conversa(1);
+		Mensagem mensagem = new Mensagem();
+		Mensagem mensagem2 = new Mensagem();
+		mensagem2.setTexto("Como vai?");
+		mensagem.setTexto("Olá");
+		List<Mensagem> mensagens = Arrays.asList(mensagem, mensagem2);
+		conversa.setMensagens(mensagens);
+		when(mensagemService.getMensagensByConversaId(conversa.getId())).thenReturn(mensagens);
+		List<Mensagem> result = mensagemController.getMensagensByConversaId(conversa.getId());
+		assertEquals(result, mensagens);
+	}
+	
+	@Test
+	public void testCreateMessage() throws Exception {
 		// Crie um DTO de exemplo
 		 MensagemDTO dto = new MensagemDTO();
 		 dto.setId(1);
@@ -75,12 +95,12 @@ public class MensagemControllerTests {
 		expectedMensagem.setTexto(dto.getTexto());
 		
 	    // Stub o método createMessage do MensagemService
-	    when(mensagemService.createMessage(any(Mensagem.class))).thenReturn(expectedMensagem);
+	    when(mensagemService.createMessage(any(MensagemDTO.class))).thenReturn(expectedMensagem);
 	    
 	    // Chame o método createMessage do controller
 	    Mensagem createdMessage = mensagemController.createMessage(dto);
 	    // Verifique se o mensagemService.createMessage foi chamado com o argumento correto
-	    verify(mensagemService).createMessage(any(Mensagem.class));
+	    verify(mensagemService).createMessage(any(MensagemDTO.class));
 	    
 	    // Compare o objeto Mensagem recebido com o objeto Mensagem esperado
 	    assertEquals(expectedMensagem, createdMessage);

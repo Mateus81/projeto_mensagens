@@ -38,6 +38,13 @@ public class UsuarioDTO {
 		this.id = id;
 	}
 	
+	// Construtor para autenticação
+	public UsuarioDTO(Integer id, String nome, String email) {
+		this.id = id;
+		this.nome = nome;
+		this.email = email;
+	}
+	
 	// Getters & Setters
 	public Integer getId() {
 		return id;

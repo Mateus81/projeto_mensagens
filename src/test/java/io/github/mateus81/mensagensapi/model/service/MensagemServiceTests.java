@@ -8,6 +8,9 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 import javax.persistence.EntityManager;
@@ -20,9 +23,13 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 
+import io.github.mateus81.mensagensapi.model.dto.MensagemDTO;
 import io.github.mateus81.mensagensapi.model.entity.Conversa;
 import io.github.mateus81.mensagensapi.model.entity.Mensagem;
+import io.github.mateus81.mensagensapi.model.entity.Usuario;
+import io.github.mateus81.mensagensapi.model.repository.ConversaRepository;
 import io.github.mateus81.mensagensapi.model.repository.MensagemRepository;
+import io.github.mateus81.mensagensapi.model.repository.UsuarioRepository;
 
 @ExtendWith(MockitoExtension.class)
 public class MensagemServiceTests {
@@ -32,6 +39,12 @@ public class MensagemServiceTests {
 
 	@Mock
 	private MensagemRepository mensagemRepository;
+	
+	@Mock
+	private UsuarioRepository usuarioRepository;
+	
+	@Mock
+	private ConversaRepository conversaRepository;
 	
 	@Mock
 	private EntityManager entityManager;
@@ -48,10 +61,53 @@ public class MensagemServiceTests {
 	}
 	
 	@Test
-	public void testCreateMessage() {
-		Mensagem mensagem = new Mensagem(1, "Olá", false);
-		when(mensagemRepository.save(mensagem)).thenReturn(mensagem);
-		Mensagem mensagemResult = mensagemService.createMessage(mensagem);
+	public void testGetMensagemByConversaId() {
+		// Criação da conversa e das mensagens
+		Conversa conversa = new Conversa(1);
+		Mensagem mensagem = new Mensagem();
+		Mensagem mensagem2 = new Mensagem();
+		mensagem2.setTexto("Como vai?");
+		mensagem.setTexto("Olá");
+		List<Mensagem> mensagens = Arrays.asList(mensagem, mensagem2);
+		conversa.setMensagens(mensagens);
+		// Mocks
+		when(mensagemRepository.findByConversaId(conversa.getId())).thenReturn(mensagens);
+		List<Mensagem> result = mensagemService.getMensagensByConversaId(conversa.getId());
+		// Verificações
+		assertEquals(mensagens, result);
+	}
+	
+	@Test
+	public void testCreateMessage() throws Exception {
+		// Criação dos usuarios e conversa e setando cada um a ela
+		Usuario remetente = new Usuario();
+		remetente.setEmail("remetente@gmail.com");
+		Usuario destinatario = new Usuario();
+		destinatario.setNome("Destino");
+		Conversa conversa = new Conversa();
+		conversa.setId(1);
+		conversa.setUsuario(remetente);
+		conversa.setUsuarioDest(destinatario);
+		// Criação da mensagemDTO e setando conversa nela e usuarios
+		MensagemDTO dto = new MensagemDTO();
+		dto.setconversa(conversa);
+		dto.setUsuarioRemetente(remetente);
+		dto.setUsuarioDestino(destinatario);
+		dto.setTexto("Olá");
+		// Criação da Mensagem
+		Mensagem mensagem = new Mensagem();
+		mensagem.setData_hora_envio(new Date());
+		mensagem.setTexto(dto.getTexto());
+		mensagem.setConversa(conversa);
+		mensagem.setUsuarioremetente(remetente);
+		mensagem.setUsuariodestino(destinatario);
+		mensagem.setVista(false);
+		// Mocks
+		when(usuarioRepository.findByEmail(remetente.getEmail())).thenReturn(remetente);
+		when(conversaRepository.findById(conversa.getId())).thenReturn(Optional.of(conversa));
+		when(mensagemRepository.save(any(Mensagem.class))).thenReturn(mensagem);
+		// Verificações
+		Mensagem mensagemResult = mensagemService.createMessage(dto);
 		assertEquals(mensagemResult, mensagem);
 	}
 	

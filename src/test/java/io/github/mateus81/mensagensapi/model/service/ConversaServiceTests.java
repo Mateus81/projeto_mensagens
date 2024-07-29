@@ -78,11 +78,12 @@ public class ConversaServiceTests {
 		Conversa conversa = new Conversa();
 		Conversa conversa2 = new Conversa();
 		conversa.setUsuario(usuario);
-		conversa2.setUsuario(usuario);
+		conversa2.setUsuarioDest(usuario);
 		List<Conversa> conversas = Arrays.asList(conversa, conversa2);
 		
 		when(usuarioRepository.findByEmail(email)).thenReturn(usuario);
-		when(conversaRepository.findByUsuario(any(Usuario.class))).thenReturn(conversas);
+		when(conversaRepository.findByUsuarioOrUsuarioDest(usuario, usuario)).thenReturn(conversas);
+		when(conversaService.getLoggedUserEmail()).thenReturn(email);
 		List<Conversa> conversaResult = conversaService.readAllConversasByUser();
 		assertEquals(conversaResult, conversas);
 	}

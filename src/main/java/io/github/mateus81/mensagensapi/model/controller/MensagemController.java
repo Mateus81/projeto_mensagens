@@ -1,5 +1,7 @@
 package io.github.mateus81.mensagensapi.model.controller;
 
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -47,19 +49,18 @@ public class MensagemController {
 		throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Mensagem não encontrada");
 		}
 	}
+	
+	// Exibe mensagem pelo id da conversa
+	@GetMapping("/conversas/{conversaId}/mensagens")
+	public List<Mensagem> getMensagensByConversaId(@PathVariable Integer conversaId){
+		return mensagemService.getMensagensByConversaId(conversaId);
+	}
 
 	// Cria/Salva mensagem
 	@PostMapping("conversas/{conversaId}/mensagens")
 	@ResponseStatus(HttpStatus.CREATED)
-	public Mensagem createMessage(@RequestBody MensagemDTO dto) {
-		Mensagem mensagem = new Mensagem();
-		mensagem.setConversa(dto.getConversa());
-		mensagem.setId(dto.getId());
-		mensagem.setTexto(dto.getTexto());
-		mensagem.setUsuariodestino(dto.getUsuarioDestino());
-		mensagem.setUsuarioremetente(dto.getUsuarioRemetente());
-		mensagem.setVista(dto.getVista());
-		return mensagemService.createMessage(mensagem);
+	public Mensagem createMessage(@RequestBody MensagemDTO dto) throws Exception {
+		return mensagemService.createMessage(dto);
 	}
 
 	// Deleta mensagem

@@ -10,5 +10,6 @@ import io.github.mateus81.mensagensapi.model.entity.Usuario;
 public interface ConversaRepository extends JpaRepository<Conversa, Integer> {
 
 	List<Conversa> findByUsuario(Usuario usuario);
+	List<Conversa> findByUsuarioOrUsuarioDest(Usuario usuario, Usuario usuarioDest);
 
 }
