@@ -59,8 +59,8 @@ public class MensagemController {
 	// Cria/Salva mensagem
 	@PostMapping("conversas/{conversaId}/mensagens")
 	@ResponseStatus(HttpStatus.CREATED)
-	public Mensagem createMessage(@RequestBody MensagemDTO dto) throws Exception {
-		return mensagemService.createMessage(dto);
+	public Mensagem createMessage(@PathVariable Integer conversaId, @RequestBody MensagemDTO dto) throws Exception {
+		return mensagemService.createMessage(conversaId, dto);
 	}
 
 	// Deleta mensagem

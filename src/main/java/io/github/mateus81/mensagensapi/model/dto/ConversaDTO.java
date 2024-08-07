@@ -5,7 +5,6 @@ import java.util.Objects;
 
 import javax.validation.constraints.NotNull;
 
-import io.github.mateus81.mensagensapi.model.entity.Mensagem;
 import io.github.mateus81.mensagensapi.model.entity.Usuario;
 
 public class ConversaDTO {
@@ -18,8 +17,8 @@ public class ConversaDTO {
 	
 	@NotNull
 	private Usuario usuarioDest;
-	
-	private List<Mensagem> mensagens;
+
+	private List<MensagemDTO> mensagens;
 	
 	// Construtor padrão
 	public ConversaDTO() {}
@@ -49,11 +48,11 @@ public class ConversaDTO {
 		this.usuarioDest = usuarioDest;
 	}
 	
-	public List<Mensagem> getMensagens(){
+	public List<MensagemDTO> getMensagens(){
 		return mensagens;
 	}
 	
-	public void setMensagens(List<Mensagem> mensagens) {
+	public void setMensagens(List<MensagemDTO> mensagens) {
 		this.mensagens = mensagens;
 	}
 	

@@ -107,7 +107,7 @@ public class MensagemServiceTests {
 		when(conversaRepository.findById(conversa.getId())).thenReturn(Optional.of(conversa));
 		when(mensagemRepository.save(any(Mensagem.class))).thenReturn(mensagem);
 		// Verificações
-		Mensagem mensagemResult = mensagemService.createMessage(dto);
+		Mensagem mensagemResult = mensagemService.createMessage(conversa.getId(), dto);
 		assertEquals(mensagemResult, mensagem);
 	}
 	

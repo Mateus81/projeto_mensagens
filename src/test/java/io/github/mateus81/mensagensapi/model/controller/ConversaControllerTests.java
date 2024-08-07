@@ -22,6 +22,7 @@ import org.springframework.http.ResponseEntity;
 
 import io.github.mateus81.mensagensapi.model.dto.ConversaDTO;
 import io.github.mateus81.mensagensapi.model.entity.Conversa;
+import io.github.mateus81.mensagensapi.model.entity.Mensagem;
 import io.github.mateus81.mensagensapi.model.entity.Usuario;
 import io.github.mateus81.mensagensapi.model.service.ConversaService;
 
@@ -36,20 +37,31 @@ public class ConversaControllerTests {
 	
 	@Test
 	public void testGetConversasByUser() {
-		// Criação do usuario e inserindo ele nas conversas
+		// Criação do usuario/destino e inserindo eles nas conversas e as mensagens
 		Usuario usuario = new Usuario(1);
+		Usuario destino = new Usuario(2);
 		Conversa conversa = new Conversa();
-		conversa.setUsuario(usuario);
 		Conversa conversa2 = new Conversa();
+		conversa.setUsuario(usuario);
+		conversa.setUsuarioDest(destino);
+		conversa2.setUsuarioDest(destino);
 		conversa2.setUsuario(usuario);
+		Mensagem mensagem = new Mensagem(1,"Olá", false);
+		// Seta mensagens para as conversas
+		conversa.setMensagens(Arrays.asList(mensagem));
+		conversa2.setMensagens(Arrays.asList(mensagem));
 		List<Conversa> conversas = Arrays.asList(conversa, conversa2);
+		
+		ConversaController controller = new ConversaController(conversaService);
 		// Validação
-		List<ConversaDTO> dtos = conversas.stream().map(conversaEntity -> {
-			ConversaDTO dto = new ConversaDTO();
-			dto.setId(conversaEntity.getId());
-			dto.setUsuario(conversaEntity.getUsuario());
-			return dto;
-		}).collect(Collectors.toList());
+	    List<ConversaDTO> dtos = conversas.stream().map(conversaEntity -> {
+	        ConversaDTO dto = new ConversaDTO();
+	        dto.setId(conversaEntity.getId());
+	        dto.setUsuario(conversaEntity.getUsuario());
+	        dto.setUsuarioDest(conversaEntity.getUsuarioDest());
+	        dto.setMensagens(controller.convertToDTO(conversaEntity.getMensagens()));
+	        return dto;
+	    }).collect(Collectors.toList());
 		
 		when(conversaService.readAllConversasByUser()).thenReturn(conversas);
 		List<ConversaDTO> conversaResult = conversaController.getConversasByUser();	
@@ -58,13 +70,20 @@ public class ConversaControllerTests {
 	
 	@Test
 	public void testGetConversaById() {
-		// Define usuario, conversa e dto da conversa
+		// Define usuario, mensagem, conversa e dto da conversa
 		Usuario usuario = new Usuario(1);
+		Usuario destino = new Usuario(2);
+		Mensagem mensagem = new Mensagem(1, "Olá", false);
 		Conversa conversa = new Conversa(1);
 		conversa.setUsuario(usuario);
+		conversa.setUsuarioDest(destino);
+		conversa.setMensagens(Arrays.asList(mensagem));
+		ConversaController controller = new ConversaController(conversaService);
 		ConversaDTO dto = new ConversaDTO();
 		dto.setId(conversa.getId());
 		dto.setUsuario(conversa.getUsuario());
+		dto.setUsuarioDest(destino);
+		dto.setMensagens(controller.convertToDTO(conversa.getMensagens()));
 		
 		when(conversaService.readConversaById(anyInt())).thenReturn(conversa);
 		ConversaDTO conversaResult = conversaController.getConversaById(1);

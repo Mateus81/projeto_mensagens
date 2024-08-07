@@ -12,7 +12,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -84,23 +83,28 @@ public class MensagemControllerTests {
 	
 	@Test
 	public void testCreateMessage() throws Exception {
-		// Crie um DTO de exemplo
+		 // Cria conversa
+	     Conversa conversa = new Conversa(1);
+	     
+		 // Crie um DTO de exemplo e setamos conversa
 		 MensagemDTO dto = new MensagemDTO();
+		 dto.setconversa(conversa);
 		 dto.setId(1);
 	     dto.setTexto("Teste de mensagem");
 	     
-	    // Crie um objeto Mensagem esperado
+	    // Crie um objeto Mensagem esperado copiando dados de DTO
 	    Mensagem expectedMensagem = new Mensagem();
+	    expectedMensagem.setConversa(dto.getConversa());
 	    expectedMensagem.setId(dto.getId());
 		expectedMensagem.setTexto(dto.getTexto());
 		
 	    // Stub o método createMessage do MensagemService
-	    when(mensagemService.createMessage(any(MensagemDTO.class))).thenReturn(expectedMensagem);
+	    when(mensagemService.createMessage(conversa.getId(), dto)).thenReturn(expectedMensagem);
 	    
 	    // Chame o método createMessage do controller
-	    Mensagem createdMessage = mensagemController.createMessage(dto);
+	    Mensagem createdMessage = mensagemController.createMessage(conversa.getId(), dto);
 	    // Verifique se o mensagemService.createMessage foi chamado com o argumento correto
-	    verify(mensagemService).createMessage(any(MensagemDTO.class));
+	    verify(mensagemService).createMessage(conversa.getId(), dto);
 	    
 	    // Compare o objeto Mensagem recebido com o objeto Mensagem esperado
 	    assertEquals(expectedMensagem, createdMessage);

@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,7 +17,9 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.github.mateus81.mensagensapi.model.dto.ConversaDTO;
+import io.github.mateus81.mensagensapi.model.dto.MensagemDTO;
 import io.github.mateus81.mensagensapi.model.entity.Conversa;
+import io.github.mateus81.mensagensapi.model.entity.Mensagem;
 import io.github.mateus81.mensagensapi.model.service.ConversaService;
 
 @RestController
@@ -28,9 +31,27 @@ public class ConversaController {
 	public ConversaController(ConversaService conversaService) {
 		this.conversaService = conversaService;
 	}
+	
+	// Método que serializa mensagemDTO
+	public MensagemDTO convertToDto(Mensagem mensagem) {
+		MensagemDTO dto = new MensagemDTO();
+		dto.setId(mensagem.getId());
+		dto.setTexto(mensagem.getTexto());
+		dto.setUsuarioRemetente(mensagem.getUsuarioremetente());
+		dto.setUsuarioDestino(mensagem.getUsuariodestino());
+		dto.setconversa(mensagem.getConversa());
+		dto.setVista(mensagem.isVista());
+		return dto;
+	}
+	
+	// Método que chama o outro em lista
+    public List<MensagemDTO> convertToDTO(List<Mensagem> mensagens) {
+        return mensagens.stream().map(this::convertToDto).collect(Collectors.toList());
+    }
 
 	// Exibe todas as conversas do usuário
 	@GetMapping("/conversas")
+	@Transactional // Evita erro de serialização em mensagens, pois o atributo tem @Lob
 	public List<ConversaDTO> getConversasByUser() {
 		List<Conversa> conversas = conversaService.readAllConversasByUser();
 		return conversas.stream().map(conversa -> {
@@ -38,20 +59,21 @@ public class ConversaController {
 			dto.setId(conversa.getId());
 			dto.setUsuario(conversa.getUsuario());
 			dto.setUsuarioDest(conversa.getUsuarioDest());
-			dto.setMensagens(conversa.getMensagens());
+			dto.setMensagens(convertToDTO(conversa.getMensagens()));
 			return dto;
 		}).collect(Collectors.toList());
 	}
 	
 	// Exibe conversa
 	@GetMapping("/conversas/{id}")
+	@Transactional // Evita erro de serialização em mensagens, pois o atributo tem @Lob
 	public ConversaDTO getConversaById(@PathVariable Integer id) {
 		Conversa conversa =  conversaService.readConversaById(id);
 		ConversaDTO dto = new ConversaDTO();
 		dto.setId(conversa.getId());
 		dto.setUsuario(conversa.getUsuario());
 		dto.setUsuarioDest(conversa.getUsuarioDest());
-		dto.setMensagens(conversa.getMensagens());
+		dto.setMensagens(convertToDTO(conversa.getMensagens()));
 		return dto;
 	}
 

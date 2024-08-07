@@ -14,9 +14,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-
 
 // Esta é a Mensagem que estará presente na conversa dos usuários.
 @Entity
@@ -25,8 +25,9 @@ public class Mensagem {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
-
+	
 	@Lob
+	@JsonIgnore
 	private String texto;
 
 	@Temporal(TemporalType.TIMESTAMP)
@@ -45,6 +46,7 @@ public class Mensagem {
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "conversaId")
+	@JsonIgnore
 	private Conversa conversa;
 
 	// Construtor padrão

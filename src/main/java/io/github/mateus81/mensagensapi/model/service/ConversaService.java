@@ -85,6 +85,7 @@ public class ConversaService {
 	}
 
 	// Inicia Conversa
+	@Transactional
 	public Conversa startConversa(ConversaDTO conversaDTO) throws Exception {
 		// Busca usuario que inicia conversa e busca o contato(usuarioDestino)
 		String email = getLoggedUserEmail();
@@ -108,6 +109,7 @@ public class ConversaService {
 	}
 
 	// Finaliza Conversa
+	@Transactional
 	public Conversa endConversa(Integer conversaId) {
 		Conversa conversa = conversaRepository.findById(conversaId)
 				.orElseThrow(() -> new RuntimeException("Conversa não encontrada"));

@@ -48,7 +48,7 @@ public class Conversa {
 	private Usuario usuarioDest;
 	
 	// Objeto Mensagens
-	@OneToMany(mappedBy = "conversa", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "conversa", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<Mensagem> mensagens;
 
 	// Status

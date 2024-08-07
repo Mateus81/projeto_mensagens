@@ -66,6 +66,7 @@ public class MensagemService {
 	}
 	
 	// Exibe mensagem pelo ID da conversa
+	@Transactional(readOnly = true)
 	public List<Mensagem> getMensagensByConversaId(Integer conversaId){
 		List<Mensagem> mensagens = mensagemRepository.findByConversaId(conversaId);
 		return mensagens;
@@ -73,19 +74,24 @@ public class MensagemService {
 
 	// Cria uma nova mensagem - Transactional -> Atomicidade
 	@Transactional
-	public Mensagem createMessage(MensagemDTO dto) throws Exception {
+	public Mensagem createMessage(Integer conversaId, MensagemDTO dto) throws Exception {
 		Usuario remetente = usuarioRepository.findByEmail(dto.getUsuarioRemetente().getEmail());
-		Conversa conversa = conversaRepository.findById(dto.getConversa().getId()).orElseThrow((
+		if(remetente == null) {
+			throw new Exception("Remetente não encontrado");
+		}
+		Conversa conversa = conversaRepository.findById(conversaId).orElseThrow((
 				) -> new Exception("Conversa não encontrada."));
 		Usuario destinatario = conversa.getUsuarioDest();
 		
 		Mensagem mensagem = new Mensagem();
+		mensagem.setId(dto.getId());
 		mensagem.setData_hora_envio(new Date());
 		mensagem.setTexto(dto.getTexto());
 		mensagem.setUsuarioremetente(remetente);
 		mensagem.setUsuariodestino(destinatario);
 		mensagem.setConversa(conversa);
 		mensagem.setVista(false);
+		System.out.println("Salvando mensagem" + mensagem);
 		return mensagemRepository.save(mensagem);
 	}
 
