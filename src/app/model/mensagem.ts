@@ -9,4 +9,6 @@ export class Mensagem {
     usuarioDestino: Usuario;
     usuarioRemetente: Usuario;
     vista: boolean;
+    // método para editar mensagem
+    editando?: boolean = false;
 }

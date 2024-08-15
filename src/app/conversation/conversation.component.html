@@ -1,15 +1,23 @@
+<!--Se a conversa e destinatário existirem e ele não for o usuário logado (remetente), mostre a conversa-->
 <div *ngIf="conversa && conversa.usuarioDest && conversa.usuarioDest.id !== currentUser.id" class="conversation-container">
     <h2>Conversando com {{ conversa.usuarioDest.nome }}</h2>
-
+    <div class="sem-mensagem" *ngIf="mensagens.length === 0">
+      <p>Nenhuma mensagem disponível. ;-;</p>
+    </div>
     <div *ngFor="let mensagem of mensagens" class="mensagem">
       <div class="mensagem-texto">
-        <span *ngIf="mensagem.usuarioRemetente">{{ mensagem.usuarioRemetente.nome }}:</span>
-        <span>{{ mensagem.texto }}</span>
+        <strong *ngIf="conversa.usuario.id === currentUser.id">{{ conversa.usuario.nome }}:</strong>
+        <!--Se a mensagem estiver em modo de edição, seu texto é editável-->
+        <textarea *ngIf="mensagem.editando" [(ngModel)]="mensagem.texto"></textarea>
+        <!--Senão, ela é padrão-->
+        <p *ngIf="mensagem.texto && !mensagem.editando">{{ mensagem.texto }}</p>
       </div>
       <div class="mensagem-acoes">
-        <button (click)="marcaComoLida(mensagem.id!)" [disabled]="mensagem.vista">Marcar como lida</button>
+        <!--Se o destinatário estiver logado ele pode marcar mensagens recebidas como lidas-->
+        <button *ngIf="conversa.usuarioDest.id === currentUser.id" (click)="marcaComoLida(mensagem.id!)" [disabled]="mensagem.vista">Marcar como lida</button>
         <button (click)="apagaMensagem(mensagem.id!)">Deletar</button>
-        <button (click)="atualizaMensagem(mensagem.id!, mensagem)">Editar</button>
+        <button (click)="mensagem.editando ? salvaMensagemEditada(mensagem.id) : editaMensagem(mensagem)">
+          {{mensagem.editando ? "Salvar" : "Editar"}}</button>
       </div>
     </div>
 
@@ -17,7 +25,8 @@
       <textarea [(ngModel)]="novaMensagem" placeholder="Digite sua mensagem"></textarea>
       <button (click)="enviarMensagem()">Enviar</button>
     </div>
-    <div class="marca-todas-como-lida">
+    <!--Se o destinatário estiver logado ele pode marcar mensagens recebidas como lidas-->
+    <div class="marca-todas-como-lida" *ngIf="conversa.usuarioDest.id === currentUser.id">
       <button (click)="marcaTodasComoLidas()">Marca mensagens como lidas</button>
     </div>
 
