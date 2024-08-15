@@ -27,7 +27,6 @@ public class Mensagem {
 	private Integer id;
 	
 	@Lob
-	@JsonIgnore
 	private String texto;
 
 	@Temporal(TemporalType.TIMESTAMP)

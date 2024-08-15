@@ -101,8 +101,8 @@ public class MensagemService {
 		// Verifique se a mensagem existe antes de atualizá-la
 		Mensagem existingMensagem = mensagemRepository.findById(mensagemId)
 				.orElseThrow(() -> new RuntimeException("Mensagem não encontrada"));
-		updatedMensagem.setId(existingMensagem.getId());
-		return mensagemRepository.save(updatedMensagem);
+		existingMensagem.setTexto(updatedMensagem.getTexto());
+		return mensagemRepository.save(existingMensagem);
 	}
 
 	// Exclui uma mensagem
