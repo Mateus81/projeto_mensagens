@@ -7,9 +7,12 @@
     </form>
     <div *ngIf="conversas && conversas.length > 0; else noConversations">
       <div *ngFor="let conversa of conversas" class="conversa">
-        <div *ngIf="conversa.usuarioDest.id !== usuario?.id">
+        <!--Se o usuário está envolvido na conversa ele tem acesso a ela, do contrário ele não tem acesso-->
+        <div *ngIf="conversa.usuarioDest.id === usuario?.id || conversa.usuario.id === usuario?.id">
           <p>ID da Conversa: {{ conversa.id }}</p>
-          <p *ngIf="conversa.usuarioDest">Usuário: {{ conversa.usuarioDest.nome }}</p>
+          <!--Se o usuário logado é destinatário, o remetente será exibido e vice-versa-->
+          <p *ngIf="conversa.usuarioDest && conversa.usuarioDest.id !== usuario?.id">Contato: {{ conversa.usuarioDest.nome }}</p>
+          <p *ngIf="conversa.usuario && conversa.usuario.id !== usuario?.id">Contato: {{ conversa.usuario.nome }}</p>
           <button (click)="deleteConversa(conversa.id)">Deletar</button>
           <button (click)="endConversa(conversa.id)">Encerrar</button>
           <a [routerLink]="['/conversa', conversa.id]">Conversar</a>
