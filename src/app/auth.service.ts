@@ -29,11 +29,18 @@ export class AuthService {
   }
 
   logout(): void {
-    this.http.delete(`${this.apiUrl}/logout`, {withCredentials: true}).subscribe(() => {
+    this.http.post(`${this.apiUrl}/logout`, {withCredentials: true}).subscribe(() => {
       this.currentUserSubject.next(null);
-      localStorage.removeItem('currentUser');
-      this.router.navigate(['/home']);
-    }, error => {
+    //  localStorage.removeItem('currentUser');
+      localStorage.clear();
+      sessionStorage.clear();
+      document.cookie.split(";").forEach(function(c) { 
+        document.cookie = c.trim().split("=")[0] + 
+        "=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/";  
+    });
+      window.location.href="/home"; 
+    },
+      error => {
         console.error("Erro ao sair", error);
     });
   }

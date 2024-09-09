@@ -28,12 +28,14 @@ export class LoginComponent implements OnInit {
     this.authService.login(this.email, this.password).subscribe(
       response => {
         if(this.lembrar){
-          localStorage.setItem('currentUser', JSON.stringify({email: this.email, password: this.password}));
+          localStorage.setItem('rememberedUser', JSON.stringify({email: this.email, password: this.password}));
         } else {
           localStorage.removeItem('rememberedUser');
         }
         localStorage.setItem('currentUser', JSON.stringify(response));
-        this.router.navigate(['/chat']);
+        this.router.navigate(['/chat']).then(() => { window.location.reload();
+
+        });
       },
       error => {
         console.error('Erro ao fazer login:', error);

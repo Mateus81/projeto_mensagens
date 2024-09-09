@@ -1,12 +1,12 @@
-<!--Se a conversa e destinatário existirem e ele não for o usuário logado (remetente), mostre a conversa-->
-<div *ngIf="conversa && conversa.usuarioDest && conversa.usuarioDest.id !== currentUser.id" class="conversation-container">
-    <h2>Conversando com {{ conversa.usuarioDest.nome }}</h2>
+<div *ngIf="conversa && conversa.usuarioDest && currentUser && conversa.usuario" class="conversation-container">
+    <h2>Conversando com {{ conversa.usuarioDest.id !== currentUser.id ? conversa.usuarioDest.nome : conversa.usuario.nome }}</h2>
     <div class="sem-mensagem" *ngIf="mensagens.length === 0">
       <p>Nenhuma mensagem disponível. ;-;</p>
     </div>
     <div *ngFor="let mensagem of mensagens" class="mensagem">
       <div class="mensagem-texto">
-        <strong *ngIf="conversa.usuario.id === currentUser.id">{{ conversa.usuario.nome }}:</strong>
+        <strong *ngIf="mensagem?.usuarioRemetente?.id === currentUser.id">Você:</strong>
+        <strong *ngIf="mensagem?.usuarioRemetente?.id !== currentUser.id">{{ mensagem?.usuarioRemetente?.nome }}:</strong>
         <!--Se a mensagem estiver em modo de edição, seu texto é editável-->
         <textarea *ngIf="mensagem.editando" [(ngModel)]="mensagem.texto"></textarea>
         <!--Senão, ela é padrão-->
@@ -14,9 +14,9 @@
       </div>
       <div class="mensagem-acoes">
         <!--Se o destinatário estiver logado ele pode marcar mensagens recebidas como lidas-->
-        <button *ngIf="conversa.usuarioDest.id === currentUser.id" (click)="marcaComoLida(mensagem.id!)" [disabled]="mensagem.vista">Marcar como lida</button>
-        <button (click)="apagaMensagem(mensagem.id!)">Deletar</button>
-        <button (click)="mensagem.editando ? salvaMensagemEditada(mensagem.id) : editaMensagem(mensagem)">
+        <button *ngIf="mensagem.usuarioDestino?.id === currentUser?.id" (click)="marcaComoLida(mensagem.id!)" [disabled]="mensagem.vista">Marcar como lida</button>
+        <button class="delete" *ngIf="mensagem.usuarioRemetente?.id === currentUser?.id"(click)="apagaMensagem(mensagem.id!)">Deletar</button>
+        <button class="edit" *ngIf="mensagem.usuarioRemetente?.id === currentUser?.id"(click)="mensagem.editando ? salvaMensagemEditada(mensagem.id) : editaMensagem(mensagem)">
           {{mensagem.editando ? "Salvar" : "Editar"}}</button>
       </div>
     </div>
@@ -26,7 +26,7 @@
       <button (click)="enviarMensagem()">Enviar</button>
     </div>
     <!--Se o destinatário estiver logado ele pode marcar mensagens recebidas como lidas-->
-    <div class="marca-todas-como-lida" *ngIf="conversa.usuarioDest.id === currentUser.id">
+    <div class="marca-todas-como-lida" *ngIf="conversa.usuarioDest?.id === currentUser?.id">
       <button (click)="marcaTodasComoLidas()">Marca mensagens como lidas</button>
     </div>
 

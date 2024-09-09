@@ -32,31 +32,36 @@ export class ConversationComponent implements OnInit {
     });
   }
 
-  // Método que carrega a conversa (e as mensagens) 
+  // Método que carrega a conversa e chama a função que carrega as mensagens 
   loadConversa(): void {
     const conversaId = this.route.snapshot.paramMap.get("id");
     if(conversaId) {
       this.chatService.getConversa(/*Uso do '+' pra converter string em number*/+conversaId).subscribe(
         (conversa: Conversa) => {
         this.conversa = conversa;
-        this.usuarioDest = conversa.usuarioDest;
-        this.loadMensagens();
+        this.usuarioDest = conversa.usuarioDest && conversa.usuarioDest.id === this.currentUser.id ? conversa.usuario : conversa.usuarioDest;
         console.log("Conversa carregada", this.conversa);
         console.log("Usuário destino", this.usuarioDest);
+        this.loadMensagens();
+        this.cdr.detectChanges();
     },
   error => {
     console.error("Erro ao carregar conversa", error);
   })
   
 }}
-
+  // Esse é o método que está ocasionando TypeError id undefined
   loadMensagens(): void {
     if(this.conversa && this.conversa.id && this.currentUser && this.usuarioDest){
     this.mensagemService.getMensagensByConversaId(this.conversa.id).subscribe((mensagens: Mensagem[]) => {
       this.mensagens = mensagens;
+      // log
+      console.log("Mensagens carregadas:", this.mensagens)
     }, error => {
       console.error("Erro ao carregar mensagens", error)
     });
+  } else {
+    console.warn("Dados obrigatórios não estão definidos.");
   }}
 
   enviarMensagem(): void {
@@ -64,7 +69,7 @@ export class ConversationComponent implements OnInit {
       const mensagem : Mensagem = {
         texto : this.novaMensagem,
         usuarioRemetente : this.currentUser,
-        usuarioDestino : this.conversa.usuarioDest,
+        usuarioDestino : this.usuarioDest,
         conversa : this.conversa,
         vista : false,
       };

@@ -2,13 +2,19 @@ import { Conversa } from "./conversa";
 import { Usuario } from "./usuario";
 
 export class Mensagem {
-    // Uso do "?" = id pode ser undefined
+    // ? - Opcional
     id?: number;
     texto: string;
     conversa: Conversa;
     usuarioDestino: Usuario;
     usuarioRemetente: Usuario;
     vista: boolean;
-    // método para editar mensagem
+    // método para editar mensagem (opcional = ?)
     editando?: boolean = false;
+
+    constructor(){
+        this.usuarioDestino = new Usuario();
+        this.usuarioRemetente = new Usuario();
+        this.conversa = new Conversa();
+    }
 }

@@ -36,10 +36,11 @@ export class MensagemService {
   }
 
   markAsRead(conversaId: number, id: number): Observable<string> {
-    return this.http.patch<string>(`${this.apiUrl}/conversas/${conversaId}/mensagens/${id}`, null, {withCredentials: true})
+    return this.http.patch(`${this.apiUrl}/conversas/${conversaId}/mensagens/${id}`, null, 
+    {withCredentials: true, responseType: 'text'})
   }
 
   markAllAsRead(conversaId: number): Observable<string> {
-    return this.http.patch<string>(`${this.apiUrl}/conversas/${conversaId}/mensagens`, null, {withCredentials: true})
+    return this.http.patch(`${this.apiUrl}/conversas/${conversaId}/mensagens`, null, {withCredentials: true, responseType: 'text'})
   }
 }

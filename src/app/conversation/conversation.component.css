@@ -30,8 +30,31 @@ h2 {
     display: inline-block;
 }
 
-.mensagens-acoes button {
-    margin-left: 10px;
+strong {
+    margin-right: 10px;
+}
+
+.mensagens-acoes {
+    display: flex;
+    margin-top: 10px;
+    gap: 15px;
+}
+
+.mensagem-acoes button {
+    padding: 5px 10px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+}
+
+.delete {
+    background-color: red;
+    color: white;
+}
+
+.edit {
+    background-color: green;
+    color: white;
 }
 
 .nova-mensagem {
