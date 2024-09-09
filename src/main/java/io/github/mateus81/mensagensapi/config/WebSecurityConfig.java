@@ -41,6 +41,8 @@ public class WebSecurityConfig {
             .logout()
             .logoutUrl("/logout")
             .logoutSuccessHandler(new HttpStatusReturningLogoutSuccessHandler())
+            .invalidateHttpSession(true) // invalida a sessão durante o logout
+            .clearAuthentication(true) // Limpa a autenticação do securityContext
             .permitAll();
         return http.build();
     }

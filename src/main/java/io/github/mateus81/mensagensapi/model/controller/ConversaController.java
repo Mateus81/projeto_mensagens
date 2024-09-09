@@ -37,9 +37,9 @@ public class ConversaController {
 		MensagemDTO dto = new MensagemDTO();
 		dto.setId(mensagem.getId());
 		dto.setTexto(mensagem.getTexto());
-		dto.setUsuarioRemetente(mensagem.getUsuarioremetente());
-		dto.setUsuarioDestino(mensagem.getUsuariodestino());
-		dto.setconversa(mensagem.getConversa());
+		dto.setUsuarioRemetente(mensagem.getUsuarioRemetente());
+		dto.setUsuarioDestino(mensagem.getUsuarioDestino());
+		dto.setConversa(mensagem.getConversa());
 		dto.setVista(mensagem.isVista());
 		return dto;
 	}

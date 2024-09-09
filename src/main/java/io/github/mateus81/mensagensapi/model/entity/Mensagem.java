@@ -14,7 +14,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
@@ -43,9 +43,10 @@ public class Mensagem {
 	@Column
 	private Boolean vista;
 	
+	//@JsonIgnore
+	@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "conversaId")
-	@JsonIgnore
 	private Conversa conversa;
 
 	// Construtor padrão
@@ -95,19 +96,19 @@ public class Mensagem {
 		this.dataHoraEnvio = (dataHoraEnvio != null) ? dataHoraEnvio : new Date();
 	}
 
-	public Usuario getUsuarioremetente() {
+	public Usuario getUsuarioRemetente() {
 		return usuario_remetente;
 	}
 
-	public void setUsuarioremetente(Usuario usuario_remetente) {
+	public void setUsuarioRemetente(Usuario usuario_remetente) {
 		this.usuario_remetente = usuario_remetente;
 	}
 
-	public Usuario getUsuariodestino() {
+	public Usuario getUsuarioDestino() {
 		return usuario_destino;
 	}
 
-	public void setUsuariodestino(Usuario usuario_destino) {
+	public void setUsuarioDestino(Usuario usuario_destino) {
 		this.usuario_destino = usuario_destino;
 	}
 

@@ -88,7 +88,7 @@ public class MensagemControllerTests {
 	     
 		 // Crie um DTO de exemplo e setamos conversa
 		 MensagemDTO dto = new MensagemDTO();
-		 dto.setconversa(conversa);
+		 dto.setConversa(conversa);
 		 dto.setId(1);
 	     dto.setTexto("Teste de mensagem");
 	     

@@ -60,9 +60,9 @@ public class MensagemService {
 	// Exibe Mensagem
 	@Transactional(readOnly = true)
 	public Mensagem getMessageById(Integer mensagemId) {
-		 return mensagemRepository.findById(mensagemId)
-				.orElseThrow(() -> new RuntimeException("Mensagem não encontrada"));
-		
+		 Mensagem mensagem = mensagemRepository.findByIdWithConversa(mensagemId)
+				.orElseThrow(() -> new RuntimeException("Mensagem não encontrada"));	
+		 return mensagem;
 	}
 	
 	// Exibe mensagem pelo ID da conversa
@@ -87,8 +87,8 @@ public class MensagemService {
 		mensagem.setId(dto.getId());
 		mensagem.setData_hora_envio(new Date());
 		mensagem.setTexto(dto.getTexto());
-		mensagem.setUsuarioremetente(remetente);
-		mensagem.setUsuariodestino(destinatario);
+		mensagem.setUsuarioRemetente(remetente);
+		mensagem.setUsuarioDestino(destinatario);
 		mensagem.setConversa(conversa);
 		mensagem.setVista(false);
 		System.out.println("Salvando mensagem" + mensagem);

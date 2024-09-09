@@ -36,11 +36,11 @@ public class MensagemTests {
 		Usuario destino = new Usuario("Fernando","fernando@yahoo.com");
 		Mensagem mensagem = new Mensagem();
 		// Insere ambos na mensagem
-		mensagem.setUsuariodestino(destino);
-		mensagem.setUsuarioremetente(remetente);
+		mensagem.setUsuarioDestino(destino);
+		mensagem.setUsuarioRemetente(remetente);
 		// Verificação
-		Assertions.assertEquals(remetente, mensagem.getUsuarioremetente());
-		Assertions.assertEquals(destino, mensagem.getUsuariodestino());
+		Assertions.assertEquals(remetente, mensagem.getUsuarioRemetente());
+		Assertions.assertEquals(destino, mensagem.getUsuarioDestino());
 	}
 	
 	// Testa mensagem vista na conversa

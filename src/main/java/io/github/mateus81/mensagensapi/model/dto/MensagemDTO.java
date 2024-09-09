@@ -66,7 +66,7 @@ public class MensagemDTO {
 		return conversa;
 	}
 	
-	public void setconversa(Conversa conversa) {
+	public void setConversa(Conversa conversa) {
 		this.conversa = conversa;
 	}
 	

@@ -19,6 +19,8 @@ import javax.persistence.TemporalType;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import io.github.mateus81.mensagensapi.model.service.ConversaService.StatusConversa;
 
 // Esta é a conversa entre os usuários.
@@ -49,6 +51,7 @@ public class Conversa {
 	
 	// Objeto Mensagens
 	@OneToMany(mappedBy = "conversa", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@JsonIgnore
 	private List<Mensagem> mensagens;
 
 	// Status

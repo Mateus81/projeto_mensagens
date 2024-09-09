@@ -40,9 +40,9 @@ public class MensagemController {
 		MensagemDTO dto = new MensagemDTO();
 		dto.setId(mensagem.getId());
 		dto.setTexto(mensagem.getTexto());
-		dto.setUsuarioRemetente(mensagem.getUsuarioremetente());
-		dto.setUsuarioDestino(mensagem.getUsuariodestino());
-		dto.setconversa(mensagem.getConversa());
+		dto.setUsuarioRemetente(mensagem.getUsuarioRemetente());
+		dto.setUsuarioDestino(mensagem.getUsuarioDestino());
+		dto.setConversa(mensagem.getConversa());
 		dto.setVista(mensagem.isVista());
 		return dto; 
 	} else {
@@ -50,7 +50,7 @@ public class MensagemController {
 		}
 	}
 	
-	// Exibe mensagem pelo id da conversa
+	// Exibe as mensagens pelo id da conversa
 	@GetMapping("/conversas/{conversaId}/mensagens")
 	public List<Mensagem> getMensagensByConversaId(@PathVariable Integer conversaId){
 		return mensagemService.getMensagensByConversaId(conversaId);

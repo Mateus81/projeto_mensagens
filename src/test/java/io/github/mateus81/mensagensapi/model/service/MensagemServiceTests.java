@@ -55,7 +55,7 @@ public class MensagemServiceTests {
 	@Test
 	public void testGetMessageById() {
 		Mensagem mensagem = new Mensagem(1, "Olá", false);
-		when(mensagemRepository.findById(anyInt())).thenReturn(Optional.of(mensagem));
+		when(mensagemRepository.findByIdWithConversa(mensagem.getId())).thenReturn(Optional.of(mensagem));
 		Mensagem mensagemResult = mensagemService.getMessageById(1);
 		assertEquals(mensagemResult, mensagem);
 	}
@@ -90,7 +90,7 @@ public class MensagemServiceTests {
 		conversa.setUsuarioDest(destinatario);
 		// Criação da mensagemDTO e setando conversa nela e usuarios
 		MensagemDTO dto = new MensagemDTO();
-		dto.setconversa(conversa);
+		dto.setConversa(conversa);
 		dto.setUsuarioRemetente(remetente);
 		dto.setUsuarioDestino(destinatario);
 		dto.setTexto("Olá");
@@ -99,8 +99,8 @@ public class MensagemServiceTests {
 		mensagem.setData_hora_envio(new Date());
 		mensagem.setTexto(dto.getTexto());
 		mensagem.setConversa(conversa);
-		mensagem.setUsuarioremetente(remetente);
-		mensagem.setUsuariodestino(destinatario);
+		mensagem.setUsuarioRemetente(remetente);
+		mensagem.setUsuarioDestino(destinatario);
 		mensagem.setVista(false);
 		// Mocks
 		when(usuarioRepository.findByEmail(remetente.getEmail())).thenReturn(remetente);
