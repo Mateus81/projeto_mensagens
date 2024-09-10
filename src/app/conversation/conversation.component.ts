@@ -50,7 +50,7 @@ export class ConversationComponent implements OnInit {
   })
   
 }}
-  // Esse é o método que está ocasionando TypeError id undefined
+  
   loadMensagens(): void {
     if(this.conversa && this.conversa.id && this.currentUser && this.usuarioDest){
     this.mensagemService.getMensagensByConversaId(this.conversa.id).subscribe((mensagens: Mensagem[]) => {
@@ -94,7 +94,13 @@ export class ConversationComponent implements OnInit {
     if(this.conversa){
     this.mensagemService.deleteMessage(this.conversa.id, id).subscribe(
       () => {
-        this.mensagens = this.mensagens.filter(msg => msg.id !== id)
+        const mensagem = this.mensagens.find(msg => msg.id === id);
+        if(mensagem){
+          mensagem.texto = "mensagem deletada!";
+          mensagem.deletada = true;
+          mensagem.editando = false;
+          this.cdr.detectChanges();
+        }
         // this.loadMensagens();
       }, error => {
         console.error("Erro ao deletar mensagem", error)
@@ -104,7 +110,9 @@ export class ConversationComponent implements OnInit {
 }
 
   editaMensagem(mensagem: Mensagem): void {
+    if(!mensagem.deletada){
     mensagem.editando = true;
+    }
   }
 
   salvaMensagemEditada(id: number | undefined): void {
@@ -131,6 +139,7 @@ export class ConversationComponent implements OnInit {
         const index = this.mensagens.findIndex(msg => msg.id === id);
         if(index !== -1){
           this.mensagens[index] = mensagemAtualizada;
+          this.mensagens[index].texto += " (mensagem editada!)";
           this.mensagens[index].editando = false;
           // Detecta estado de mudança de estado
           this.cdr.detectChanges();

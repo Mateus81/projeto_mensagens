@@ -11,6 +11,7 @@ export class Mensagem {
     vista: boolean;
     // método para editar mensagem (opcional = ?)
     editando?: boolean = false;
+    deletada?: boolean = false;
 
     constructor(){
         this.usuarioDestino = new Usuario();

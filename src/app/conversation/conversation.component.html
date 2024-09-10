@@ -15,8 +15,8 @@
       <div class="mensagem-acoes">
         <!--Se o destinatário estiver logado ele pode marcar mensagens recebidas como lidas-->
         <button *ngIf="mensagem.usuarioDestino?.id === currentUser?.id" (click)="marcaComoLida(mensagem.id!)" [disabled]="mensagem.vista">Marcar como lida</button>
-        <button class="delete" *ngIf="mensagem.usuarioRemetente?.id === currentUser?.id"(click)="apagaMensagem(mensagem.id!)">Deletar</button>
-        <button class="edit" *ngIf="mensagem.usuarioRemetente?.id === currentUser?.id"(click)="mensagem.editando ? salvaMensagemEditada(mensagem.id) : editaMensagem(mensagem)">
+        <button class="delete" *ngIf="mensagem.usuarioRemetente?.id === currentUser?.id && !mensagem.deletada"(click)="apagaMensagem(mensagem.id!)">Deletar</button>
+        <button class="edit" *ngIf="mensagem.usuarioRemetente?.id === currentUser?.id && !mensagem.deletada"(click)="mensagem.editando ? salvaMensagemEditada(mensagem.id) : editaMensagem(mensagem)">
           {{mensagem.editando ? "Salvar" : "Editar"}}</button>
       </div>
     </div>
