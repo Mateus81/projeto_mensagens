@@ -66,6 +66,11 @@ export class ConversationComponent implements OnInit {
 
   enviarMensagem(): void {
     if(this.novaMensagem.trim() && this.currentUser && this.conversa && this.usuarioDest) {
+      // Validação  
+      if(this.currentUser.id === this.usuarioDest.id){
+        console.error("O Remetente e destinatário não podem ser o mesmo usuário")
+        return;
+      }
       const mensagem : Mensagem = {
         texto : this.novaMensagem,
         usuarioRemetente : this.currentUser,

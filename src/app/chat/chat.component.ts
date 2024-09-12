@@ -19,6 +19,8 @@ export class ChatComponent implements OnInit {
   constructor(private chatService: ChatService, private authService: AuthService, private userService: UserService){}
 
   ngOnInit(): void {
+    this.usuario = null;
+    this.conversas = [];
     this.loadLoggedUser();
   }
 
@@ -111,6 +113,8 @@ export class ChatComponent implements OnInit {
 
   logout(): void {
     this.authService.logout();
+    this.usuario = null;
+    this.conversas = [];
   }
 }
 
