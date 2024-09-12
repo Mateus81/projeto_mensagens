@@ -75,14 +75,22 @@ public class MensagemService {
 	// Cria uma nova mensagem - Transactional -> Atomicidade
 	@Transactional
 	public Mensagem createMessage(Integer conversaId, MensagemDTO dto) throws Exception {
+		// Busca remetente
 		Usuario remetente = usuarioRepository.findByEmail(dto.getUsuarioRemetente().getEmail());
 		if(remetente == null) {
 			throw new Exception("Remetente não encontrado");
 		}
+		// Busca conversa
 		Conversa conversa = conversaRepository.findById(conversaId).orElseThrow((
 				) -> new Exception("Conversa não encontrada."));
-		Usuario destinatario = conversa.getUsuarioDest();
-		
+		// Identifica destinatário com base na conversa e remetente atual
+		Usuario destinatario;
+		if(remetente.getId().equals(conversa.getUsuario().getId())) {
+			destinatario = conversa.getUsuarioDest();
+		} else {
+			destinatario = conversa.getUsuario();
+		}
+		// Atribui valores, log e salva
 		Mensagem mensagem = new Mensagem();
 		mensagem.setId(dto.getId());
 		mensagem.setData_hora_envio(new Date());

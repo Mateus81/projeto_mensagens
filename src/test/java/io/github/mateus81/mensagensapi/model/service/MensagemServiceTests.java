@@ -82,8 +82,10 @@ public class MensagemServiceTests {
 		// Criação dos usuarios e conversa e setando cada um a ela
 		Usuario remetente = new Usuario();
 		remetente.setEmail("remetente@gmail.com");
+		remetente.setId(1);
 		Usuario destinatario = new Usuario();
 		destinatario.setNome("Destino");
+		destinatario.setId(2); 
 		Conversa conversa = new Conversa();
 		conversa.setId(1);
 		conversa.setUsuario(remetente);
@@ -106,9 +108,9 @@ public class MensagemServiceTests {
 		when(usuarioRepository.findByEmail(remetente.getEmail())).thenReturn(remetente);
 		when(conversaRepository.findById(conversa.getId())).thenReturn(Optional.of(conversa));
 		when(mensagemRepository.save(any(Mensagem.class))).thenReturn(mensagem);
-		// Verificações
+	
 		Mensagem mensagemResult = mensagemService.createMessage(conversa.getId(), dto);
-		assertEquals(mensagemResult, mensagem);
+		assertEquals(mensagem, mensagemResult);
 	}
 	
 	@Test
