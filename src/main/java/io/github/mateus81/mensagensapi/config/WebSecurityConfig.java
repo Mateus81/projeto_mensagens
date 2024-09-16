@@ -43,7 +43,12 @@ public class WebSecurityConfig {
             .logoutSuccessHandler(new HttpStatusReturningLogoutSuccessHandler())
             .invalidateHttpSession(true) // invalida a sessão durante o logout
             .clearAuthentication(true) // Limpa a autenticação do securityContext
-            .permitAll();
+            .permitAll().and().headers().cacheControl().disable().and().headers()
+            .addHeaderWriter((request, response)-> {
+            	response.setHeader("Cache-Control", "no-store, no-cache, must-revalidate, max-age=0");
+            	response.setHeader("Pragma", "no-cache");
+            	response.setHeader("Expires", "0");
+            });
         return http.build();
     }
 
