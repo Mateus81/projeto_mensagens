@@ -13,15 +13,16 @@ import { UserService } from '../user.service';
 export class ChatComponent implements OnInit {
   conversas: Conversa[] = [];
   novaConversa: Conversa = new Conversa();
-  usuario: Usuario | null = new Usuario();
+  usuario: Usuario | null = null;
   usuarioDest: Usuario = new Usuario();
 
   constructor(private chatService: ChatService, private authService: AuthService, private userService: UserService){}
 
   ngOnInit(): void {
-    this.usuario = null;
-    this.conversas = [];
-    this.loadLoggedUser();
+    this.usuario = this.authService.getUser();
+    if(this.usuario){
+      this.loadConversas();
+    }
   }
 
   loadConversas(): void {
@@ -36,26 +37,6 @@ export class ChatComponent implements OnInit {
     )}
   };
 
-  loadLoggedUser(): void {
-    this.authService.currentUser.subscribe(
-      (user: Usuario | null) => {
-        if(user){
-        this.usuario = user;
-         this.loadConversas();
-        } else {
-          const currentUserString = localStorage.getItem('currentUser');
-          if(currentUserString){
-            this.usuario = JSON.parse(currentUserString);
-            this.loadConversas();
-          }
-        }
-        },
-        error => {
-          console.error("Erro ao carregar usuário logado", error);
-        }
-      );
-    }
-  
   deleteConversa(id: number): void {
     this.chatService.deleteConversa(id).subscribe(
       () => {

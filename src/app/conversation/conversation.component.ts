@@ -16,30 +16,30 @@ export class ConversationComponent implements OnInit {
   @Input() conversa: Conversa;
   mensagens: Mensagem[] = [];
   novaMensagem: string = '';
-  currentUser: Usuario;
+  currentUser: Usuario | null = null;
   usuarioDest: Usuario;
 
   constructor(private authService: AuthService, private mensagemService: MensagemService, private chatService: ChatService,
      private route: ActivatedRoute, private router: Router, private cdr: ChangeDetectorRef){}
   
   ngOnInit(): void {
-    this.authService.getUser().subscribe((user: Usuario) => {
-      this.currentUser = user;
-      console.log("Usuário atual:", this.currentUser);
+    this.currentUser = this.authService.getUser();
+    console.log("Usuário atual:", this.currentUser);
+    if(this.currentUser){
       this.loadConversa();
-    }, error => {
-      console.error("Erro ao obter usuário", error);
-    });
+    } else {     
+      console.error("Erro ao obter usuário");
+    }
   }
 
   // Método que carrega a conversa e chama a função que carrega as mensagens 
   loadConversa(): void {
     const conversaId = this.route.snapshot.paramMap.get("id");
-    if(conversaId) {
+    if(conversaId && this.currentUser) {
       this.chatService.getConversa(/*Uso do '+' pra converter string em number*/+conversaId).subscribe(
         (conversa: Conversa) => {
         this.conversa = conversa;
-        this.usuarioDest = conversa.usuarioDest && conversa.usuarioDest.id === this.currentUser.id ? conversa.usuario : conversa.usuarioDest;
+        this.usuarioDest = conversa.usuarioDest && conversa.usuarioDest.id === this.currentUser?.id ? conversa.usuario : conversa.usuarioDest;
         console.log("Conversa carregada", this.conversa);
         console.log("Usuário destino", this.usuarioDest);
         this.loadMensagens();
