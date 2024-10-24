@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { Conversa } from '../model/conversa';
 import { Usuario } from '../model/usuario';
-import { AuthService } from '../auth.service';
-import { ChatService } from '../chat.service';
-import { UserService } from '../user.service';
+import { AuthService } from '../service/auth.service';
+import { ChatService } from '../service/chat.service';
+import { UserService } from '../service/user.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-chat',
@@ -16,7 +17,7 @@ export class ChatComponent implements OnInit {
   usuario: Usuario | null = null;
   usuarioDest: Usuario = new Usuario();
 
-  constructor(private chatService: ChatService, private authService: AuthService, private userService: UserService){}
+  constructor(private chatService: ChatService, private authService: AuthService, private userService: UserService, private router: Router){}
 
   ngOnInit(): void {
     this.usuario = this.authService.getUser();
@@ -91,6 +92,10 @@ export class ChatComponent implements OnInit {
       }
     )
   };
+
+  irParaContatos(): void {
+    this.router.navigate(['/contatos']);
+  }
 
   logout(): void {
     this.authService.logout();

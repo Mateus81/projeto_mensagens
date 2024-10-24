@@ -4,9 +4,10 @@ import { HomeComponent } from './home/home.component';
 import { LoginComponent } from './login/login.component';
 import { CadastroComponent } from './cadastro/cadastro.component';
 import { ChatComponent } from './chat/chat.component';
+import { ContatoComponent } from './contato/contato.component';
 import { ConversationComponent } from './conversation/conversation.component';
 
-const routes: Routes = [{path: 'home', component: HomeComponent},
+const routes: Routes = [{path: 'home', component: HomeComponent}, {path: 'contatos', component: ContatoComponent},
 {path: 'login', component: LoginComponent}, {path: 'cadastro', component: CadastroComponent}, 
 {path: 'chat', component: ChatComponent}, {path: 'conversa/:id', component: ConversationComponent},
 {path: '', redirectTo: '/home', pathMatch: 'full'}];

@@ -1,0 +1,52 @@
+<div *ngIf="contatos && usuario" class="contato-container">
+    <div class="contato-list">
+        <h3>Seus contatos</h3>
+        <ul>
+            <li *ngFor="let contato of contatos" (click)="loadContato(contato.id!)" 
+            [class.selected]="contato?.id === this.contato?.id" class="contato-item">
+                <div>
+                    <img *ngIf="contato.foto; else noImage" [src]="'data:image/jpeg;base64,' + contato.foto.toString('base64')" alt="{{contato.nome}}">
+                    <ng-template #noImage>
+                        <img src="assets/icon.png" alt="Imagem padrão">
+                    </ng-template>
+                </div>
+                <span>{{ contato.nome }}</span>
+            </li>
+        </ul>
+    </div>
+    <!--Detalhes do contato selecionado-->
+    <div *ngIf="contato" class="contato-detalhe">
+        <h3>Detalhes do Contato</h3>
+        <p><strong>Nome:</strong>{{contato.nome}}</p>
+        <p><strong>E-mail:</strong>{{contato.email}}</p>
+        <p><strong>Telefone:</strong>{{contato.telefone}}</p>   
+    <!--Botões de ação-->
+    <div class="contato-acoes">
+        <button (click)="deleteContato(contato.id!)">Deletar Contato</button>
+        <button (click)="irParaConversa(contato.id!)">Iniciar Conversa</button>
+    </div><br>
+    <div class="contato-edicoes" *ngIf="editandoContato">
+        <input [(ngModel)]="contatoEditado.nome" placeholder="Nome do contato" aria-label="Nome do contato"/>
+        <button (click)="salvarEdicao()">Salvar</button>
+        <button (click)="cancelaEdicao()">Cancelar</button>
+    </div>
+    <div class="contato-edicoes" *ngIf="!editandoContato">
+        <span>{{contato.nome}}</span><br>
+        <button (click)="editarContato(contato)">Editar Nome</button>
+    </div>
+    </div>
+    <!--Adicionar contato-->
+    <div class="novo-contato">
+        <h3>Adicionar Contato</h3>
+        <input [(ngModel)]="usuarioAdicionado.nome" placeholder="Nome do contato" aria-label="Nome do contato">
+        <button (click)="addContato()">Adicionar</button>
+    </div>
+
+    <footer>
+        <p>Deseja sair?</p>
+        <button (click)="logout()">Sair</button>
+        <br>
+        <p>Deseja voltar para lista de conversas?</p>
+        <button (click)="voltarParaChat()">Conversas</button>
+    </footer>
+</div>

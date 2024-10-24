@@ -3,9 +3,9 @@ import { ActivatedRoute, Route, Router } from '@angular/router';
 import { Conversa } from '../model/conversa';
 import { Usuario } from '../model/usuario';
 import { Mensagem } from '../model/mensagem';
-import { MensagemService } from '../mensagem.service';
-import { AuthService } from '../auth.service';
-import { ChatService } from '../chat.service';
+import { MensagemService } from '../service/mensagem.service';
+import { AuthService } from '../service/auth.service';
+import { ChatService } from '../service/chat.service';
 
 @Component({
   selector: 'app-conversation',
@@ -183,7 +183,11 @@ export class ConversationComponent implements OnInit {
     )}
   }
 
-  voltarParaConversas(): void{
+  voltarParaConversas(): void {
     this.router.navigate(['/chat'])
+  }
+
+  voltarParaContatos(): void {
+    this.router.navigate(['/contatos']);
   }
 }

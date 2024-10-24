@@ -5,6 +5,8 @@
     border-radius: 8px;
     border: 1px solid #ccc; /*Ordem para border: width, style e color*/
     background-color: #f9f9f9; /*Ordem para background: color, image, repeat, position*/
+    min-height: 100vh;
+    overflow: auto;
 }
 
 .chat-container form {
@@ -91,6 +93,15 @@ p {
     color: #666;
 }
 
+.contatos button {
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: chartreuse;
+    color: white;
+    cursor: pointer;
+}
+
 .logout p {
     text-align: center;
     font-size: 15px;
@@ -134,6 +145,7 @@ p {
 @media (min-width: 992px) {
     .chat-container {
         max-width: 1200px;
+        padding: 40px;
     }
 
     .conversa {
@@ -147,6 +159,10 @@ p {
 
     .logout p {
         font-size: 18px;
+    }
+
+    .chat-container form {
+        margin-bottom: 40px;
     }
 }
 /* Mobile */

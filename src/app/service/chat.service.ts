@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Conversa } from './model/conversa';
+import { Conversa } from '../model/conversa';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
