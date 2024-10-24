@@ -9,4 +9,4 @@ Tecnologias usadas/ a utilizar:
 * Pacotes criados no Back-end -> Controller, Service, Repository, Entity, DTO e Config.
 
 Correções/Implementações a fazer:
-1. Resolver erro 405 POST no endpoint "contatos/{usuarioAssociadoId}
+1. Resolver erro 405 POST no endpoint "contatos/{usuarioAssociadoId}"
