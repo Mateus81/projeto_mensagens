@@ -9,5 +9,4 @@ Tecnologias usadas/ a utilizar:
 * Pacotes criados no Back-end -> Controller, Service, Repository, Entity, DTO e Config.
 
 Correções/Implementações a fazer:
-1. Adicionar link para tela de contatos no ChatComponent;
-2. Criar ContatoComponent. (A partir do momento que eu crio uma conversa com um usuário cadastrado, ele se torna meu contato) 
+1. Resolver erro 405 POST no endpoint "contatos/{usuarioAssociadoId}
