@@ -31,9 +31,10 @@ public class WebSecurityConfig {
             .csrf().disable()
             .cors().and()
             .authorizeRequests(authorizeRequests -> authorizeRequests
-            	.antMatchers("/usuarios", "usuarios/login").permitAll()
+            	.antMatchers("/usuarios", "/usuarios/login").permitAll()
                 .antMatchers("/public/**").permitAll() // Permitir acesso público para determinados endpoints
                 .antMatchers("/conversas/**").authenticated()
+                .antMatchers("/contatos/**").authenticated()
                 .anyRequest().authenticated() // Requer autenticação para todos os outros endpoints
             )
             .httpBasic()

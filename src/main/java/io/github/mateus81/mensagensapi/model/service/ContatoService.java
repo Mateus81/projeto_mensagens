@@ -30,23 +30,35 @@ public class ContatoService {
 		return contatoRepository.findById(contatoId).orElseThrow(() -> new RuntimeException("Contato não encontrado"));
 	}
 
-	// Vê lista de contatos
-	public List<Contato> readAllContatos() {
-		return contatoRepository.findAll();
+	// Vê lista de contatos do usuário logado
+	public List<Contato> readContatosByUsuario(Integer usuarioId) {
+		return contatoRepository.findByUsuarioId(usuarioId);
 	}
 
 	// Inclui Contato
 	@Transactional
-	public Contato insertContato(Contato contato) {
-		Optional<Usuario> usuarioOpt = usuarioRepository.findById(contato.getUsuario().getId());
-		if(usuarioOpt.isPresent()) {
-			Usuario usuario = usuarioOpt.get();
-			contato.setUsuario(usuario);
-			return contatoRepository.save(contato);
-		} else {
-			throw new RuntimeException("Usuário não encontrado");
+	public Usuario insertContato(Integer usuarioAssociadoId, Usuario contato) {
+		// Busca usuário associado
+		Optional<Usuario> usuarioAssociadoOpt = usuarioRepository.findById(usuarioAssociadoId);
+		if(!usuarioAssociadoOpt.isPresent()) {
+			throw new RuntimeException("Usuário associado não encontrado");
+		}
+		// Verifica se Contato existe no banco de dados como um usuário
+		Optional<Usuario> contatoComoUsuario = usuarioRepository.findOptionalByNome(contato.getNome());
+		if(!contatoComoUsuario.isPresent()) {
+			throw new RuntimeException("Contato não é um usuário existente");
+		}
+	
+		Usuario usuarioAssociado = usuarioAssociadoOpt.get();
+		Usuario usuarioContato = contatoComoUsuario.get();
+		// Impede de adicionar duas vezes o mesmo contato
+		if(usuarioAssociado.getContatos().stream().anyMatch(c -> c.getNome().equals(contato.getNome()))){
+			throw new RuntimeException("Contato já está adicionado");
 		}
 		
+		usuarioAssociado.getContatos().add(usuarioContato);
+		usuarioRepository.save(usuarioAssociado);
+		return usuarioContato;
 	}
 
 	// Excluir Contato
@@ -63,7 +75,6 @@ public class ContatoService {
 				.orElseThrow(() -> new RuntimeException("Contato não encontrado"));
 		contatoAtualizado.setId(id);
 		contatoExistente.setNome(contatoAtualizado.getNome());
-		contatoExistente.setEmail(contatoAtualizado.getEmail());
 
 		Contato contatoSalvo = contatoRepository.save(contatoExistente);
 		return contatoSalvo;

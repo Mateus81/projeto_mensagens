@@ -4,8 +4,6 @@ import java.util.Objects;
 
 import javax.validation.constraints.NotNull;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import io.github.mateus81.mensagensapi.model.entity.Usuario;
 
 public class ContatoDTO {
@@ -19,11 +17,10 @@ public class ContatoDTO {
 	@NotNull
 	private String email;
 	
-	@NotNull
+	
 	private String telefone;
 	
 	@NotNull
-	@JsonIgnore
 	private Usuario usuario;
 	
 	// Construtor

@@ -12,7 +12,10 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.Lob;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
@@ -56,9 +59,11 @@ public class Usuario {
 	private byte[] foto;
 
 	// Um usuário pode ter vários contatos
-	@OneToMany(mappedBy = "usuario")
+	@ManyToMany
+	@JoinTable(name = "usuario_contatos", joinColumns = @JoinColumn(name = "usuario_id"), 
+	inverseJoinColumns = @JoinColumn(name = "contato_id"))
 	@JsonIgnore
-	private List<Contato> contatos;
+	private List<Usuario> contatos;
 	// E Também conversas!
 	@OneToMany(mappedBy = "usuario")
 	@JsonIgnore
@@ -191,12 +196,12 @@ public class Usuario {
 	}
 
 	// Obtém a lista de contatos
-	public List<Contato> getContatos() {
+	public List<Usuario> getContatos() {
 		return contatos;
 	}
 
 	// Insere lista de contatos
-	public void setContatos(List<Contato> contatos) {
+	public void setContatos(List<Usuario> contatos) {
 		this.contatos = contatos;
 	}
 

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -33,8 +34,8 @@ public class ContatoController {
 
 	// Vê lista de contatos
 	@GetMapping("/contatos")
-	public List<ContatoDTO> getAllContatos() {
-		List<Contato> contatos = contatoService.readAllContatos();
+	public List<ContatoDTO> getContatosByUsuario(@RequestParam Integer usuarioId) {
+		List<Contato> contatos = contatoService.readContatosByUsuario(usuarioId);
 		return contatos.stream().map(contato -> {
 			ContatoDTO dto = new ContatoDTO();
 			dto.setId(contato.getId());
@@ -67,18 +68,15 @@ public class ContatoController {
 	}
 
 	// Insere contato
-	@PostMapping("/contatos")
+	@PostMapping("/contatos/{usuarioAssociadoId}")
 	@ResponseStatus(HttpStatus.CREATED)
-	public Contato insertContato(@RequestBody ContatoDTO contatoDto) {
-		Contato contato = new Contato();
+	public Usuario insertContato(@PathVariable Integer usuarioAssociadoId, @RequestBody ContatoDTO contatoDto) {
+		Usuario contato = new Usuario();
 		contato.setId(contatoDto.getId());
 		contato.setNome(contatoDto.getNome());
 		contato.setEmail(contatoDto.getEmail());
-		contato.setTelefone(contatoDto.getTelefone());
 		
-		Usuario usuario = new Usuario();
-		contato.setUsuario(usuario);
-		return contatoService.insertContato(contato);
+		return contatoService.insertContato(usuarioAssociadoId, contato);
 	}
 
 	// Atualiza contato

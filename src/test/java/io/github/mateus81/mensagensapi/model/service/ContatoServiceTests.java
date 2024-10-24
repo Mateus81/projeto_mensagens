@@ -1,11 +1,14 @@
 package io.github.mateus81.mensagensapi.model.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -45,41 +48,45 @@ public class ContatoServiceTests {
 	
 	@Test
 	public void testReadAllContatos() {
-		// Cria dois contatos e os insere numa lista
+		// Cria Usuário 
+		Usuario usuario = new Usuario(1);
+		// Cria dois contatos e os insere numa lista e associa ao contato
 		Contato contato1 = new Contato(2, "Marcelo");
 		Contato contato2 = new Contato(3, "Leo");
 		List<Contato> contatos = Arrays.asList(contato1, contato2);
+		contato1.setUsuario(usuario);
+		contato2.setUsuario(usuario);
 		// Validação
-		when(contatoRepository.findAll()).thenReturn(contatos);
-		List<Contato> contatoResult = contatoService.readAllContatos();
+		when(contatoRepository.findByUsuarioId(usuario.getId())).thenReturn(contatos);
+		List<Contato> contatoResult = contatoService.readContatosByUsuario(usuario.getId());
 		assertEquals(contatoResult, contatos);
 	}
 	
 	@Test
 	public void testInsertContato() {
-	    // Cria e salva contato e o usuário
-		Contato contato = new Contato(4, "Leandro");
-	    Usuario usuario = new Usuario();
-	    usuario.setId(1); // Defina o id do usuário como Long
-	    contato.setUsuario(usuario);
+		// Cria um usuário associado
+		Usuario usuarioAssociado = new Usuario(2, "Renan");
+		usuarioAssociado.setContatos(new ArrayList<>());
+	    Usuario usuarioContato = new Usuario(3, "Fernando");
 
-	    // Mocke o resultado do método findById do UsuarioRepository
-	    Optional<Usuario> usuarioOpt = Optional.of(usuario);
-	    when(usuarioRepository.findById(usuario.getId())).thenReturn(usuarioOpt);
+	    // Configura os mocks
+	    when(usuarioRepository.findById(usuarioAssociado.getId())).thenReturn(Optional.of(usuarioAssociado));
+	    when(usuarioRepository.findOptionalByNome(usuarioContato.getNome())).thenReturn(Optional.of(usuarioContato));
+	    when(usuarioRepository.save(any(Usuario.class))).thenReturn(usuarioAssociado);
 
-	    // Mocke o resultado do método save do ContatoRepository
-	    when(contatoRepository.save(contato)).thenReturn(contato);
+	    // Chama o método insertContato
+	    Usuario contatoResult = contatoService.insertContato(usuarioAssociado.getId(), usuarioContato);
 
-	    // Cria um novo serviço ContatoService usando os repositórios mocketados
-	    ContatoService contatoService = new ContatoService(contatoRepository, usuarioRepository);
+	    // Verifica se o resultado é igual ao objeto Contato esperado
+	    assertNotNull(contatoResult);
+	    assertEquals(usuarioContato.getNome(), contatoResult.getNome());
+	    assertTrue(usuarioAssociado.getContatos().contains(usuarioContato));
 
-	    // Chame o método insertContato com o objeto Contato
-	    Contato contatoResult = contatoService.insertContato(contato);
-
-	    // Verifique se o resultado é igual ao objeto Contato esperado
-	    assertEquals(contatoResult.getUsuario().getId(), usuario.getId());
+	    // Verifica se os métodos dos repositórios foram chamados corretamente
+	    verify(usuarioRepository).findById(usuarioAssociado.getId());
+	    verify(usuarioRepository).findOptionalByNome(usuarioContato.getNome());
+	    verify(usuarioRepository).save(usuarioAssociado);
 	}
-
 	
 	@Test
 	public void testDeleteContato() {

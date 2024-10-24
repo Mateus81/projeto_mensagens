@@ -36,8 +36,7 @@ public class Contato {
 	@Email
 	public String email;
 
-	@NotNull
-	@Column(nullable = false, unique = true)
+	@Column(nullable = true)
 	public String telefone;
 
 	// Objeto Usuário

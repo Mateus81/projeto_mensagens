@@ -3,13 +3,16 @@ package io.github.mateus81.mensagensapi.model.controller;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.Test;
@@ -21,9 +24,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import io.github.mateus81.mensagensapi.model.dto.ContatoDTO;
-import io.github.mateus81.mensagensapi.model.dto.UsuarioDTO;
 import io.github.mateus81.mensagensapi.model.entity.Contato;
 import io.github.mateus81.mensagensapi.model.entity.Usuario;
+import io.github.mateus81.mensagensapi.model.repository.UsuarioRepository;
 import io.github.mateus81.mensagensapi.model.service.ContatoService;
 
 @ExtendWith(MockitoExtension.class)
@@ -35,9 +38,14 @@ public class ContatoControllerTests {
 	@Mock
 	private ContatoService contatoService;
 	
+	@Mock
+	private UsuarioRepository usuarioRepository;
+	
 	@Test
 	public void testGetAllContatos() {
+		Usuario usuario = new Usuario(1);
 		Contato contato = new Contato();
+		contato.setUsuario(usuario);
 		Contato contato2 = new Contato();
 		List<Contato> contatos = Arrays.asList(contato, contato2);
 		List<ContatoDTO> Dtos = contatos.stream().map(contatoEntity -> {
@@ -50,8 +58,8 @@ public class ContatoControllerTests {
 			return dto;
 		}).collect(Collectors.toList());
 		
-		when(contatoService.readAllContatos()).thenReturn(contatos);
-		List<ContatoDTO> contatoResult = contatoController.getAllContatos();
+		when(contatoService.readContatosByUsuario(1)).thenReturn(contatos);
+		List<ContatoDTO> contatoResult = contatoController.getContatosByUsuario(1);
 		assertEquals(contatoResult, Dtos);
 	}
 	
@@ -80,28 +88,30 @@ public class ContatoControllerTests {
 	public void testInsertContato() {
 		 // Crie um objeto ContatoDTO
 	    ContatoDTO contatoDto = new ContatoDTO();
+	    contatoDto.setId(1);
 	    contatoDto.setNome("Felipe");
 	    contatoDto.setEmail("Felipe@gmail.com");
-	    contatoDto.setTelefone("123456789");
-	    contatoDto.setUsuario(null);
 
 	    // Crie um objeto Contato
-	    Contato contato = new Contato();
-	    contato.setNome(contatoDto.getNome());
-	    contato.setEmail(contatoDto.getEmail());
-	    contato.setTelefone(contatoDto.getTelefone());
-	    Usuario usuario = new Usuario();
-	    usuario.setId(1); // Use o id do usuário
-	    contato.setUsuario(usuario);
+	    Usuario usuarioContato = new Usuario();
+	    usuarioContato.setId(contatoDto.getId());
+	    usuarioContato.setNome(contatoDto.getNome());
+	    usuarioContato.setEmail(contatoDto.getEmail());
+	    Usuario usuarioAssociado = new Usuario();
+	    usuarioAssociado.setId(1); // Use o id do usuário
+	    usuarioAssociado.setContatos(new ArrayList<>());
 
-	    // Mocke o serviço ContatoService
-	    when(contatoService.insertContato(any(Contato.class))).thenReturn(contato);
+	    // Mocks
+	    when(contatoService.insertContato(eq(1), any(Usuario.class))).thenReturn(usuarioContato);
 	    
 	    // Chame o método insertContato com o objeto ContatoDTO
-	    Contato contatoResult = contatoController.insertContato(contatoDto);
+	    Usuario contatoResult = contatoController.insertContato(1, contatoDto);
 
-	    // Verifique se o resultado é igual ao objeto Contato esperado
-	    assertEquals(contatoResult, contato);
+	    // Verifique se o resultado é igual ao objeto esperado
+	    verify(contatoService).insertContato(eq(1), any(Usuario.class));
+	    assertEquals(contatoResult.getId(), usuarioContato.getId());
+	    assertEquals(contatoResult.getNome(), usuarioContato.getNome());
+	    assertEquals(contatoResult.getEmail(), usuarioContato.getEmail());
 	}
 	
 	@Test 
