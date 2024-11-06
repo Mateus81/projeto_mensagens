@@ -9,4 +9,4 @@ Tecnologias usadas/ a utilizar:
 * Pacotes criados no Back-end -> Controller, Service, Repository, Entity, DTO e Config.
 
 Correções/Implementações a fazer:
-1. Exibir contatos que após adicionados não aparecem.
+Subitamente no projeto, os relacionamentos bidirecionais JSON estão com problemas de serialização que não se resolvem com @JsonIgnore, nem @JsonIgnoreProperties, nem @JsonBack/ManagedReference, @JsonIdentityInfo;
