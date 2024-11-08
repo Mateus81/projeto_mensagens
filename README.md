@@ -9,5 +9,4 @@ Tecnologias usadas/ a utilizar:
 * Pacotes criados no Back-end -> Controller, Service, Repository, Entity, DTO e Config.
 
 Correções/Implementações a fazer:
-1. Adicionar link para tela de contatos no ChatComponent;
-2. Criar ContatoComponent. (A partir do momento que eu crio uma conversa com um usuário cadastrado, ele se torna meu contato) 
+Subitamente no projeto, os relacionamentos bidirecionais JSON estão com problemas de serialização que não se resolvem com @JsonIgnore, nem @JsonIgnoreProperties, nem @JsonBack/ManagedReference, @JsonIdentityInfo;
