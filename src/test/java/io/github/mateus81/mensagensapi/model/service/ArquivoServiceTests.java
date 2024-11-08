@@ -40,24 +40,31 @@ public class ArquivoServiceTests {
 	
 	@Test
 	public void testReadArquivoById() {
+		// Cria arquivo
 		Arquivo arquivo = new Arquivo(1, "arquivo", "txt", "20".getBytes());
+		// Verifica se existe o arquivo
 		when(arquivoRepository.findById(anyInt())).thenReturn(Optional.of(arquivo));
+		// Validação
 		Arquivo arquivoResult = arquivoService.readArquivoById(1);
 		assertEquals(arquivoResult, arquivo);
 	}
 	
 	@Test
 	public void testReadAllArquivo() {
+		// Cria arquivos e uma lista com eles
 		Arquivo arquivo = new Arquivo();
 		Arquivo arquivo2 = new Arquivo();
 		List<Arquivo> arquivos = Arrays.asList(arquivo, arquivo2);
+		// Verifica se existem
 		when(arquivoRepository.findAll()).thenReturn(arquivos);
+		// Validação
 		List<Arquivo> arquivoResult = arquivoService.readAllArquivo();
 		assertEquals(arquivoResult, arquivos);
 	}
 	
 	@Test
 	public void testDeleteArquivoById() {
+		// Cria arquivo e verifica se existe
 		Arquivo arquivo = new Arquivo(10);
 		when(arquivoRepository.findById(anyInt())).thenReturn(Optional.of(arquivo));
 	    // Execução
@@ -79,7 +86,7 @@ public class ArquivoServiceTests {
         Conversa conversa = new Conversa(1);
         conversa.setUsuario(usuario);
         when(conversaRepository.findById(conversa.getId())).thenReturn(Optional.of(conversa));
-
+        // Cria objeto arquivo e insere dados previamente criados
         Arquivo arquivoSalvo = new Arquivo();
         arquivoSalvo.setId(1);
         arquivoSalvo.setNome(nomeArquivo);

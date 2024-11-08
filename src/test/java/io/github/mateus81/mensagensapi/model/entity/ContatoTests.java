@@ -11,6 +11,7 @@ public class ContatoTests {
 
 	@Test
 	public void testGettersAndSetters() {
+		// Cria objeto contato e insere os dados
 		Contato contato = new Contato();
 		contato.setId(1);
 		contato.setNome("Marcos");

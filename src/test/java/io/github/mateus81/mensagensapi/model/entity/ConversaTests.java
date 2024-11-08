@@ -39,18 +39,19 @@ public class ConversaTests {
 	// Testa conversa com dois usuários
 	@Test
 	public void testConversa() {
+		// Cria objeto usuário 
 		Usuario usuarioInit = new Usuario();
 		usuarioInit.setNome("Mateus");
-		
+		// Cria objeto usuário destino
 		Usuario usuarioDest = new Usuario();
 		usuarioDest.setNome("Renan");
-		
+		// Popula a conversa com os dados dos usuários
 		Conversa conversa = new Conversa();
 		conversa.setUsuario(usuarioInit);
 		conversa.setUsuarioDest(usuarioDest);
 		conversa.setStatus(StatusConversa.OPEN);
 		conversa.setData_inicio(new Date());
-		
+		// Verificações
 		Assertions.assertEquals(usuarioInit, conversa.getUsuario());
 		Assertions.assertEquals(usuarioDest, conversa.getUsuarioDest());
 		Assertions.assertEquals(StatusConversa.OPEN, conversa.getStatus());

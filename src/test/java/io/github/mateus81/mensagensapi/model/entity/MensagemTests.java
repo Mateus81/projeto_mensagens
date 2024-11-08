@@ -19,11 +19,12 @@ public class MensagemTests {
 	// Testa setters/getters
 	@Test
 	public void testSetAndGet() {
+		// Cria mensagem e atribui valores
 		Mensagem mensagem = new Mensagem();
 		mensagem.setId(1);
 		mensagem.setTexto("Olá, mundo!");
 		mensagem.setData_hora_envio(new Date());
-		
+		// Verificações
 		Assertions.assertEquals(1, mensagem.getId());
 		Assertions.assertEquals("Olá, mundo!", mensagem.getTexto());
 		Assertions.assertNotNull(mensagem.getDataHoraEnvio());
@@ -32,6 +33,7 @@ public class MensagemTests {
 	// Testa mensagem entre usuarios
 	@Test
 	public void testSetAndGetUsuario() {
+		// Cria remetente, destinatário e a mensagem
 		Usuario remetente = new Usuario("Marcos", "marcos@gmail.com");
 		Usuario destino = new Usuario("Fernando","fernando@yahoo.com");
 		Mensagem mensagem = new Mensagem();

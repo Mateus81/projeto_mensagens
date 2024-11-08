@@ -43,7 +43,6 @@ public class Mensagem {
 	@Column
 	private Boolean vista;
 	
-	//@JsonIgnore
 	@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "conversaId")

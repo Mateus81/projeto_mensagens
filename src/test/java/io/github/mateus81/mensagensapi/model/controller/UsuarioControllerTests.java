@@ -34,9 +34,11 @@ public class UsuarioControllerTests {
 	
 	@Test
 	public void testGetAllUsers() {
+		// Cria dois usuários e os insere numa lista
 		Usuario usuario = new Usuario();
 		Usuario usuario2 = new Usuario();
 		List<Usuario> usuarios = Arrays.asList(usuario, usuario2);
+		// Cria lista DTOs e retorna com os dados de cada usuário
 		List<UsuarioDTO> Dtos = usuarios.stream().map(usuarioEntity -> {
 			UsuarioDTO dto = new UsuarioDTO();
 			dto.setId(usuarioEntity.getId());
@@ -45,7 +47,7 @@ public class UsuarioControllerTests {
 			dto.setSenhaNaoProtegida(usuarioEntity.getSenha());
 			return dto;
 		}).collect(Collectors.toList());
-		
+		// Mocka, executa e verifica
 		when(usuarioService.getAllUsers()).thenReturn(usuarios);
 		List<UsuarioDTO> usuarioResult = usuarioController.getAllUsers();
 		assertEquals(usuarioResult, Dtos);
@@ -53,6 +55,7 @@ public class UsuarioControllerTests {
 	
 	@Test
 	public void testGetUserById() throws Exception {
+		// Cria usuário e usuário dto e iguala seus IDs
 		Usuario usuario = new Usuario(1);
 		UsuarioDTO usuarioDto = new UsuarioDTO();
 		usuarioDto.setId(usuario.getId());
@@ -69,10 +72,12 @@ public class UsuarioControllerTests {
 	
 	@Test
 	public void testGetUserByNome() throws Exception {
+		// Cria usuário e dto de usuário e coloca nome e Id correspondentes
 		Usuario usuario = new Usuario(1, "Daniel");
 		UsuarioDTO dto = new UsuarioDTO();
 		dto.setNome(usuario.getNome());
 		dto.setId(usuario.getId());
+		// Mocka, executa e verifica
 		when(usuarioService.getUserByNome("Daniel")).thenReturn(usuario);
 		UsuarioDTO result = usuarioController.getUserByNome("Daniel");
 		assertEquals(result.getId(), dto.getId());
@@ -81,9 +86,12 @@ public class UsuarioControllerTests {
 	
 	@Test
 	public void testDeleteUserById() {
+		// Cria usuário
 		Usuario usuario = new Usuario(1, "Marcos");
+		// Deleta
 		doNothing().when(usuarioService).deleteUserById(anyInt());
 		usuarioController.deleteUserById(1);
+		// Verifica
 		verify(usuarioService, times(1)).deleteUserById(anyInt());
 	}
 	
@@ -104,6 +112,7 @@ public class UsuarioControllerTests {
         // Isso gera Stubbing problem -> when(usuarioService.registerUser(usuario, "password")).thenReturn(usuario);
         when(usuarioService.registerUser(any(Usuario.class), any(String.class))).thenReturn(usuario);
 
+        // Executa
         Usuario result = usuarioController.registerUser(usuarioDto);
 
         // Assert
@@ -114,16 +123,20 @@ public class UsuarioControllerTests {
 	
 	@Test
 	public void testUpdateUser() throws Exception {
+		// Cria usuário
 		Usuario usuarioAtualizado = new Usuario(1, "Mateus");
+		// Mocks
 		when(usuarioService.getUserById(1)).thenReturn(usuarioAtualizado);
 		when(usuarioService.saveOrUpdateUser(usuarioAtualizado)).thenReturn(usuarioAtualizado);
 		when(usuarioService.existsById(1)).thenReturn(true);
+		// Execução e verificação
 		Usuario response = usuarioController.updateUser(1, usuarioAtualizado);
 		assertEquals(response, usuarioAtualizado);
 	}
 	
 	@Test
 	public void testLogin() throws Exception {
+		// Cria e-mail, senha, usuário e atribui valores para teste de login
         String email = "test@example.com";
         String senha = "password";
         Usuario usuario = new Usuario();
@@ -131,13 +144,13 @@ public class UsuarioControllerTests {
         usuario.setEmail(email);
         usuario.setNome("Test User");
         usuario.setSenha(senha);
-
+        // Mock
         when(usuarioService.auth(email, senha)).thenReturn(usuario);
-
+        // Pedido de login
         LoginRequest loginRequest = new LoginRequest();
         loginRequest.setEmail(email);
         loginRequest.setSenha(senha);
-        
+        // Execução
         UsuarioDTO result = usuarioController.login(loginRequest);
 
         // Assert

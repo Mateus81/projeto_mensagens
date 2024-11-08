@@ -58,10 +58,10 @@ public class ConversaServiceTests {
 
 	@Test
 	public void testGetLoggedUserEmail() {
-		
+		// Build dados do usuário
 		UserDetails userDetails = User.withUsername("test@example.com").password("password").authorities("USER").build();
 		when(auth.getPrincipal()).thenReturn(userDetails);
-		
+		// Validação
 		String email = conversaService.getLoggedUserEmail();
 		assertEquals("test@example.com", email);
 	}
@@ -80,7 +80,7 @@ public class ConversaServiceTests {
 		conversa.setUsuario(usuario);
 		conversa2.setUsuarioDest(usuario);
 		List<Conversa> conversas = Arrays.asList(conversa, conversa2);
-		
+		// Validação
 		when(usuarioRepository.findByEmail(email)).thenReturn(usuario);
 		when(conversaRepository.findByUsuarioOrUsuarioDest(usuario, usuario)).thenReturn(conversas);
 		when(conversaService.getLoggedUserEmail()).thenReturn(email);
@@ -169,9 +169,12 @@ public class ConversaServiceTests {
 		Usuario usuario = new Usuario(1);
 		usuario.setEmail(email);
 		conversa.setUsuario(usuario);
+		// Verifica e salva
 		when(conversaRepository.findById(anyInt())).thenReturn(Optional.of(conversa));
 		when(conversaRepository.save(conversa)).thenReturn(conversa);
+		// Cria resultado e manda ao service que inicie
 		Conversa conversaResult = conversaService.endConversa(4);
+		// Compara
 		assertEquals(conversaResult, conversa);
 	}
 }

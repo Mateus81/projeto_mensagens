@@ -11,6 +11,7 @@ public class UsuarioTests {
 
 	@Test
 	public void testGettersAndSetters() {
+		// Cria usuário e atribui valores
 		Usuario usuario = new Usuario();
 		usuario.setNome("Mateus");
 		usuario.setId(1);

@@ -54,15 +54,18 @@ public class MensagemServiceTests {
 	
 	@Test
 	public void testGetMessageById() {
+		// Cria objeto mensagem
 		Mensagem mensagem = new Mensagem(1, "Olá", false);
+		// Mocka
 		when(mensagemRepository.findByIdWithConversa(mensagem.getId())).thenReturn(Optional.of(mensagem));
+		// Verificações
 		Mensagem mensagemResult = mensagemService.getMessageById(1);
 		assertEquals(mensagemResult, mensagem);
 	}
 	
 	@Test
 	public void testGetMensagemByConversaId() {
-		// Criação da conversa e das mensagens
+		// Criação da conversa, das mensagens e lista
 		Conversa conversa = new Conversa(1);
 		Mensagem mensagem = new Mensagem();
 		Mensagem mensagem2 = new Mensagem();
@@ -108,14 +111,16 @@ public class MensagemServiceTests {
 		when(usuarioRepository.findByEmail(remetente.getEmail())).thenReturn(remetente);
 		when(conversaRepository.findById(conversa.getId())).thenReturn(Optional.of(conversa));
 		when(mensagemRepository.save(any(Mensagem.class))).thenReturn(mensagem);
-	
+		// Verificações
 		Mensagem mensagemResult = mensagemService.createMessage(conversa.getId(), dto);
 		assertEquals(mensagem, mensagemResult);
 	}
 	
 	@Test
 	public void testDeleteUserById() {
+		// Criação da mensagem
 		Mensagem mensagem = new Mensagem(1, "Oi", false);
+		// Mock, exclusão e verificação
 		when(mensagemRepository.findById(anyInt())).thenReturn(Optional.of(mensagem));
 		mensagemService.deleteMessageById(1);
 		verify(mensagemRepository).delete(mensagem);;
@@ -123,20 +128,23 @@ public class MensagemServiceTests {
 	
 	@Test
 	public void testUpdateMessage() {
+		// Cria objeto mensagem e objeto da atualizada
 		Mensagem mensagem = new Mensagem(1, "Olá", false);
 		Mensagem mensagemAtualizada = new Mensagem (1, "Ei!", false);
-		
+		// Mocks
 		when(mensagemRepository.findById(mensagemAtualizada.getId())).thenReturn(Optional.of(mensagem));
 		when(mensagemRepository.save(any(Mensagem.class))).thenReturn(mensagemAtualizada);
 		Mensagem mensagemSalva = mensagemService.updateMessage(mensagemAtualizada.getId(), mensagemAtualizada);
-		
+		// Verificações
 		assertEquals(mensagemSalva.getId(), mensagem.getId());
 		assertEquals(mensagemSalva.getTexto(), mensagemAtualizada.getTexto());
 	}
 	
 	@Test
 	public void testMarkAsRead() {
+		// Cria objeto mensagem
 		Mensagem mensagem = new Mensagem(1, "Serei marcada como lida", false);
+		// Mocka, executa e verifica
 		when(mensagemRepository.findById(anyInt())).thenReturn(Optional.of(mensagem));
 		mensagemService.markAsRead(1);
 		verify(mensagemRepository).save(mensagem);
@@ -145,11 +153,14 @@ public class MensagemServiceTests {
 	
 	@Test
 	public void testMarkAllAsRead() {
+		// Cria objeto conversa
 		Conversa conversa = new Conversa(1);
+		// Mock
 		when(entityManager.createQuery(anyString())).thenReturn(query);
 		// Injeta o entityManager no mensagemService
 		ReflectionTestUtils.setField(mensagemService, "entityManager", entityManager);
 		mensagemService.markAllAsRead(conversa.getId());
+		// Verificações
 		String jpql = "UPDATE Mensagem m SET m.vista = true WHERE m.conversa.id = conversaId";
 		verify(entityManager).createQuery(jpql); 
 		verify(query).setParameter("conversaId", conversa.getId());

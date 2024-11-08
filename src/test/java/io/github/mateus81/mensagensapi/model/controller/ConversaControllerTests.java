@@ -84,7 +84,7 @@ public class ConversaControllerTests {
 		dto.setUsuario(conversa.getUsuario());
 		dto.setUsuarioDest(destino);
 		dto.setMensagens(controller.convertToDTO(conversa.getMensagens()));
-		
+		// Verificações
 		when(conversaService.readConversaById(anyInt())).thenReturn(conversa);
 		ConversaDTO conversaResult = conversaController.getConversaById(1);
 		assertEquals(conversaResult, dto);
@@ -92,9 +92,12 @@ public class ConversaControllerTests {
 	
 	@Test
 	public void testDeleteConversaById() {
+		// Cria conversa
 		Conversa conversa = new Conversa(1);
+		// Deleta
 		doNothing().when(conversaService).deleteConversaById(anyInt());
-		conversaController.deleteConversaById(1);
+		conversaController.deleteConversaById(conversa.getId());
+		// Verifica
 		verify(conversaService, times(1)).deleteConversaById(anyInt());
 	}
 	
@@ -111,7 +114,7 @@ public class ConversaControllerTests {
 		Conversa conversa = new Conversa();
 		conversa.setId(dto.getId());
 		conversa.setUsuario(dto.getUsuario());
-		
+		// Verificações
 		when(conversaService.startConversa(any(ConversaDTO.class))).thenReturn(conversa);
 		Conversa createdConversa = conversaController.startConversa(dto);
 		assertEquals(createdConversa, conversa);
@@ -119,10 +122,11 @@ public class ConversaControllerTests {
 	
 	@Test
 	public void testEndConversa() {
+		// Cria conversa, mocka e executa
 		Conversa conversa = new Conversa(1);
 		when(conversaService.endConversa(conversa.getId())).thenReturn(conversa);
 		ResponseEntity<String> response = conversaController.endConversa(conversa.getId());
-		
+		// Validação
 		assertEquals(HttpStatus.OK, response.getStatusCode());
 		assertEquals("Conversa encerrada com sucesso", response.getBody());
 	}

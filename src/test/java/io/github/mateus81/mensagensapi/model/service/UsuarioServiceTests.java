@@ -55,6 +55,7 @@ public class UsuarioServiceTests {
 		// Cria usuário e o resultado esperado
 		Usuario usuarioMock = new Usuario(4, "Renato");
 		when(usuarioRepository.findById(anyInt())).thenReturn(Optional.of(usuarioMock));
+		// Verificações
 		Usuario usuarioResult = usuarioService.getUserById(4);
 		assertEquals(usuarioResult, usuarioMock);
 	}
@@ -64,6 +65,7 @@ public class UsuarioServiceTests {
 		// Cria usuario e o resultado esperado
 		Usuario usuarioMock = new Usuario(1, "Matt");
 		when(usuarioRepository.findOptionalByNome(usuarioMock.getNome())).thenReturn(Optional.of(usuarioMock));
+		// Verificações
 		Usuario result = usuarioService.getUserByNome(usuarioMock.getNome());
 		assertEquals(result, usuarioMock);
 	}
@@ -80,7 +82,7 @@ public class UsuarioServiceTests {
 	
 	@Test
 	public void testDeleteUserById() {
-		// Cria usuario
+		// Cria usuario e mocka
 		Usuario usuario = new Usuario(5, "Leonor");
 		when(usuarioRepository.findById(anyInt())).thenReturn(Optional.of(usuario));
 		// Operação de exclusão
@@ -123,7 +125,7 @@ public class UsuarioServiceTests {
 		Usuario usuarioInexistente = new Usuario(10, "Ambrósio", "313131");
 		
 		when(usuarioRepository.findById(9)).thenReturn(Optional.of(usuarioExistente));
-		when(usuarioRepository.findById(10)).thenReturn(Optional.empty());
+		when(usuarioRepository.findById(usuarioInexistente.getId())).thenReturn(Optional.empty());
 		// Verifica
 		assertTrue(usuarioService.existsById(9));
 		assertFalse(usuarioService.existsById(10));

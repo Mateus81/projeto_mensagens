@@ -11,6 +11,7 @@ public class ArquivoTests {
 	
 	@Test
 	public void testGettersAndSetters() {
+		// Cria objeto arquivo
 		Arquivo mockArquivo = new Arquivo();
 		mockArquivo.setId(1);
 		mockArquivo.setNome("foto");
@@ -24,6 +25,7 @@ public class ArquivoTests {
 	
 	@Test
     public void testNullValues() {
+		// Cria objeto arquivo e testa com valores nulos
 		Arquivo arquivo = new Arquivo();
 		arquivo.setNome(null);
 		arquivo.setTipo(null);
@@ -34,6 +36,7 @@ public class ArquivoTests {
 
 	    @Test
 	    public void testInvalidValues() {
+	    	// Testa com valores inválidos
 	        assertThrows(IllegalArgumentException.class, () -> new Arquivo(-1, "arquivo", "png", "3".getBytes()));
 	    }
 	}

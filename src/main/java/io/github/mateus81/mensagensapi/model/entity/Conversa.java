@@ -20,11 +20,14 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 import io.github.mateus81.mensagensapi.model.service.ConversaService.StatusConversa;
 
 // Esta é a conversa entre os usuários.
 @Entity
+@JsonInclude(Include.NON_NULL)
 public class Conversa {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -12,7 +12,6 @@ import static org.mockito.Mockito.when;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.Test;
@@ -43,11 +42,13 @@ public class ContatoControllerTests {
 	
 	@Test
 	public void testGetAllContatos() {
+		// Cria usuário e contato, seta usuário em contato e cria lista de contatos
 		Usuario usuario = new Usuario(1);
 		Contato contato = new Contato();
 		contato.setUsuario(usuario);
 		Contato contato2 = new Contato();
 		List<Contato> contatos = Arrays.asList(contato, contato2);
+		// Cria lista de dto para mapear contatos
 		List<ContatoDTO> Dtos = contatos.stream().map(contatoEntity -> {
 			ContatoDTO dto = new ContatoDTO();
 			dto.setId(contatoEntity.getId());
@@ -57,7 +58,7 @@ public class ContatoControllerTests {
 			dto.setUsuario(contatoEntity.getUsuario());
 			return dto;
 		}).collect(Collectors.toList());
-		
+		// Verificações
 		when(contatoService.readContatosByUsuario(1)).thenReturn(contatos);
 		List<ContatoDTO> contatoResult = contatoController.getContatosByUsuario(1);
 		assertEquals(contatoResult, Dtos);
@@ -78,9 +79,12 @@ public class ContatoControllerTests {
 	
 	@Test
 	public void testDeleteContatoById() {
+		// Cria contato
 		Contato contato = new Contato(1, "James");
+		// Deleta
 		doNothing().when(contatoService).deleteContatoById(anyInt());
-		contatoController.deleteContatoById(3);
+		contatoController.deleteContatoById(contato.getId());
+		// Verifica
 		verify(contatoService, times(1)).deleteContatoById(anyInt());
 	}
 	
@@ -116,7 +120,9 @@ public class ContatoControllerTests {
 	
 	@Test 
 	public void testUpdateContato() {
+		// Cria contato
 		Contato contatoAtualizado = new Contato(1, "Tomás de Aquino");
+		// Mocka, executa e verifica
 		when(contatoService.updateContato(1, contatoAtualizado)).thenReturn(contatoAtualizado);
 		ResponseEntity<Contato> response = contatoController.updateContato(1, contatoAtualizado);
 		assertEquals(HttpStatus.OK, response.getStatusCode());

@@ -1,7 +1,6 @@
 package io.github.mateus81.mensagensapi.model.controller;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doNothing;
@@ -54,13 +53,17 @@ public class MensagemControllerTests {
 	
 	@Test
 	public void TestReadMessageById() {
+		// Cria mensagem e atribui valores
 		Mensagem mensagem = new Mensagem();
 		mensagem.setId(1);
 		mensagem.setTexto("Olá");
+		// Cria dto e atribui valores da mensagem
 		MensagemDTO dto = new MensagemDTO();
 		dto.setId(mensagem.getId());
 		dto.setTexto(mensagem.getTexto());
+		// Mocka
 		when(mensagemService.getMessageById(anyInt())).thenReturn(mensagem);
+		// Executa e Verifica
 		MensagemDTO mensagemResult = mensagemController.readMessage(1);
 		assertEquals(mensagemResult.getId(), dto.getId());
 		assertEquals(mensagemResult.getTexto(), dto.getTexto());
@@ -68,7 +71,7 @@ public class MensagemControllerTests {
 	
 	@Test
 	public void testGetMensagensByConversaId() {
-		// Criação da conversa e das mensagens
+		// Criação da conversa, das mensagens e da lista de mensagens
 		Conversa conversa = new Conversa(1);
 		Mensagem mensagem = new Mensagem();
 		Mensagem mensagem2 = new Mensagem();
@@ -76,6 +79,7 @@ public class MensagemControllerTests {
 		mensagem.setTexto("Olá");
 		List<Mensagem> mensagens = Arrays.asList(mensagem, mensagem2);
 		conversa.setMensagens(mensagens);
+		// Mocka, executa e verifica
 		when(mensagemService.getMensagensByConversaId(conversa.getId())).thenReturn(mensagens);
 		List<Mensagem> result = mensagemController.getMensagensByConversaId(conversa.getId());
 		assertEquals(result, mensagens);
@@ -112,28 +116,35 @@ public class MensagemControllerTests {
 	
 	@Test
 	public void testDeleteMessageById() {
+		// Cria mensagem
 		Mensagem mensagem = new Mensagem(1, "Olá, Mundo", false);
+		// Deleta
 		doNothing().when(mensagemService).deleteMessageById(anyInt());
-		mensagemController.deleteMessageById(1);
+		mensagemController.deleteMessageById(mensagem.getId());
+		// Verifica
 		verify(mensagemService, times(1)).deleteMessageById(anyInt());
 	}
 	
 	@Test 
 	public void testUpdateMessage() {
+		// Cria mensagem e mensagem atualizada
 		Mensagem mensagem = new Mensagem(1, "Meu amigo, e aí?", false);
 		Mensagem mensagemAtualizada = new Mensagem(1, "Meu amigo, e aí, beleza?", false);
-		when(mensagemService.updateMessage(1, mensagemAtualizada)).thenReturn(mensagemAtualizada);
+		// Mocka e executa
+		when(mensagemService.updateMessage(mensagem.getId(), mensagemAtualizada)).thenReturn(mensagemAtualizada);
 		ResponseEntity<Mensagem> response = mensagemController.updateMessage(1, mensagemAtualizada);
-		
+		// Verifica se foi atualizada
 		assertEquals(HttpStatus.OK, response.getStatusCode());
 		assertEquals(mensagemAtualizada, response.getBody());
 	}
 	
 	@Test
 	public void testMarkMessageAsRead() throws Exception {
+		// Chama endpoint
 		MvcResult result = mockMvc.perform(patch("/conversas/1/mensagens/1")).andReturn();
-		
+		// Verifica
 		assertEquals(HttpStatus.OK.value(), result.getResponse().getStatus());
+		// Executa e verifica
 		String expectedResponse = "Mensagem marcada como lida";
 		assertEquals(expectedResponse, result.getResponse().getContentAsString());
 		verify(mensagemService, times(1)).markAsRead(anyInt());

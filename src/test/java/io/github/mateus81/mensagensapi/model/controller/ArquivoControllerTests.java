@@ -39,9 +39,11 @@ public class ArquivoControllerTests {
 	
 	@Test
 	public void testReadAll() {
+		// Cria arquivos e adiciona em lista
 		Arquivo arquivo = new Arquivo();
 		Arquivo arquivo2 = new Arquivo();
 		List<Arquivo> arquivos = Arrays.asList(arquivo, arquivo2);
+		// Mocka, executa e verifica
 		when(arquivoService.readAllArquivo()).thenReturn(arquivos);
 		List<Arquivo> arquivoResult = arquivoController.readAll();
 		assertEquals(arquivoResult, arquivos);
@@ -49,7 +51,9 @@ public class ArquivoControllerTests {
 	
 	@Test
 	public void testReadArquivo() {
+		// Cria arquivo
 		Arquivo arquivo = new Arquivo(1, "teste", "txt", "30".getBytes());
+		// Mocka, executa e verifica
 		when(arquivoService.readArquivoById(anyInt())).thenReturn(arquivo);
 		Arquivo arquivoResult = arquivoController.readArquivo(1);
 		assertEquals(arquivoResult, arquivo);
@@ -57,22 +61,26 @@ public class ArquivoControllerTests {
 	
 	@Test
 	public void testDeleteArquivo() {
+		// Cria arquivo
 		Arquivo arquivo = new Arquivo(1, "serei deletado", "txt", "10".getBytes());
+		// Deleta e verifica se foi deletado
 		doNothing().when(arquivoService).deleteArquivoById(anyInt());
-		arquivoController.deleteArquivo(1);
+		arquivoController.deleteArquivo(arquivo.getId());
 		verify(arquivoService, times(1)).deleteArquivoById(anyInt());
 	}
 	
 	@Test
 	public void testSaveArquivo() throws Exception {
+		// Cria conteúdo de arquivo
 		byte[] mockFileContent = "Conteúdo do arquivo de teste".getBytes();
+		// Cria um objeto InputStream
 		InputStream mockInputStream = new ByteArrayInputStream(mockFileContent);
 		Resource file = new InputStreamResource(mockInputStream);
 		MultipartFile multipartFile = new MockMultipartFile("arquivoTeste.txt", file.getInputStream());
-		
+		// Cria objeto arquivo e mocka
 		Arquivo arquivo = new Arquivo(1, "arquivoTeste.txt", "texto", mockFileContent);
 		when(arquivoService.saveArquivo(any(Integer.class), any(MultipartFile.class))).thenReturn(arquivo);
-		
+		// Verificações
 		ResponseEntity<String> response = arquivoController.saveArquivo(1, multipartFile);
 		assertEquals(HttpStatus.OK, response.getStatusCode());
 		assertEquals("Arquivo enviado com sucesso", response.getBody());

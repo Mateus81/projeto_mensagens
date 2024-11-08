@@ -9,6 +9,7 @@ import java.util.regex.Pattern;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -59,7 +60,7 @@ public class Usuario {
 	private byte[] foto;
 
 	// Um usuário pode ter vários contatos
-	@ManyToMany
+	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "usuario_contatos", joinColumns = @JoinColumn(name = "usuario_id"), 
 	inverseJoinColumns = @JoinColumn(name = "contato_id"))
 	@JsonIgnore
