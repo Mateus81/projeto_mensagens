@@ -9,6 +9,6 @@ Tecnologias usadas/ a utilizar:
 * Pacotes criados no Back-end -> Controller, Service, Repository, Entity, DTO e Config.
 
 Correções/Implementações a fazer:
-- Ajustar exibição de contatos; 
+- Corrigir "encerrar conversas" e ajustar "iniciar conversa" a partir da página de contatos;
 - Ajustar Arquivo no Front/Back;
 
