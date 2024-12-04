@@ -67,16 +67,11 @@ public class ContatoController {
 		contatoService.deleteContatoById(id);
 	}
 
-	// Insere contato
+	// Salva contato
 	@PostMapping("/contatos/{usuarioAssociadoId}")
 	@ResponseStatus(HttpStatus.CREATED)
-	public Usuario insertContato(@PathVariable Integer usuarioAssociadoId, @RequestBody ContatoDTO contatoDto) {
-		Usuario contato = new Usuario();
-		contato.setId(contatoDto.getId());
-		contato.setNome(contatoDto.getNome());
-		contato.setEmail(contatoDto.getEmail());
-		
-		return contatoService.insertContato(usuarioAssociadoId, contato);
+	public Contato insertContato(@PathVariable Integer usuarioAssociadoId, @RequestBody ContatoDTO contatoDto) {
+		return contatoService.insertContato(usuarioAssociadoId, contatoDto);
 	}
 
 	// Atualiza contato

@@ -42,6 +42,10 @@ public class Contato {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "usuarioId", nullable = false)
 	private Usuario usuario;
+	
+	@ManyToOne
+	@JoinColumn(name = "Contato_usuario_id")
+	private Usuario usuarioContato;
 
 	@Column(nullable = true)
 	@Lob

@@ -7,16 +7,13 @@ import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
 import javax.persistence.Lob;
-import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
@@ -60,11 +57,9 @@ public class Usuario {
 	private byte[] foto;
 
 	// Um usuário pode ter vários contatos
-	@ManyToMany(fetch = FetchType.LAZY)
-	@JoinTable(name = "usuario_contatos", joinColumns = @JoinColumn(name = "usuario_id"), 
-	inverseJoinColumns = @JoinColumn(name = "contato_id"))
+	@OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
 	@JsonIgnore
-	private List<Usuario> contatos;
+	private List<Contato> contatos;
 	// E Também conversas!
 	@OneToMany(mappedBy = "usuario")
 	@JsonIgnore
@@ -197,12 +192,12 @@ public class Usuario {
 	}
 
 	// Obtém a lista de contatos
-	public List<Usuario> getContatos() {
+	public List<Contato> getContatos() {
 		return contatos;
 	}
 
 	// Insere lista de contatos
-	public void setContatos(List<Usuario> contatos) {
+	public void setContatos(List<Contato> contatos) {
 		this.contatos = contatos;
 	}
 

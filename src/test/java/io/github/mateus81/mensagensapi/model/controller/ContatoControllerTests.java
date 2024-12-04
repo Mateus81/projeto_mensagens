@@ -1,7 +1,6 @@
 package io.github.mateus81.mensagensapi.model.controller;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doNothing;
@@ -9,7 +8,6 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -96,26 +94,23 @@ public class ContatoControllerTests {
 	    contatoDto.setNome("Felipe");
 	    contatoDto.setEmail("Felipe@gmail.com");
 
-	    // Crie um objeto Contato
-	    Usuario usuarioContato = new Usuario();
-	    usuarioContato.setId(contatoDto.getId());
-	    usuarioContato.setNome(contatoDto.getNome());
-	    usuarioContato.setEmail(contatoDto.getEmail());
-	    Usuario usuarioAssociado = new Usuario();
-	    usuarioAssociado.setId(1); // Use o id do usuário
-	    usuarioAssociado.setContatos(new ArrayList<>());
+	    // Criação do Contato esperado
+	    Contato contatoEsperado = new Contato();
+	    contatoEsperado.setId(1);
+	    contatoEsperado.setNome("Felipe");
+	    contatoEsperado.setEmail("Felipe@gmail.com");
 
 	    // Mocks
-	    when(contatoService.insertContato(eq(1), any(Usuario.class))).thenReturn(usuarioContato);
+	    when(contatoService.insertContato(eq(1), eq(contatoDto))).thenReturn(contatoEsperado);
 	    
 	    // Chame o método insertContato com o objeto ContatoDTO
-	    Usuario contatoResult = contatoController.insertContato(1, contatoDto);
+	    Contato contatoResult = contatoController.insertContato(1, contatoDto);
 
 	    // Verifique se o resultado é igual ao objeto esperado
-	    verify(contatoService).insertContato(eq(1), any(Usuario.class));
-	    assertEquals(contatoResult.getId(), usuarioContato.getId());
-	    assertEquals(contatoResult.getNome(), usuarioContato.getNome());
-	    assertEquals(contatoResult.getEmail(), usuarioContato.getEmail());
+	    verify(contatoService).insertContato(eq(1), eq(contatoDto));
+	    assertEquals(contatoResult.getId(), contatoEsperado.getId());
+	    assertEquals(contatoResult.getNome(), contatoEsperado.getNome());
+	    assertEquals(contatoResult.getEmail(), contatoEsperado.getEmail());
 	}
 	
 	@Test 

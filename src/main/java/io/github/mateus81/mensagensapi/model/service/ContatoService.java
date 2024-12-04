@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import io.github.mateus81.mensagensapi.model.dto.ContatoDTO;
 import io.github.mateus81.mensagensapi.model.entity.Contato;
 import io.github.mateus81.mensagensapi.model.entity.Usuario;
 import io.github.mateus81.mensagensapi.model.repository.ContatoRepository;
@@ -35,30 +36,33 @@ public class ContatoService {
 		return contatoRepository.findByUsuarioId(usuarioId);
 	}
 
-	// Inclui Contato
 	@Transactional
-	public Usuario insertContato(Integer usuarioAssociadoId, Usuario contato) {
+	public Contato insertContato(Integer usuarioAssociadoId, ContatoDTO contatoDto) {
 		// Busca usuário associado
 		Optional<Usuario> usuarioAssociadoOpt = usuarioRepository.findById(usuarioAssociadoId);
 		if(!usuarioAssociadoOpt.isPresent()) {
 			throw new RuntimeException("Usuário associado não encontrado");
 		}
 		// Verifica se Contato existe no banco de dados como um usuário
-		Optional<Usuario> contatoComoUsuario = usuarioRepository.findOptionalByNome(contato.getNome());
+		Optional<Usuario> contatoComoUsuario = usuarioRepository.findOptionalByNome(contatoDto.getNome());
 		if(!contatoComoUsuario.isPresent()) {
 			throw new RuntimeException("Contato não é um usuário existente");
 		}
-	
+		
 		Usuario usuarioAssociado = usuarioAssociadoOpt.get();
-		Usuario usuarioContato = contatoComoUsuario.get();
+		
 		// Impede de adicionar duas vezes o mesmo contato
-		if(usuarioAssociado.getContatos().stream().anyMatch(c -> c.getNome().equals(contato.getNome()))){
+		if(contatoRepository.existsByUsuarioIdAndNome(usuarioAssociadoId, contatoDto.getNome())){
 			throw new RuntimeException("Contato já está adicionado");
 		}
-		
-		usuarioAssociado.getContatos().add(usuarioContato);
-		usuarioRepository.save(usuarioAssociado);
-		return usuarioContato;
+		// Definindo contato
+		Contato contato = new Contato();
+		contato.setId(contatoDto.getId());
+		contato.setNome(contatoDto.getNome());
+		contato.setEmail(contatoDto.getEmail());
+		contato.setTelefone(contatoDto.getTelefone());
+		contato.setUsuario(usuarioAssociado);
+		return contatoRepository.save(contato);
 	}
 
 	// Excluir Contato

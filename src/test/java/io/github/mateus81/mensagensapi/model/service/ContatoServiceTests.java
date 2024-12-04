@@ -19,6 +19,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import io.github.mateus81.mensagensapi.model.dto.ContatoDTO;
 import io.github.mateus81.mensagensapi.model.entity.Contato;
 import io.github.mateus81.mensagensapi.model.entity.Usuario;
 import io.github.mateus81.mensagensapi.model.repository.ContatoRepository;
@@ -66,26 +67,27 @@ public class ContatoServiceTests {
 	public void testInsertContato() {
 		// Cria um usuário associado
 		Usuario usuarioAssociado = new Usuario(2, "Renan");
-		usuarioAssociado.setContatos(new ArrayList<>());
-	    Usuario usuarioContato = new Usuario(3, "Fernando");
+		// Cria usuário que é contato
+	    Usuario usuarioContato = new Usuario(1, "Fernando");
+	    // E Seu DTO
+	    ContatoDTO dto = new ContatoDTO();
+	    dto.setId(1);
+	    dto.setEmail("email@address.com.br");
+	    dto.setNome("Fernando");
+	 
 
 	    // Configura os mocks
 	    when(usuarioRepository.findById(usuarioAssociado.getId())).thenReturn(Optional.of(usuarioAssociado));
-	    when(usuarioRepository.findOptionalByNome(usuarioContato.getNome())).thenReturn(Optional.of(usuarioContato));
-	    when(usuarioRepository.save(any(Usuario.class))).thenReturn(usuarioAssociado);
+	    when(usuarioRepository.findOptionalByNome(dto.getNome())).thenReturn(Optional.of(usuarioContato));
+	    when(contatoRepository.save(any(Contato.class))).thenAnswer(i -> i.getArgument(0));
 
 	    // Chama o método insertContato
-	    Usuario contatoResult = contatoService.insertContato(usuarioAssociado.getId(), usuarioContato);
+	    Contato contatoResult = contatoService.insertContato(usuarioAssociado.getId(), dto);
 
 	    // Verifica se o resultado é igual ao objeto Contato esperado
 	    assertNotNull(contatoResult);
 	    assertEquals(usuarioContato.getNome(), contatoResult.getNome());
-	    assertTrue(usuarioAssociado.getContatos().contains(usuarioContato));
 
-	    // Verifica se os métodos dos repositórios foram chamados corretamente
-	    verify(usuarioRepository).findById(usuarioAssociado.getId());
-	    verify(usuarioRepository).findOptionalByNome(usuarioContato.getNome());
-	    verify(usuarioRepository).save(usuarioAssociado);
 	}
 	
 	@Test
