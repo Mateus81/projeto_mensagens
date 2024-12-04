@@ -38,6 +38,7 @@ export class ContatoComponent implements OnInit {
       this.contatoService.getContatos(this.usuario.id).subscribe((
         contatos: Contato[]) => {
           this.contatos = contatos;
+          console.log("Contatos carregados: ", contatos);
         })
     } else {
       console.error("Não foi possível carregar sua lista de contatos");
@@ -59,21 +60,29 @@ export class ContatoComponent implements OnInit {
 
   // Melhorar lógica de adicionar contato
   addContato(): void {
-    if(this.usuario && this.usuarioAdicionado.nome && this.usuarioAdicionado.nome.trim()) {
-      if(this.usuario){
-      this.userService.getUsuarioByNome(this.usuarioAdicionado.nome).subscribe((usuario: Usuario) => {
-        if(!usuario){
-          console.error("Usuário não encontrado");
-          return;
-        }
-        if(this.usuario?.id){
+    if(!this.usuario && !this.usuario!.id) {
+      console.error("Usuário associado não foi encontrado");
+      return;
+    }
+
+    if(!this.usuarioAdicionado.nome || !this.usuarioAdicionado.nome.trim()){
+      console.error("Nome do contato não pode ser vazio");
+      return;
+    }
+
+    this.userService.getUsuarioByNome(this.usuarioAdicionado.nome).subscribe((usuario: Usuario) => {
+      if(!usuario){
+        console.error("Usuário não encontrado");
+        return;
+      }
+        
         const novoContato: Contato = {
           nome: usuario.nome,
           email: usuario.email,
           usuario: this.usuario as Usuario,
-          foto: null
+          foto: null,
         };
-        this.contatoService.insertContato(this.usuario.id, novoContato).subscribe(() => {
+        this.contatoService.insertContato(this.usuario!.id, novoContato).subscribe(() => {
           console.log("Contato adicionado com sucesso");
           this.usuarioAdicionado.nome = '';
           this.loadContatos();
@@ -82,16 +91,11 @@ export class ContatoComponent implements OnInit {
         error => {
           console.error("Erro ao adicionar contato", error);
         });
-      } else {
-        console.error("Usuário associado não foi encontrado");
-      }}, 
+      },
       error => {
         console.error("Erro ao buscar usuário pelo nome", error);
       });
-    } else {
-      console.error("Nome do contato não pode ser vazio");
-    }}
-  }
+    }
 
   deleteContato(id: number): void {
     if(this.usuario && this.contato){

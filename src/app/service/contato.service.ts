@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
-import { Observable } from "rxjs";
+import { Observable, tap } from "rxjs";
 import { environment } from "src/environments/environment";
 import { Contato } from "../model/contato";
 
@@ -21,7 +21,8 @@ export class ContatoService {
 
     // RequestParam
     getContatos(usuarioId: number): Observable<Contato[]>{
-        return this.http.get<Contato[]>(`${this.apiUrl}/contatos?usuarioId=${usuarioId}`, {withCredentials: true});
+        return this.http.get<Contato[]>(`${this.apiUrl}/contatos?usuarioId=${usuarioId}`, {withCredentials: true}).pipe(tap(
+            data => console.log("Dados recebidos do back-end", data)));
     }
 
     deleteContato(id: number): Observable<void>{

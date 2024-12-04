@@ -1,4 +1,3 @@
-import { Contato } from "./contato"
 import { Conversa } from "./conversa";
 import { Expose, Transform } from "class-transformer";
 import { Buffer } from "buffer";
@@ -9,7 +8,7 @@ export class Usuario {
     email: string;
     senha: string;
     conversas: Conversa[];
-    contatos: Contato[];
+    contatos: Usuario[];
 
     // Lob e Byte no back-end
     @Expose()
