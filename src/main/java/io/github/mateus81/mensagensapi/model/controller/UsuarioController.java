@@ -3,7 +3,10 @@ package io.github.mateus81.mensagensapi.model.controller;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -92,6 +95,13 @@ public class UsuarioController {
 		dto.setEmail(usuario.getEmail());
 		dto.setNome(usuario.getNome());
 		return dto;
+	}
+	
+	// Método de logout explícito
+	@PostMapping("/logout")
+	public ResponseEntity<?> logout(HttpServletRequest request){
+		request.getSession().invalidate();
+		return ResponseEntity.ok("Sessão encerrada.");
 	}
 
 	// Deleta usuário por ID

@@ -1,5 +1,6 @@
 package io.github.mateus81.mensagensapi.model.repository;
 
+
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;

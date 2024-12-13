@@ -1,23 +1,30 @@
 package io.github.mateus81.mensagensapi.config;
 
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
+import org.springframework.web.filter.OncePerRequestFilter;
 
 import io.github.mateus81.mensagensapi.model.service.UserDetailsServiceImpl;
 
 @Configuration
 @EnableWebSecurity
-public class WebSecurityConfig {
+public class WebSecurityConfig extends OncePerRequestFilter {
 
     @Autowired
     private UserDetailsServiceImpl userDetailsService;
@@ -25,6 +32,8 @@ public class WebSecurityConfig {
     @Autowired
     private PasswordEncoder appPasswordEncoder;
 
+    /* Este código tratava da autenticação utilizando Basic Auth, porém devido a inúmeros problemas de 
+     * armazenamento de sessões, mudamos para cookies */
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
@@ -37,19 +46,27 @@ public class WebSecurityConfig {
                 .antMatchers("/contatos/**").authenticated()
                 .anyRequest().authenticated() // Requer autenticação para todos os outros endpoints
             )
-            .httpBasic()
-            .and()
-            .logout()
-            .logoutUrl("/logout")
-            .logoutSuccessHandler(new HttpStatusReturningLogoutSuccessHandler())
-            .invalidateHttpSession(true) // invalida a sessão durante o logout
-            .clearAuthentication(true) // Limpa a autenticação do securityContext
-            .permitAll().and().headers().cacheControl().disable().and().headers()
-            .addHeaderWriter((request, response)-> {
-            	response.setHeader("Cache-Control", "no-store, no-cache, must-revalidate, max-age=0");
-            	response.setHeader("Pragma", "no-cache");
-            	response.setHeader("Expires", "0");
-            });
+            .formLogin(form -> form
+            		.loginProcessingUrl("/usuarios/login")
+            		.successHandler((request, response, auth) -> {SecurityContextHolder.getContext().setAuthentication(auth);
+            		response.setStatus(HttpServletResponse.SC_OK);
+            		})
+            		.usernameParameter("email")
+            		.passwordParameter("senha")
+            		.permitAll()
+            		)
+            .logout(logout -> logout.logoutUrl("/logout")
+            		.invalidateHttpSession(true) // invalida sessão
+            		.clearAuthentication(true)	// limpa autenticação
+            		.addLogoutHandler((request, response, auth) -> SecurityContextHolder.clearContext())
+            		.deleteCookies("JSESSIONID") // remove cookie da sessão
+            		.permitAll()
+            		)
+            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.ALWAYS).
+            		sessionFixation().newSession())
+            .httpBasic().disable()
+            .headers(headers -> headers.cacheControl().disable() 
+            );
         return http.build();
     }
 
@@ -70,6 +87,28 @@ public class WebSecurityConfig {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
         return new CorsFilter(source);
+    }
+    
+    // Impede Basic Auth no navegador
+    @Override
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) 
+    		throws ServletException, java.io.IOException {
+    	
+    	// Logs para depuração
+    	System.out.println("Session ID: " + request.getRequestedSessionId());
+    	System.out.println("Authorization Header: " + request.getHeader("Authorization"));
+    	System.out.println("Current User: " + SecurityContextHolder.getContext().getAuthentication());
+    	
+    	String authorizationHeader = request.getHeader("Authorization");
+    	
+    	if(authorizationHeader != null && authorizationHeader.startsWith("Basic ")) {
+    		System.out.println("Warning: Authorization header detected and ignored.");
+    	}
+    	if(SecurityContextHolder.getContext().getAuthentication() == null && request.getSession(false) != null) {
+    		System.out.println("Forcing session-based authentication");
+    	}
+    	
+    	filterChain.doFilter(request, response);
     }
 }
 

@@ -56,7 +56,7 @@ public class ConversaService {
 			return new ArrayList<>();
 		}
 		List<Conversa> conversas = conversaRepository.findByUsuarioOrUsuarioDest(usuario, usuario);
-		log.info("Conversas encontradas: {}", conversas.size());
+		log.info("Conversas encontradas: {}", usuario.getNome(), conversas.size());
 		return conversas;
 	}
 	
