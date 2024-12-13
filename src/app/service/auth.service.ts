@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, tap, BehaviorSubject } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Usuario } from 'src/app/model/usuario';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +13,7 @@ export class AuthService {
   private currentUserSubject: BehaviorSubject<Usuario | null>;
   public currentUser: Observable<Usuario | null>;
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private router: Router) {
     const currentUserFromStorage = localStorage.getItem("currentUser");
     this.currentUserSubject = new BehaviorSubject<Usuario | null>(currentUserFromStorage ? JSON.parse(currentUserFromStorage) : null);
     this.currentUser = this.currentUserSubject.asObservable();
@@ -32,11 +33,14 @@ export class AuthService {
   }
 
   logout(): void {
+    this.http.post(`${this.apiUrl}/logout`, {}, {withCredentials: true}).subscribe(() => {
       this.currentUserSubject.next(null);
       localStorage.clear();
       sessionStorage.clear();
-      window.location.href="/home"; 
-  }
+      console.log("Usuário deslogado. Estado limpo.");
+      this.router.navigate(["/home"]);
+  }, (err => console.error("Erro ao realizar logout", err))
+)};
 
   // Para fins de teste
   getUser(): Usuario | null {

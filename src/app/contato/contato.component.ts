@@ -145,7 +145,8 @@ export class ContatoComponent implements OnInit {
   }
 
   irParaConversa(id: number): void {
-    if(this.contato){
+    console.log("Usuário atual em irParaConversa:", this.usuario);
+    if(this.contato && this.usuario){
       // Verifica se existe conversa com o contato
       this.chatService.getConversas().subscribe((conversas: Conversa[])=> {
         const conversaExistente = conversas.find(c => c.usuarioDest.nome === this.contato?.nome || c.usuario.nome === this.contato?.nome);

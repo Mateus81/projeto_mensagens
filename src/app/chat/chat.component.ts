@@ -5,6 +5,7 @@ import { AuthService } from '../service/auth.service';
 import { ChatService } from '../service/chat.service';
 import { UserService } from '../service/user.service';
 import { Router } from '@angular/router';
+import { ChangeDetectorRef } from '@angular/core';
 
 @Component({
   selector: 'app-chat',
@@ -17,26 +18,34 @@ export class ChatComponent implements OnInit {
   usuario: Usuario | null = null;
   usuarioDest: Usuario = new Usuario();
 
-  constructor(private chatService: ChatService, private authService: AuthService, private userService: UserService, private router: Router){}
+  constructor(private chatService: ChatService, private authService: AuthService, private userService: UserService, 
+    private router: Router, private cdr: ChangeDetectorRef){}
 
   ngOnInit(): void {
-    this.usuario = this.authService.getUser();
-    if(this.usuario){
-      this.loadConversas();
-    }
+    this.authService.currentUser.subscribe(user => {
+      this.usuario = user;
+      console.log("Usuário atual no front-end:", user);
+      if(this.usuario){
+        this.loadConversas();
+      } else {
+        console.warn('Nenhum usuário logado encontrado.');
+        this.router.navigate(['/home']); // Redirecione para o login
+      }
+    });
   }
 
   loadConversas(): void {
-    if(this.usuario){
     this.chatService.getConversas().subscribe(
       (data: Conversa[]) => {
-        this.conversas = data;
+      // Filtro para melhor funcionamento de exibição e log
+        this.conversas = data.filter(conversa => conversa.usuario.id === this.usuario?.id || conversa.usuarioDest.id === this.usuario?.id);
+        console.log("Conversas filtradas para usuário atual:", this.conversas);
+        this.cdr.detectChanges();
       },
       (error) => {
         console.error('Erro ao carregar as conversas', error);
       }
-    )}
-  };
+    )};
 
   deleteConversa(id: number): void {
     this.chatService.deleteConversa(id).subscribe(

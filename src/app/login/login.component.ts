@@ -33,9 +33,7 @@ export class LoginComponent implements OnInit {
           localStorage.removeItem('rememberedUser');
         }
         localStorage.setItem('currentUser', JSON.stringify(response));
-        this.router.navigate(['/chat']).then(() => { window.location.reload();
-
-        });
+        this.router.navigate(['/chat']);
       },
       error => {
         console.error('Erro ao fazer login:', error);
@@ -44,3 +42,4 @@ export class LoginComponent implements OnInit {
     );
   }
 }
+
