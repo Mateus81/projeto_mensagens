@@ -50,7 +50,7 @@ public class MensagemService {
 	@Transactional
 	public void markAllAsRead(Integer conversaId) {
 		// Consulta com Java Persistency QUERY LANGUAGE
-		String jpql = "UPDATE Mensagem m SET m.vista = true WHERE m.conversa.id = conversaId";
+		String jpql = "UPDATE Mensagem m SET m.vista = true WHERE m.conversa.id = :conversaId";
 		// Executa
 		Query query = entityManager.createQuery(jpql);
 		query.setParameter("conversaId", conversaId);

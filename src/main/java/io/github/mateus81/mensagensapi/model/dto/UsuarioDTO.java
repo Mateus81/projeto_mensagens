@@ -17,6 +17,8 @@ public class UsuarioDTO {
 	@NotNull
 	private String email;
 	
+	private String token;
+	
 	@NotNull
 	@JsonProperty("senha")
 	private String senhaNaoProtegida;
@@ -28,10 +30,16 @@ public class UsuarioDTO {
 		this.senhaNaoProtegida = senhaNaoProtegida;
 	}
 	
-	// Construtor padrão
-	public UsuarioDTO() {
-		
+	// Construtor com token
+	public UsuarioDTO(Integer id, String nome, String email, String token) {
+		this.id = id;
+		this.nome = nome;
+		this.email = email;
+		this.token = token;
 	}
+	
+	// Construtor padrão
+	public UsuarioDTO() {}
 	
 	// Construtor de teste de ID
 	public UsuarioDTO(Integer id) {
@@ -76,6 +84,10 @@ public class UsuarioDTO {
 	
 	public void setEmail(String email) {
 		this.email = email;
+	}
+	
+	public String getToken() {
+		return token;
 	}
 	
 	// Tratamento do AssertionFailedError no JUnit

@@ -12,29 +12,31 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.github.mateus81.mensagensapi.model.dto.ContatoDTO;
 import io.github.mateus81.mensagensapi.model.entity.Contato;
-import io.github.mateus81.mensagensapi.model.entity.Usuario;
 import io.github.mateus81.mensagensapi.model.service.ContatoService;
+import io.github.mateus81.mensagensapi.util.SecurityUtil;
 
 @CrossOrigin("*")
 @RestController
 public class ContatoController {
 
 	private final ContatoService contatoService;
+	private final SecurityUtil securityUtil;
 
 	// Construtor
-	public ContatoController(ContatoService contatoService) {
+	public ContatoController(ContatoService contatoService, SecurityUtil securityUtil) {
 		this.contatoService = contatoService;
+		this.securityUtil = securityUtil;
 	}
 
 	// Vê lista de contatos
 	@GetMapping("/contatos")
-	public List<ContatoDTO> getContatosByUsuario(@RequestParam Integer usuarioId) {
+	public List<ContatoDTO> getContatosByUsuario() {
+		Integer usuarioId = securityUtil.getAuthenticatedId();
 		List<Contato> contatos = contatoService.readContatosByUsuario(usuarioId);
 		return contatos.stream().map(contato -> {
 			ContatoDTO dto = new ContatoDTO();
@@ -68,10 +70,11 @@ public class ContatoController {
 	}
 
 	// Salva contato
-	@PostMapping("/contatos/{usuarioAssociadoId}")
+	@PostMapping("/contatos")
 	@ResponseStatus(HttpStatus.CREATED)
 	public Contato insertContato(@PathVariable Integer usuarioAssociadoId, @RequestBody ContatoDTO contatoDto) {
-		return contatoService.insertContato(usuarioAssociadoId, contatoDto);
+		Integer usuarioAssociadoId1 = securityUtil.getAuthenticatedId();
+		return contatoService.insertContato(usuarioAssociadoId1, contatoDto);
 	}
 
 	// Atualiza contato

@@ -1,6 +1,7 @@
 package io.github.mateus81.mensagensapi.model.controller;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.doNothing;
@@ -17,11 +18,14 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 import io.github.mateus81.mensagensapi.model.dto.LoginRequest;
 import io.github.mateus81.mensagensapi.model.dto.UsuarioDTO;
 import io.github.mateus81.mensagensapi.model.entity.Usuario;
 import io.github.mateus81.mensagensapi.model.service.UsuarioService;
+import io.github.mateus81.mensagensapi.util.JwtUtil;
 
 @ExtendWith(MockitoExtension.class)
 public class UsuarioControllerTests {
@@ -31,6 +35,9 @@ public class UsuarioControllerTests {
 	
 	@Mock
 	private UsuarioService usuarioService;
+	
+	@Mock
+	private JwtUtil jwtUtil;
 	
 	@Test
 	public void testGetAllUsers() {
@@ -141,21 +148,27 @@ public class UsuarioControllerTests {
         String senha = "password";
         Usuario usuario = new Usuario();
         usuario.setId(1);
+        usuario.setSenha(senha);
         usuario.setEmail(email);
         usuario.setNome("Test User");
-        usuario.setSenha(senha);
-        // Mock
+        // Mocks
         when(usuarioService.auth(email, senha)).thenReturn(usuario);
+        when(jwtUtil.generateToken(email)).thenReturn("mock-token");
         // Pedido de login
         LoginRequest loginRequest = new LoginRequest();
         loginRequest.setEmail(email);
         loginRequest.setSenha(senha);
         // Execução
-        UsuarioDTO result = usuarioController.login(loginRequest);
+        ResponseEntity<UsuarioDTO> result = usuarioController.login(loginRequest);
 
         // Assert
-        assertEquals(usuario.getId(), result.getId());
-        assertEquals(usuario.getEmail(), result.getEmail());
-        assertEquals(usuario.getNome(), result.getNome());
+        assertNotNull(result);
+        assertEquals(HttpStatus.OK, result.getStatusCode());
+        assertNotNull(result.getBody());
+        
+        UsuarioDTO dto = result.getBody();
+        assertEquals(usuario.getEmail(), dto.getEmail());
+        assertEquals(usuario.getNome(), dto.getNome());
+        assertEquals("mock-token", dto.getToken());
     }
 }

@@ -161,7 +161,7 @@ public class MensagemServiceTests {
 		ReflectionTestUtils.setField(mensagemService, "entityManager", entityManager);
 		mensagemService.markAllAsRead(conversa.getId());
 		// Verificações
-		String jpql = "UPDATE Mensagem m SET m.vista = true WHERE m.conversa.id = conversaId";
+		String jpql = "UPDATE Mensagem m SET m.vista = true WHERE m.conversa.id = :conversaId";
 		verify(entityManager).createQuery(jpql); 
 		verify(query).setParameter("conversaId", conversa.getId());
 		verify(query).executeUpdate();

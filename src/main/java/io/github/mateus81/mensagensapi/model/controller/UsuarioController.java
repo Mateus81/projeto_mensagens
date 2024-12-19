@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -23,18 +24,21 @@ import io.github.mateus81.mensagensapi.model.dto.LoginRequest;
 import io.github.mateus81.mensagensapi.model.dto.UsuarioDTO;
 import io.github.mateus81.mensagensapi.model.entity.Usuario;
 import io.github.mateus81.mensagensapi.model.service.UsuarioService;
+import io.github.mateus81.mensagensapi.util.JwtUtil;
 
 @CrossOrigin("*")
 @RestController
 public class UsuarioController {
 
-	private final UsuarioService usuarioService;
-	private final PasswordEncoder passwordEncoder;
+	@Autowired
+	private UsuarioService usuarioService;
 	
-	public UsuarioController(UsuarioService usuarioService, PasswordEncoder passwordEncoder) {
-		this.usuarioService = usuarioService;
-		this.passwordEncoder = passwordEncoder;
-	}
+	@Autowired
+	private  PasswordEncoder passwordEncoder;
+	
+	@Autowired
+	private JwtUtil jwtUtil;
+	
 
 	// Busca todos os usuários
 	@GetMapping("/usuarios")
@@ -88,20 +92,20 @@ public class UsuarioController {
 	
 	// Autentica usuário
 	@PostMapping("/usuarios/login")
-	public UsuarioDTO login(@RequestBody LoginRequest login) {
+	public ResponseEntity<UsuarioDTO> login(@RequestBody LoginRequest login) {
 		Usuario usuario = usuarioService.auth(login.getEmail(), login.getSenha());
-		UsuarioDTO dto = new UsuarioDTO();
-		dto.setId(usuario.getId());
-		dto.setEmail(usuario.getEmail());
-		dto.setNome(usuario.getNome());
-		return dto;
+		if(usuario != null) {
+			String token = jwtUtil.generateToken(usuario.getEmail());
+			return ResponseEntity.ok().body(new UsuarioDTO(usuario.getId(), usuario.getNome(), usuario.getEmail(), token));
+		} else {
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+		}
 	}
 	
 	// Método de logout explícito
 	@PostMapping("/logout")
 	public ResponseEntity<?> logout(HttpServletRequest request){
-		request.getSession().invalidate();
-		return ResponseEntity.ok("Sessão encerrada.");
+		return ResponseEntity.ok("Logout realizado com sucesso. Apenas remova o token no Front-end");
 	}
 
 	// Deleta usuário por ID

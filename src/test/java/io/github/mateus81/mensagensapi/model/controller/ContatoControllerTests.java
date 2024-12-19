@@ -25,6 +25,7 @@ import io.github.mateus81.mensagensapi.model.entity.Contato;
 import io.github.mateus81.mensagensapi.model.entity.Usuario;
 import io.github.mateus81.mensagensapi.model.repository.UsuarioRepository;
 import io.github.mateus81.mensagensapi.model.service.ContatoService;
+import io.github.mateus81.mensagensapi.util.SecurityUtil;
 
 @ExtendWith(MockitoExtension.class)
 public class ContatoControllerTests {
@@ -34,6 +35,9 @@ public class ContatoControllerTests {
 
 	@Mock
 	private ContatoService contatoService;
+	
+	@Mock
+	private SecurityUtil securityUtil;
 	
 	@Mock
 	private UsuarioRepository usuarioRepository;
@@ -57,8 +61,9 @@ public class ContatoControllerTests {
 			return dto;
 		}).collect(Collectors.toList());
 		// Verificações
+		when(securityUtil.getAuthenticatedId()).thenReturn(usuario.getId());
 		when(contatoService.readContatosByUsuario(1)).thenReturn(contatos);
-		List<ContatoDTO> contatoResult = contatoController.getContatosByUsuario(1);
+		List<ContatoDTO> contatoResult = contatoController.getContatosByUsuario();
 		assertEquals(contatoResult, Dtos);
 	}
 	
@@ -88,6 +93,9 @@ public class ContatoControllerTests {
 	
 	@Test
 	public void testInsertContato() {
+		// Cria usuário autenticado
+		Usuario usuario = new Usuario(1);
+		
 		 // Crie um objeto ContatoDTO
 	    ContatoDTO contatoDto = new ContatoDTO();
 	    contatoDto.setId(1);
@@ -101,6 +109,7 @@ public class ContatoControllerTests {
 	    contatoEsperado.setEmail("Felipe@gmail.com");
 
 	    // Mocks
+	    when(securityUtil.getAuthenticatedId()).thenReturn(usuario.getId());
 	    when(contatoService.insertContato(eq(1), eq(contatoDto))).thenReturn(contatoEsperado);
 	    
 	    // Chame o método insertContato com o objeto ContatoDTO

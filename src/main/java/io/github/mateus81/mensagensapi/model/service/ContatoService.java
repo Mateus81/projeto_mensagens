@@ -78,7 +78,7 @@ public class ContatoService {
 		Contato contatoExistente = contatoRepository.findById(id)
 				.orElseThrow(() -> new RuntimeException("Contato não encontrado"));
 		contatoAtualizado.setId(id);
-		contatoExistente.setNome(contatoAtualizado.getNome());
+		contatoExistente.setNome(Optional.ofNullable(contatoAtualizado.getNome()).orElse(contatoExistente.getNome()));
 
 		Contato contatoSalvo = contatoRepository.save(contatoExistente);
 		return contatoSalvo;
