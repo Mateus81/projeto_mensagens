@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
-import { HttpClientModule} from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
 
 import { AppComponent } from './app.component';
@@ -17,6 +17,7 @@ import { ChatService } from './service/chat.service';
 import { ContatoService } from './service/contato.service';
 import { MensagemService } from './service/mensagem.service';
 import { UserService } from './service/user.service';
+import { JwtInterceptor } from './interceptors/JwtInterceptor';
 
 
 
@@ -36,7 +37,8 @@ import { UserService } from './service/user.service';
     FormsModule,
     HttpClientModule,
   ],
-  providers: [AuthService, ChatService, UserService, MensagemService, ContatoService],
+  providers: [AuthService, ChatService, UserService, MensagemService, ContatoService, {
+    provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true }, ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

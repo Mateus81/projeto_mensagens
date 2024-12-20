@@ -30,20 +30,24 @@ export class ContatoComponent implements OnInit {
     this.usuario = this.authService.getUser();
     if(this.usuario){
       this.loadContatos();
+    } else {
+      console.error("Usuário não autenticado. Impossível carregar contatos");
     }
   }
 
   loadContatos(): void {
-    if(this.usuario){
-      this.contatoService.getContatos(this.usuario.id).subscribe((
+    if(!this.usuario){
+      console.error("Usuário indefinido. Impossível carregar contatos");
+      return; 
+    }
+      this.contatoService.getContatos().subscribe((
         contatos: Contato[]) => {
           this.contatos = contatos;
           console.log("Contatos carregados: ", contatos);
+        }, error => {
+          console.error("Erro ao carregar contatos", error);
         })
-    } else {
-      console.error("Não foi possível carregar sua lista de contatos");
     }
-  }
 
   loadContato(id: number): void {
     if(this.usuario && this.contatos) {
@@ -54,7 +58,7 @@ export class ContatoComponent implements OnInit {
           console.error("Erro ao carregar contato", error);
         })
     } else {
-      console.error("Contato inexistente")
+      console.error("Contato inexistente");
     }
   }
 
@@ -75,27 +79,33 @@ export class ContatoComponent implements OnInit {
         console.error("Usuário não encontrado");
         return;
       }
-        
-        const novoContato: Contato = {
-          nome: usuario.nome,
-          email: usuario.email,
-          usuario: this.usuario as Usuario,
-          foto: null,
-        };
-        this.contatoService.insertContato(this.usuario!.id, novoContato).subscribe(() => {
-          console.log("Contato adicionado com sucesso");
-          this.usuarioAdicionado.nome = '';
-          this.loadContatos();
-          this.contato = null;
-        }, 
-        error => {
-          console.error("Erro ao adicionar contato", error);
-        });
-      },
+
+      const contatoExistente = this.contatos.find(contato => contato.email === usuario.email);
+      if(contatoExistente){
+        console.warn("Contato já adicionado");
+        return;
+      }
+
+      const novoContato: Contato = {
+        nome: usuario.nome,
+        email: usuario.email,
+        usuario: this.usuario as Usuario,
+        foto: null,
+      };
+      this.contatoService.insertContato(novoContato).subscribe(() => {
+        console.log("Contato adicionado com sucesso");
+        this.usuarioAdicionado.nome = '';
+        this.loadContatos();
+        this.contato = null;
+      }, 
       error => {
-        console.error("Erro ao buscar usuário pelo nome", error);
+        console.error("Erro ao adicionar contato", error);
       });
-    }
+    },
+    error => {
+      console.error("Erro ao buscar usuário pelo nome", error);
+    });
+  }
 
   deleteContato(id: number): void {
     if(this.usuario && this.contato){

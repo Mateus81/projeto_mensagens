@@ -22,6 +22,8 @@ export class AuthService {
   login(email: string, senha: string): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/usuarios/login`, { email, senha }, {withCredentials: true}).pipe(
       tap(user => {
+        const token = user.token;
+        localStorage.setItem("jwtToken", token);
         this.currentUserSubject.next(user);
         localStorage.setItem('currentUser', JSON.stringify(user))
       })
@@ -33,7 +35,7 @@ export class AuthService {
   }
 
   logout(): void {
-    this.http.post(`${this.apiUrl}/logout`, {}, {withCredentials: true}).subscribe(() => {
+    this.http.post("http://localhost:8080/mensagensapi/logout", {}, {withCredentials: true}).subscribe(() => {
       this.currentUserSubject.next(null);
       localStorage.clear();
       sessionStorage.clear();
