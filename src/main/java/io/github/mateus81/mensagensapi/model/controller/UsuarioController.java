@@ -1,14 +1,19 @@
 package io.github.mateus81.mensagensapi.model.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,10 +26,13 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import io.github.mateus81.mensagensapi.model.dto.LoginRequest;
+import io.github.mateus81.mensagensapi.model.dto.RefreshTokenRequest;
+import io.github.mateus81.mensagensapi.model.dto.TokenResponse;
 import io.github.mateus81.mensagensapi.model.dto.UsuarioDTO;
 import io.github.mateus81.mensagensapi.model.entity.Usuario;
 import io.github.mateus81.mensagensapi.model.service.UsuarioService;
 import io.github.mateus81.mensagensapi.util.JwtUtil;
+import io.jsonwebtoken.ExpiredJwtException;
 
 @CrossOrigin("*")
 @RestController
@@ -34,11 +42,7 @@ public class UsuarioController {
 	private UsuarioService usuarioService;
 	
 	@Autowired
-	private  PasswordEncoder passwordEncoder;
-	
-	@Autowired
 	private JwtUtil jwtUtil;
-	
 
 	// Busca todos os usuários
 	@GetMapping("/usuarios")
@@ -103,9 +107,26 @@ public class UsuarioController {
 	}
 	
 	// Método de logout explícito
-	@PostMapping("/logout")
-	public ResponseEntity<?> logout(HttpServletRequest request){
-		return ResponseEntity.ok("Logout realizado com sucesso. Apenas remova o token no Front-end");
+	@PostMapping("/usuarios/logout")
+	public ResponseEntity<Map<String, String>> logout(HttpServletRequest request, HttpServletResponse response){
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		if(auth != null) {
+			new SecurityContextLogoutHandler().logout(request, response, auth);
+		}
+		Map<String, String> responseBody = new HashMap<>();
+		responseBody.put("message", "logout realizado com sucesso");
+		return ResponseEntity.ok(responseBody);
+	}
+	
+	// Método de refresh token para usuário
+	@PostMapping("/refresh-token")
+	public ResponseEntity<?> refreshToken(@RequestBody RefreshTokenRequest request) throws Exception {
+		try {
+			String newAccessToken = jwtUtil.refreshAccessToken(request.getRefreshToken());
+			return ResponseEntity.ok(new TokenResponse(newAccessToken));
+		} catch(ExpiredJwtException e) {
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid refresh token");
+		}	
 	}
 
 	// Deleta usuário por ID

@@ -16,6 +16,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import io.github.mateus81.mensagensapi.model.service.UserDetailsServiceImpl;
 import io.github.mateus81.mensagensapi.util.JwtUtil;
+import io.jsonwebtoken.ExpiredJwtException;
 
 @Component
 public class JwtRequestFilter extends OncePerRequestFilter {
@@ -36,7 +37,11 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 		
 		if(authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
 			jwt = authorizationHeader.substring(7);
-			username = jwtUtil.extractUsername(jwt);
+			try {
+				username = jwtUtil.extractUsername(jwt);
+			} catch(ExpiredJwtException e) {
+				  request.setAttribute("expiredToken", jwt);
+			}
 		}
 		
 		if(username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
@@ -45,6 +50,9 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 				var authenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
 				authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 				SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+			} else if(request.getAttribute("ExpiredToken") != null) {
+				chain.doFilter(request, response);
+				return;
 			}
 		}
 		chain.doFilter(request, response);

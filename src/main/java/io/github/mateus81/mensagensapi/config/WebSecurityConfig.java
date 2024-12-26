@@ -33,7 +33,7 @@ public class WebSecurityConfig  {
             .csrf().disable()
             .cors().and()
             .authorizeRequests(authorizeRequests -> authorizeRequests
-            	.antMatchers("/usuarios", "/usuarios/login").permitAll()
+            	.antMatchers("/usuarios", "/usuarios/login", "/usuarios/logout", "/refresh-token").permitAll()
                 .anyRequest().authenticated() // Requer autenticação para todos os outros endpoints
             )
             .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)

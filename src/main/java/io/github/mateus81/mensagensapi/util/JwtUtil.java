@@ -8,6 +8,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
@@ -36,7 +37,11 @@ public class JwtUtil {
 	}
 	
 	public String extractUsername(String token) {
-		return getClaims(token).getSubject();
+		try {
+			return getClaims(token).getSubject();
+		} catch(ExpiredJwtException e) {
+			return e.getClaims().getSubject();
+		}
 	}
 	
 	public boolean validateToken(String token, UserDetails userDetails) {
@@ -48,6 +53,22 @@ public class JwtUtil {
 	}
 	
 	private boolean isTokenExpired(String token){
-		return getClaims(token).getExpiration().before(new Date());
+		try {
+			return getClaims(token).getExpiration().before(new Date());
+		} catch(ExpiredJwtException e) {
+			return true;
+		}
 	}
+	
+	public String refreshAccessToken(String refreshToken) throws Exception {
+		try {
+			String username = extractUsername(refreshToken);
+			return generateToken(username);
+		} catch(ExpiredJwtException e) {
+			String username = e.getClaims().getSubject();
+			return generateToken(username);
+		} catch(Exception ex) {
+			throw new Exception("Refresh token is invalid or expired");
+		}
+    }
 }
