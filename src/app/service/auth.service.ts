@@ -35,7 +35,7 @@ export class AuthService {
   }
 
   logout(): void {
-    this.http.post("http://localhost:8080/mensagensapi/logout", {}, {withCredentials: true}).subscribe(() => {
+    this.http.post<{message: String}>(`${this.apiUrl}/usuarios/logout`, {}).subscribe(() => {
       this.currentUserSubject.next(null);
       localStorage.clear();
       sessionStorage.clear();
