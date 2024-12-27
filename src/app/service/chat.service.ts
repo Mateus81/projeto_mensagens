@@ -30,6 +30,6 @@ export class ChatService {
   }
 
   endConversa(id: number): Observable<string> {
-    return this.http.put<string>(`${this.apiUrl}/conversas/${id}`, {},  {withCredentials: true});
+    return this.http.put(`${this.apiUrl}/conversas/${id}`, {},  {responseType: "text" ,withCredentials: true});
   }
 }

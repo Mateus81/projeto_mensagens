@@ -6,9 +6,11 @@ export class Conversa {
     usuario: Usuario;
     usuarioDest: Usuario;
     mensagens: Mensagem[];
+    status: string;
 
     constructor() {
       this.usuario = new Usuario();
       this.usuarioDest = new Usuario();
+      this.status = "OPEN";
     }
 }

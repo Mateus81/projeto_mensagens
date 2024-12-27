@@ -38,7 +38,8 @@ export class ChatComponent implements OnInit {
     this.chatService.getConversas().subscribe(
       (data: Conversa[]) => {
       // Filtro para melhor funcionamento de exibição e log
-        this.conversas = data.filter(conversa => conversa.usuario.id === this.usuario?.id || conversa.usuarioDest.id === this.usuario?.id);
+        this.conversas = data.filter(conversa => (conversa.usuario.id === this.usuario?.id || conversa.usuarioDest.id === this.usuario?.id)
+          && conversa.status === "OPEN");
         console.log("Conversas filtradas para usuário atual:", this.conversas);
         this.cdr.detectChanges();
       },
