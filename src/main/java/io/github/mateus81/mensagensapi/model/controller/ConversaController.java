@@ -60,6 +60,7 @@ public class ConversaController {
 			dto.setUsuario(conversa.getUsuario());
 			dto.setUsuarioDest(conversa.getUsuarioDest());
 			dto.setMensagens(convertToDTO(conversa.getMensagens()));
+			dto.setStatus(conversa.getStatus());
 			return dto;
 		}).collect(Collectors.toList());
 	}

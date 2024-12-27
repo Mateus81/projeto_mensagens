@@ -55,7 +55,8 @@ public class ConversaService {
 			log.error("Usuário não encontrado: {}", email);
 			return new ArrayList<>();
 		}
-		List<Conversa> conversas = conversaRepository.findByUsuarioOrUsuarioDest(usuario, usuario);
+		List<Conversa> conversas = conversaRepository.findByUsuarioOrUsuarioDestAndStatus(usuario, usuario, StatusConversa.OPEN);
+		conversas.forEach(conversa -> log.info("Conversa ID: {}, Status: {}", conversa.getId(), conversa.getStatus()));
 		log.info("Conversas encontradas: {}", usuario.getNome(), conversas.size());
 		return conversas;
 	}

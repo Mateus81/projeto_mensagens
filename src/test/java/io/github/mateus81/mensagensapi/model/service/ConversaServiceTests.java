@@ -82,7 +82,7 @@ public class ConversaServiceTests {
 		List<Conversa> conversas = Arrays.asList(conversa, conversa2);
 		// Validação
 		when(usuarioRepository.findByEmail(email)).thenReturn(usuario);
-		when(conversaRepository.findByUsuarioOrUsuarioDest(usuario, usuario)).thenReturn(conversas);
+		when(conversaRepository.findByUsuarioOrUsuarioDestAndStatus(usuario, usuario, StatusConversa.OPEN)).thenReturn(conversas);
 		when(conversaService.getLoggedUserEmail()).thenReturn(email);
 		List<Conversa> conversaResult = conversaService.readAllConversasByUser();
 		assertEquals(conversaResult, conversas);
