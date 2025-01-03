@@ -72,7 +72,7 @@ public class ContatoController {
 	// Salva contato
 	@PostMapping("/contatos")
 	@ResponseStatus(HttpStatus.CREATED)
-	public Contato insertContato(@PathVariable Integer usuarioAssociadoId, @RequestBody ContatoDTO contatoDto) {
+	public Contato insertContato(@RequestBody ContatoDTO contatoDto) {
 		Integer usuarioAssociadoId1 = securityUtil.getAuthenticatedId();
 		return contatoService.insertContato(usuarioAssociadoId1, contatoDto);
 	}

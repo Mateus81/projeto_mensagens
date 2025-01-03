@@ -31,7 +31,7 @@ public class Contato {
 	public String nome;
 
 	@NotNull
-	@Column(unique = true, nullable = false)
+	@Column(nullable = false)
 	@Email
 	public String email;
 

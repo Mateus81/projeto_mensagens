@@ -113,7 +113,7 @@ public class ContatoControllerTests {
 	    when(contatoService.insertContato(eq(1), eq(contatoDto))).thenReturn(contatoEsperado);
 	    
 	    // Chame o método insertContato com o objeto ContatoDTO
-	    Contato contatoResult = contatoController.insertContato(1, contatoDto);
+	    Contato contatoResult = contatoController.insertContato(contatoDto);
 
 	    // Verifique se o resultado é igual ao objeto esperado
 	    verify(contatoService).insertContato(eq(1), eq(contatoDto));
