@@ -62,7 +62,6 @@ export class ContatoComponent implements OnInit {
     }
   }
 
-  // Melhorar lógica de adicionar contato
   addContato(): void {
     if(!this.usuario && !this.usuario!.id) {
       console.error("Usuário associado não foi encontrado");
@@ -154,23 +153,28 @@ export class ContatoComponent implements OnInit {
     this.router.navigate(['/chat'])
   }
 
+  // Método que adiciona uma conversa com o contato caso ele não tenha uma com o usuário || Continua conversa com contato
   irParaConversa(id: number): void {
     console.log("Usuário atual em irParaConversa:", this.usuario);
     if(this.contato && this.usuario){
       // Verifica se existe conversa com o contato
       this.chatService.getConversas().subscribe((conversas: Conversa[])=> {
-        const conversaExistente = conversas.find(c => c.usuarioDest.nome === this.contato?.nome || c.usuario.nome === this.contato?.nome);
+        const conversaExistente = conversas.find(c => c.usuarioDest.email === this.contato?.email || c.usuario.email === this.contato?.email);
         if(conversaExistente){
           this.router.navigate([`conversa/${conversaExistente.id}`]);
       } else {
         // Senão existe cria uma e navega até ela
-        this.userService.getUsuarioByNome(this.contato?.nome!).subscribe((usuarioDest: Usuario) => {
+        this.userService.getUsuarioByEmail(this.contato?.email!).subscribe((usuarioDest: Usuario) => {
           if(usuarioDest){
             const novaConversa = new Conversa();
             novaConversa.usuario = this.usuario as Usuario;
             novaConversa.usuarioDest = usuarioDest;
+            novaConversa.status = "OPEN";
 
             this.chatService.startConversa(novaConversa).subscribe((conversaCriada: Conversa) => {
+              this.chatService.getConversas().subscribe(atualizadas => {
+                console.log("Lista de conversas atualizadas", atualizadas);
+              })
               this.router.navigate([`conversa/${conversaCriada.id}`]);
               console.log("Conversa criada com sucesso", conversaCriada);
             }, error => {

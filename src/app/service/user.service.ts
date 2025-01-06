@@ -14,11 +14,16 @@ export class UserService {
     constructor(private http: HttpClient){}
 
     getUsuarioByNome(nome: String): Observable<Usuario> {
-        return this.http.get<Usuario>(`${this.apiUrl}/usuarios/nome/${nome}`,  {withCredentials: true})
+        return this.http.get<Usuario>(`${this.apiUrl}/usuarios/nome/${nome}`,  {withCredentials: true});
     }
 
     getUsuarioById(id: number): Observable<Usuario> {
-        return this.http.get<Usuario>(`${this.apiUrl}/usuarios/${id}`,  {withCredentials: true})
+        return this.http.get<Usuario>(`${this.apiUrl}/usuarios/${id}`,  {withCredentials: true});
     }
+
+    getUsuarioByEmail(email: String): Observable<Usuario> {
+        return this.http.get<Usuario>(`${this.apiUrl}/usuarios/email/${email}`, {withCredentials: true});
+    }
+
 }
 

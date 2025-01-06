@@ -23,7 +23,7 @@
     <!--Botões de ação-->
     <div class="contato-acoes">
         <button (click)="deleteContato(contato.id!)">Deletar Contato</button>
-        <button (click)="irParaConversa(contato.id!)">Iniciar Conversa</button>
+        <button (click)="irParaConversa(contato.id!)">Conversar</button>
     </div><br>
     <div class="contato-edicoes" *ngIf="editandoContato">
         <input [(ngModel)]="contatoEditado.nome" placeholder="Nome do contato" aria-label="Nome do contato"/>
