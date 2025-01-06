@@ -71,6 +71,15 @@ public class UsuarioServiceTests {
 	}
 	
 	@Test
+	public void testGetUserByEmail() throws Exception {
+		Usuario usuario = new Usuario();
+		usuario.setEmail("test@gmail.com");
+		when(usuarioRepository.findByEmail(usuario.getEmail())).thenReturn(usuario);
+		Usuario result = usuarioService.getUserByEmail(usuario.getEmail());
+		assertEquals(result.getEmail(), usuario.getEmail());
+	}
+	
+	@Test
 	public void testSaveOrUpdateUser() {
 		// Cria usuario e salva
 		Usuario usuario = new Usuario("user", "user@gmail.com");

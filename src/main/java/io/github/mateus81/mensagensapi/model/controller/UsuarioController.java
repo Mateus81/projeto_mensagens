@@ -82,7 +82,18 @@ public class UsuarioController {
 		return dto;
 		
 	}
-
+	
+	// Busca usuário por e-mail
+	@GetMapping("/usuarios/email/{email}")
+	public ResponseEntity<Usuario> getUserByEmail(@PathVariable String email) {
+		try {
+			Usuario usuario = usuarioService.getUserByEmail(email);
+			return ResponseEntity.ok(usuario);
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+		}
+	}
+	
 	// Cria um usuário
 	@PostMapping("/usuarios")
 	@ResponseStatus(HttpStatus.CREATED)

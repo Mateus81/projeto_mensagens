@@ -92,6 +92,16 @@ public class UsuarioControllerTests {
 	}
 	
 	@Test
+	public void testGetUserByEmail() throws Exception {
+		Usuario usuario = new Usuario();
+		usuario.setEmail("test@gmail.com");
+		when(usuarioService.getUserByEmail(usuario.getEmail())).thenReturn(usuario);
+		ResponseEntity<Usuario> result = usuarioController.getUserByEmail(usuario.getEmail());
+		assertEquals(result.getStatusCode(), HttpStatus.OK);
+		assertEquals(usuario, result.getBody());
+	}
+	
+	@Test
 	public void testDeleteUserById() {
 		// Cria usuário
 		Usuario usuario = new Usuario(1, "Marcos");

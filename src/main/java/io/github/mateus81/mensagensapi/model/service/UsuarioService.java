@@ -38,6 +38,15 @@ public class UsuarioService {
 	public Usuario getUserByNome(String nome) {
 		 return usuarioRepository.findOptionalByNome(nome).orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
 	}
+	
+	// Busca um usuáro pelo e-mail
+	public Usuario getUserByEmail(String email) throws Exception {
+		Usuario usuario = usuarioRepository.findByEmail(email);
+		if(usuario == null){
+			throw new Exception("Usuário não encontrado com o e-mail: " + email);
+		}
+		return usuario;
+	}
 	        
 	// Salva/Atualiza um usuário - neste caso utilizamos o ID existente apesar do
 	// mesmo código de registerUser
