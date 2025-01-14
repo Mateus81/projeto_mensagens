@@ -18,6 +18,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockMultipartFile;
 
 import io.github.mateus81.mensagensapi.model.entity.Arquivo;
@@ -37,6 +42,7 @@ public class ArquivoServiceTests {
 	
 	@Mock
 	private ConversaRepository conversaRepository;	
+	
 	
 	@Test
 	public void testReadArquivoById() {
@@ -109,4 +115,19 @@ public class ArquivoServiceTests {
         verify(conversaRepository).findById(conversa.getId());
         verify(arquivoRepository).save(any(Arquivo.class));
     }
+	
+	@Test
+	public void testDownloadArquivo() {
+		// Cria arquivo
+		Arquivo arquivo = new Arquivo(1, "arquivo.txt", "text/plain", "30".getBytes());
+		// Verifica se existe o arquivo
+		when(arquivoRepository.findById(anyInt())).thenReturn(Optional.of(arquivo));
+		// Chamando service
+		ResponseEntity<Resource> response = arquivoService.downloadArquivo(1);
+		// Verificações
+		assertEquals(HttpStatus.OK, response.getStatusCode());
+		assertEquals("text/plain", response.getHeaders().getContentType().toString());
+		assertEquals("attachment; filename=\"arquivo.txt\"", response.getHeaders().get(HttpHeaders.CONTENT_DISPOSITION).get(0));
+		assertArrayEquals("30".getBytes(), ((ByteArrayResource)response.getBody()).getByteArray());
+	}
 }

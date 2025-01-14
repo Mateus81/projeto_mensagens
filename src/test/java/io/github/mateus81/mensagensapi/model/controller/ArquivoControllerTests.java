@@ -7,22 +7,32 @@ import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.multipart.MultipartFile;
 
 import io.github.mateus81.mensagensapi.model.entity.Arquivo;
@@ -36,6 +46,13 @@ public class ArquivoControllerTests {
 
 	@Mock
 	private ArquivoService arquivoService;
+	
+	private MockMvc mockMvc;
+	
+	@BeforeEach
+	public void setUp() {
+		mockMvc = MockMvcBuilders.standaloneSetup(arquivoController).build();
+	}
 	
 	@Test
 	public void testReadAll() {
@@ -84,5 +101,23 @@ public class ArquivoControllerTests {
 		ResponseEntity<String> response = arquivoController.saveArquivo(1, multipartFile);
 		assertEquals(HttpStatus.OK, response.getStatusCode());
 		assertEquals("Arquivo enviado com sucesso", response.getBody());
+	}
+	
+	@Test
+	public void testDownloadArquivo() throws Exception {
+		// Cria arquivo
+		Arquivo arquivo = new Arquivo(1, "arquivo.txt", "text/plain", "30".getBytes());
+		// Cria resource
+		ByteArrayResource resource = new ByteArrayResource(arquivo.getConteudo());
+		// Verifica se existe o arquivo
+		when(arquivoService.downloadArquivo(anyInt())).thenReturn(ResponseEntity.ok()
+				.contentType(MediaType.parseMediaType(arquivo.getTipo()))
+				.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + arquivo.getNome() + "\"")
+				.body(resource));
+	
+		// Requisição e Resposta
+		mockMvc.perform(get("/arquivos/1/download")).andExpect(status().isOk()).andExpect(content().contentType("text/plain"))
+		.andExpect(header().string(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"arquivo.txt\""))
+		.andExpect(content().bytes("30".getBytes()));
 	}
 }

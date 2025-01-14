@@ -2,6 +2,7 @@ package io.github.mateus81.mensagensapi.model.controller;
 
 import java.util.List;
 
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -47,7 +48,7 @@ public class ArquivoController {
 		arquivoService.deleteArquivoById(id);
 	}
 
-	// Salva e envia arquivo
+	// Salva e envia arquivo (Upload)
 	@PostMapping("/conversas/{id}/arquivos")
 	public ResponseEntity<String> saveArquivo(@PathVariable Integer id, @RequestParam("file") MultipartFile file) {
 		Arquivo arquivoSalvo = arquivoService.saveArquivo(id, file);
@@ -56,5 +57,11 @@ public class ArquivoController {
 		} else {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ocorreu um erro ao enviar o arquivo");
 		}
+	}
+	
+	// Baixa arquivo
+	@GetMapping("arquivos/{id}/download")
+	public ResponseEntity<Resource> downloadArquivo(@PathVariable Integer id){
+		return arquivoService.downloadArquivo(id);
 	}
 }

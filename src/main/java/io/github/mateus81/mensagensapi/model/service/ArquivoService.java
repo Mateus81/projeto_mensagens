@@ -4,6 +4,11 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -39,7 +44,7 @@ public class ArquivoService {
 		return arquivoRepository.findById(arquivoId).orElseThrow(() -> new RuntimeException("Arquivo não encontrado"));
 	}
 
-	// Envia e salva Arquivo
+	// Envia e salva Arquivo (Upload)
 	@Transactional
 	public Arquivo saveArquivo(Integer conversaId, MultipartFile file) {
 		// Obtém o usuário e busca a conversa
@@ -71,5 +76,15 @@ public class ArquivoService {
 		} else {
 			throw new RuntimeException("Arquivo não encontrado");
 		}
+	}
+	
+	// Baixa arquivo
+	@Transactional
+	public ResponseEntity<Resource> downloadArquivo(Integer id){
+		Arquivo arquivo = arquivoRepository.findById(id).orElseThrow(() -> new RuntimeException("Arquivo não encontrado"));
+		ByteArrayResource resource = new ByteArrayResource(arquivo.getConteudo());
+		return ResponseEntity.ok().contentType(MediaType.parseMediaType(arquivo.getTipo()))
+				.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + arquivo.getNome() + "\"")
+				.body(resource);
 	}
 }
