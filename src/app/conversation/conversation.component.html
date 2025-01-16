@@ -14,27 +14,28 @@
       </div>
       <div class="mensagem-acoes">
         <!--Se o destinatário estiver logado ele pode marcar mensagens recebidas como lidas-->
-        <button *ngIf="mensagem.usuarioDestino?.id === currentUser?.id" (click)="marcaComoLida(mensagem.id!)" [disabled]="mensagem.vista">Marcar como lida</button>
-        <button class="delete" *ngIf="mensagem.usuarioRemetente?.id === currentUser?.id && !mensagem.deletada"(click)="apagaMensagem(mensagem.id!)">Deletar</button>
-        <button class="edit" *ngIf="mensagem.usuarioRemetente?.id === currentUser?.id && !mensagem.deletada"(click)="mensagem.editando ? salvaMensagemEditada(mensagem.id) : editaMensagem(mensagem)">
+        <button *ngIf="mensagem.usuarioDestino?.id === currentUser?.id" (click)="marcaComoLida(mensagem.id!)" [disabled]="mensagem.vista" aria-label="Marcar como lida">Marcar como lida</button>
+        <button class="delete" *ngIf="mensagem.usuarioRemetente?.id === currentUser?.id && !mensagem.deletada"(click)="apagaMensagem(mensagem.id!)" aria-label="Deletar mensagem">Deletar</button>
+        <button class="edit" *ngIf="mensagem.usuarioRemetente?.id === currentUser?.id && !mensagem.deletada"(click)="mensagem.editando ? salvaMensagemEditada(mensagem.id) : editaMensagem(mensagem)" aria-label="Editar mensagem">
           {{mensagem.editando ? "Salvar" : "Editar"}}</button>
       </div>
     </div>
 
     <div class="nova-mensagem">
       <textarea [(ngModel)]="novaMensagem" placeholder="Digite sua mensagem"></textarea>
-      <button (click)="enviarMensagem()">Enviar</button>
+      <button (click)="enviarMensagem()" aria-label="Enviar mensagem">Enviar</button>
     </div>
     <!--Se o destinatário estiver logado ele pode marcar mensagens recebidas como lidas-->
     <div class="marca-todas-como-lida" *ngIf="conversa.usuarioDest?.id === currentUser?.id">
-      <button (click)="marcaTodasComoLidas()">Marca mensagens como lidas</button>
+      <button (click)="marcaTodasComoLidas()" aria-label="Marcar mensagens como lidas">Marca mensagens como lidas</button>
     </div>
 
     <footer>
+      <button routerLink="/arquivos" aria-label="Ir para arquivos">Gerenciar Arquivos</button>
       <p>Retornar a lista de conversas?</p>
-      <button (click)="voltarParaConversas()">Retornar</button>
+      <button (click)="voltarParaConversas()" aria-label="Retornar para as conversas">Retornar</button>
       <br>
       <p>Retornar para contatos?</p>
-      <button (click)="voltarParaContatos()">Retornar</button>
+      <button (click)="voltarParaContatos()" aria-label="Retornar para contatos">Retornar</button>
     </footer>
 </div>

@@ -11,8 +11,10 @@ import { ConversationComponent } from './conversation/conversation.component';
 import { CadastroComponent } from './cadastro/cadastro.component';
 import { ChatComponent } from './chat/chat.component';
 import { ContatoComponent } from './contato/contato.component';
+import { ArquivoComponent } from './arquivo/arquivo.component';
 
 import { AuthService } from './service/auth.service';
+import { ArquivoService } from './service/arquivo.service';
 import { ChatService } from './service/chat.service';
 import { ContatoService } from './service/contato.service';
 import { MensagemService } from './service/mensagem.service';
@@ -29,7 +31,8 @@ import { JwtInterceptor } from './interceptors/JwtInterceptor';
     CadastroComponent,
     ChatComponent,
     ConversationComponent,
-    ContatoComponent
+    ContatoComponent,
+    ArquivoComponent
   ],
   imports: [
     BrowserModule,
@@ -37,7 +40,7 @@ import { JwtInterceptor } from './interceptors/JwtInterceptor';
     FormsModule,
     HttpClientModule,
   ],
-  providers: [AuthService, ChatService, UserService, MensagemService, ContatoService, {
+  providers: [AuthService, ChatService, UserService, MensagemService, ContatoService, ArquivoService, {
     provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true }, ],
   bootstrap: [AppComponent]
 })

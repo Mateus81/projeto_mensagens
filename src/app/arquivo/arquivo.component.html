@@ -1,0 +1,30 @@
+<div class="arquivo-container">
+    <h2>Gerenciamento de Arquivos</h2>
+
+    <div *ngIf="usuario">
+        <label for="file-upload" class="file-upload-label">
+            Selecione um arquivo:
+        </label>
+        <input type="file" id="file-upload" (change)="onFileSelected($event)" />
+
+        <p *ngIf="selectedFile">Arquivo selecionado: {{ selectedFile.name }}</p>
+        <button [disabled]="!selectedFile" (click)="uploadArquivo()" aria-label="Fazer upload de arquivo">Fazer upload</button>
+        <p *ngIf="isUploading">Fazendo upload...</p>
+
+        <h3>Lista de Arquivos</h3>
+        <div *ngIf="arquivos.length > 0; else noFiles">
+            <ul class="arquivo-list">
+                <li class="arquivo-item" *ngFor="let arquivo of arquivos">
+                    <span>{{ arquivo.nome }} ({{arquivo.tipo}}, {{ arquivo.tamanho }} bytes)</span>
+                    <button (click)="downloadArquivo(arquivo.id)" [attr.aria-label]="'Baixar ' + arquivo.nome">Baixar arquivo</button>
+                    <button class="delete" (click)="deleteArquivo(arquivo.id)" [attr.aria-label]="'Deletar ' + arquivo.nome">Deletar arquivo</button>
+                </li>
+            </ul>
+        </div>
+        <ng-template #noFiles>
+            <p>Não há arquivos disponíveis</p>
+        </ng-template>
+
+        <button routerLink="/conversas/{{conversaId}}" aria-label="Voltar para conversa">Voltar para conversa</button>
+    </div>
+</div>

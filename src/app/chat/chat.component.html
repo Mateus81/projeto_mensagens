@@ -3,7 +3,7 @@
     <h2>Olá, {{ usuario?.nome }}!</h2>
     <form (ngSubmit)="startConversa()">
       <input type="text" id="usuarioDest" [(ngModel)]="usuarioDest.nome" name="usuarioDest" placeholder="Nome do usuário destino" required>
-      <button type="submit">Iniciar conversa</button>
+      <button type="submit" aria-label="Iniciar conversa">Iniciar conversa</button>
     </form>
     <div *ngIf="conversas && conversas.length > 0; else noConversations">
       <div *ngFor="let conversa of conversas" class="conversa">
@@ -13,9 +13,9 @@
           <!--Se o usuário logado é destinatário, o remetente será exibido e vice-versa-->
           <p *ngIf="conversa.usuarioDest && conversa.usuarioDest.id !== usuario?.id">Contato: {{ conversa.usuarioDest.nome }}</p>
           <p *ngIf="conversa.usuario && conversa.usuario.id !== usuario?.id">Contato: {{ conversa.usuario.nome }}</p>
-          <button (click)="deleteConversa(conversa.id)">Deletar</button>
-          <button (click)="endConversa(conversa.id)">Encerrar</button>
-          <a [routerLink]="['/conversa', conversa.id]">Conversar</a>
+          <button (click)="deleteConversa(conversa.id)" aria-label="Deletar conversa">Deletar</button>
+          <button (click)="endConversa(conversa.id)" aria-label="Encerrar conversa">Encerrar</button>
+          <a [routerLink]="['/conversa', conversa.id]" aria-label="Conversar">Conversar</a>
         </div>
       </div>
     </div>
@@ -23,13 +23,16 @@
        <p>Você não possui conversas</p>
     </ng-template>
 
+    <br>
+    <button routerLink="/arquivos" aria-label="Ir para arquivos">Gerenciar Arquivos</button>
+
     <div class="contatos">
       <p>Deseja ir para contatos?</p>
-      <button (click)="irParaContatos()">Contatos</button>
+      <button (click)="irParaContatos()" aria-label="Ir para contatos">Contatos</button>
     </div>
 
     <div class="logout">
       <p>Deseja sair?</p>
-      <button (click)="logout()">Logout</button>
+      <button (click)="logout()" aria-label="Sair do perfil">Logout</button>
     </div>
 </div>

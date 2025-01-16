@@ -22,31 +22,31 @@
         <p><strong>Telefone:</strong>{{contato.telefone}}</p>   
     <!--Botões de ação-->
     <div class="contato-acoes">
-        <button (click)="deleteContato(contato.id!)">Deletar Contato</button>
-        <button (click)="irParaConversa(contato.id!)">Conversar</button>
+        <button (click)="deleteContato(contato.id!)" aria-label="Deletar contato">Deletar Contato</button>
+        <button (click)="irParaConversa(contato.id!)" aria-label="Conversar">Conversar</button>
     </div><br>
     <div class="contato-edicoes" *ngIf="editandoContato">
         <input [(ngModel)]="contatoEditado.nome" placeholder="Nome do contato" aria-label="Nome do contato"/>
-        <button (click)="salvarEdicao()">Salvar</button>
-        <button (click)="cancelaEdicao()">Cancelar</button>
+        <button (click)="salvarEdicao()" aria-label="Salvar edição">Salvar</button>
+        <button (click)="cancelaEdicao()" aria-label="Cancelar edição">Cancelar</button>
     </div>
     <div class="contato-edicoes" *ngIf="!editandoContato">
         <span>{{contato.nome}}</span><br>
-        <button (click)="editarContato(contato)">Editar Nome</button>
+        <button (click)="editarContato(contato)" aria-label="Editar nome do contato">Editar Nome</button>
     </div>
     </div>
     <!--Adicionar contato-->
     <div class="novo-contato">
         <h3>Adicionar Contato</h3>
         <input [(ngModel)]="usuarioAdicionado.nome" placeholder="Nome do contato" aria-label="Nome do contato">
-        <button (click)="addContato()">Adicionar</button>
+        <button (click)="addContato()" aria-label="Adicionar contato">Adicionar</button>
     </div>
 
     <footer>
         <p>Deseja sair?</p>
-        <button (click)="logout()">Sair</button>
+        <button (click)="logout()" aria-label="Sair do perfil">Sair</button>
         <br>
         <p>Deseja voltar para lista de conversas?</p>
-        <button (click)="voltarParaChat()">Conversas</button>
+        <button (click)="voltarParaChat()" aria-label="Voltar para conversas">Conversas</button>
     </footer>
 </div>
