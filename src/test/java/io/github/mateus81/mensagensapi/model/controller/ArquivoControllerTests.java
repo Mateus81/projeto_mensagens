@@ -107,13 +107,13 @@ public class ArquivoControllerTests {
 	public void testDownloadArquivo() throws Exception {
 		// Cria arquivo
 		Arquivo arquivo = new Arquivo(1, "arquivo.txt", "text/plain", "30".getBytes());
-		// Cria resource
-		ByteArrayResource resource = new ByteArrayResource(arquivo.getConteudo());
+		// Cria byte[]
+		byte[] fileContent = arquivo.getConteudo();
 		// Verifica se existe o arquivo
 		when(arquivoService.downloadArquivo(anyInt())).thenReturn(ResponseEntity.ok()
 				.contentType(MediaType.parseMediaType(arquivo.getTipo()))
 				.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + arquivo.getNome() + "\"")
-				.body(resource));
+				.body(fileContent));
 	
 		// Requisição e Resposta
 		mockMvc.perform(get("/arquivos/1/download")).andExpect(status().isOk()).andExpect(content().contentType("text/plain"))

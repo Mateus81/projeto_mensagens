@@ -1,17 +1,17 @@
 package io.github.mateus81.mensagensapi.model.service;
 
 import java.io.IOException;
+import java.net.URLConnection;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.core.io.ByteArrayResource;
-import org.springframework.core.io.Resource;
+import org.springframework.http.ContentDisposition;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import io.github.mateus81.mensagensapi.model.entity.Arquivo;
@@ -54,7 +54,17 @@ public class ArquivoService {
 		// Cria objeto arquivo e busca nome, tipo, conteúdo e usuario originais
 		Arquivo arquivo = new Arquivo();
 		arquivo.setNome(file.getOriginalFilename());
-		String tipo = StringUtils.getFilenameExtension(file.getOriginalFilename());
+		String tipo = URLConnection.guessContentTypeFromName(file.getOriginalFilename());
+		// Bloco para tratar arquivos de imagem
+		if(tipo == null | !tipo.contains("/")) {
+			if(file.getOriginalFilename().toLowerCase().endsWith(".jpg") || file.getOriginalFilename().toLowerCase().endsWith(".jpeg")){
+				tipo = "image/jpeg";
+			} else if(file.getOriginalFilename().toLowerCase().endsWith(".png")){
+				tipo = "image/png";	
+			} else {
+				tipo = "application/octet-stream"; // Tipo padrão
+			}
+		}
 		arquivo.setTipo(tipo);
 		arquivo.setUsuario(usuario);
 		// Bloco try/catch
@@ -80,11 +90,11 @@ public class ArquivoService {
 	
 	// Baixa arquivo
 	@Transactional
-	public ResponseEntity<Resource> downloadArquivo(Integer id){
+	public ResponseEntity<byte[]> downloadArquivo(Integer id){
 		Arquivo arquivo = arquivoRepository.findById(id).orElseThrow(() -> new RuntimeException("Arquivo não encontrado"));
-		ByteArrayResource resource = new ByteArrayResource(arquivo.getConteudo());
-		return ResponseEntity.ok().contentType(MediaType.parseMediaType(arquivo.getTipo()))
-				.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + arquivo.getNome() + "\"")
-				.body(resource);
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.parseMediaType(arquivo.getTipo()));
+		headers.setContentDisposition(ContentDisposition.attachment().filename(arquivo.getNome()).build());
+		return new ResponseEntity<>(arquivo.getConteudo(), headers, HttpStatus.OK);
 	}
 }

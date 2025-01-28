@@ -61,7 +61,7 @@ public class ArquivoController {
 	
 	// Baixa arquivo
 	@GetMapping("arquivos/{id}/download")
-	public ResponseEntity<Resource> downloadArquivo(@PathVariable Integer id){
+	public ResponseEntity<byte[]> downloadArquivo(@PathVariable Integer id){
 		return arquivoService.downloadArquivo(id);
 	}
 }

@@ -123,11 +123,11 @@ public class ArquivoServiceTests {
 		// Verifica se existe o arquivo
 		when(arquivoRepository.findById(anyInt())).thenReturn(Optional.of(arquivo));
 		// Chamando service
-		ResponseEntity<Resource> response = arquivoService.downloadArquivo(1);
+		ResponseEntity<byte[]> response = arquivoService.downloadArquivo(1);
 		// Verificações
 		assertEquals(HttpStatus.OK, response.getStatusCode());
 		assertEquals("text/plain", response.getHeaders().getContentType().toString());
 		assertEquals("attachment; filename=\"arquivo.txt\"", response.getHeaders().get(HttpHeaders.CONTENT_DISPOSITION).get(0));
-		assertArrayEquals("30".getBytes(), ((ByteArrayResource)response.getBody()).getByteArray());
+		assertArrayEquals("30".getBytes(), response.getBody());
 	}
 }
