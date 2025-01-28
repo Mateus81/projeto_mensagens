@@ -4,6 +4,7 @@ import { AuthService } from '../service/auth.service';
 import { Arquivo } from '../model/arquivo';
 import { Usuario } from '../model/usuario';
 import { ActivatedRoute } from '@angular/router';
+import { HttpResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-arquivo',
@@ -21,6 +22,7 @@ export class ArquivoComponent implements OnInit {
 
   ngOnInit(): void {
     this.conversaId = +this.route.snapshot.params['id']; // '+' converte em número
+    console.log("ID da conversa capturada: " + this.conversaId);
     this.usuario = this.authService.getUser();
     if(this.usuario){
       this.loadArquivos();
@@ -68,11 +70,16 @@ export class ArquivoComponent implements OnInit {
   }
 
   downloadArquivo(id: number): void {
-    this.arquivoService.downloadArquivo(id).subscribe((blob) => {
+    this.arquivoService.downloadArquivo(id).subscribe((response: HttpResponse<Blob>) => {
+      const contentDisposition = response.headers.get('Content-Disposition');
+      const fileNameMatch = contentDisposition?.match(/filename="(.+)"/);
+      const filename = fileNameMatch ? fileNameMatch[1] : `arquivo_${id}`;
+
+      const blob = new Blob([response.body!], { type: response.body?.type })
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `arquivo_${id}.ext`;
+      a.download = filename;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);

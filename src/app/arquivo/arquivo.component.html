@@ -25,6 +25,6 @@
             <p>Não há arquivos disponíveis</p>
         </ng-template>
 
-        <button routerLink="/conversas/{{conversaId}}" aria-label="Voltar para conversa">Voltar para conversa</button>
+        <button *ngIf="conversaId" [routerLink]="['/conversa', conversaId]" aria-label="Voltar para conversa">Voltar para conversa</button>
     </div>
 </div>

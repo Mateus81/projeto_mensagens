@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { HttpClient, HttpResponse } from "@angular/common/http";
 import { Observable } from "rxjs";
 import { environment } from "src/environments/environment";
 import { Arquivo } from "../model/arquivo";
@@ -24,7 +24,7 @@ export class ArquivoService {
     uploadArquivo(conversaId: number, file: File): Observable<string>{
         const formData = new FormData();
         formData.append('file', file);
-        return this.http.post<string>(`${this.apiUrl}/conversas/${conversaId}/arquivos`, formData, {withCredentials: true});
+        return this.http.post(`${this.apiUrl}/conversas/${conversaId}/arquivos`, formData, {withCredentials: true, responseType:'text'});
     }
 
     deleteArquivo(id: number): Observable<void>{
@@ -32,9 +32,10 @@ export class ArquivoService {
     }
 
     // Método de download que utiliza objeto Blob para baixar arquivos (dados binários)
-    downloadArquivo(id: number): Observable<Blob> {
+    downloadArquivo(id: number): Observable<HttpResponse<Blob>> {
         return this.http.get(`${this.apiUrl}/arquivos/${id}/download`, {
             responseType: "blob",
+            observe: 'response',
             withCredentials: true
         });
     }

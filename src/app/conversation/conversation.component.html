@@ -29,9 +29,10 @@
     <div class="marca-todas-como-lida" *ngIf="conversa.usuarioDest?.id === currentUser?.id">
       <button (click)="marcaTodasComoLidas()" aria-label="Marcar mensagens como lidas">Marca mensagens como lidas</button>
     </div>
-
+    <br>
+    <br>
     <footer>
-      <button routerLink="/arquivos" aria-label="Ir para arquivos">Gerenciar Arquivos</button>
+      <button [routerLink]="['/arquivos', conversa.id]" aria-label="Ir para arquivos">Gerenciar Arquivos</button>
       <p>Retornar a lista de conversas?</p>
       <button (click)="voltarParaConversas()" aria-label="Retornar para as conversas">Retornar</button>
       <br>

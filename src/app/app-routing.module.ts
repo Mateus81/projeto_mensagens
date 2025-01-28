@@ -9,7 +9,7 @@ import { ConversationComponent } from './conversation/conversation.component';
 import { ArquivoComponent } from './arquivo/arquivo.component';
 
 const routes: Routes = [{path: 'home', component: HomeComponent}, {path: 'contatos', component: ContatoComponent}, 
-{path: 'arquivos', component: ArquivoComponent}, {path: 'login', component: LoginComponent}, 
+{path: 'arquivos/:id', component: ArquivoComponent}, {path: 'login', component: LoginComponent}, 
 {path: 'cadastro', component: CadastroComponent}, {path: 'chat', component: ChatComponent}, 
 {path: 'conversa/:id', component: ConversationComponent},
 {path: '', redirectTo: '/home', pathMatch: 'full'}];
