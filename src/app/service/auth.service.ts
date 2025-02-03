@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, tap, BehaviorSubject } from 'rxjs';
+import { Observable, tap, BehaviorSubject, map, catchError, throwError } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Usuario } from 'src/app/model/usuario';
 import { Router } from '@angular/router';
@@ -48,4 +48,31 @@ export class AuthService {
   getUser(): Usuario | null {
     return this.currentUserSubject.value;
     }
-  }
+
+  refreshToken(): Observable<string> {
+    const refreshToken = localStorage.getItem("refreshToken");
+    if(!refreshToken){
+      throw new Error("Refresh token not found");
+    }
+    return this.http.post<{ token: string; refreshToken?: string }>(`${this.apiUrl}/refresh-token`, {refreshToken}).pipe(
+      map(response => {
+        const newToken = response.token;
+        const newRefreshToken = response.refreshToken || refreshToken;
+        this.storeToken(newToken);
+        this.storeRefreshToken(refreshToken);
+        return newToken;
+      }),
+      catchError(error => {
+        console.error("Error refreshing token", error);
+        return throwError(error);
+      })
+    )}
+
+    storeToken(token: string): void{
+      localStorage.setItem("jwtToken", token);
+    }
+
+    storeRefreshToken(refreshToken: string): void {
+      localStorage.setItem("refreshToken", refreshToken);
+    }
+}

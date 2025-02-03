@@ -82,5 +82,55 @@ p {
 @media (max-width: 599px) {
     .arquivo-container {
         padding: 10px;
+        border-radius: 6px;
+    }
+
+    h2, h3 {
+        font-size: 1.2em;
+        text-align: center;
+    }
+
+    .arquivo-item {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+        padding: 10px;
+        border-bottom: 1px solid #ddd;
+        word-wrap: break-word;
+    }
+
+    .arquivo-item span {
+        font-size: 0.9em;
+        max-width: 100%;
+        white-space: normal;
+        overflow-wrap: break-word;
+    }
+
+    button {
+        width: 100%;
+        padding: 12px;
+        font-size: 0.9em;
+        margin: 4px 0;
+    }
+
+    #file-upload {
+        width: 100%;
+        box-sizing: border-box;
+        padding: 8px;
+        margin-bottom: 10px;
+    }
+
+    .delete {
+        background-color: crimson;
+    }
+
+    .delete:hover {
+        background-color: darkred;
+    }
+
+    p {
+        font-size: 0.85em;
+        text-align: center;
     }
 }
