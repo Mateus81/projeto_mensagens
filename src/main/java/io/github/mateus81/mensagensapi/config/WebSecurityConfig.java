@@ -33,7 +33,9 @@ public class WebSecurityConfig  {
             .csrf().disable()
             .cors().and()
             .authorizeRequests(authorizeRequests -> authorizeRequests
-            	.antMatchers("/usuarios", "/usuarios/login", "/usuarios/logout", "/refresh-token").permitAll()
+            	.antMatchers("/usuarios", "/usuarios/login", "/usuarios/logout", 
+            	"/refresh-token", "/swagger-ui.html", "/swagger-ui/**", "/swagger-resources/**",
+            	"/webjars/**", "/v3/api-docs/**", "/configuration/ui", "/configuration/security").permitAll()
                 .anyRequest().authenticated() // Requer autenticação para todos os outros endpoints
             )
             .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)

@@ -30,6 +30,18 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) 
 		throws ServletException, IOException {
+		
+		String path = request.getRequestURI();
+		
+		// Rotas para ignorar validação
+		if(path.startsWith("/usuarios") || path.startsWith("/refresh-token") || path.startsWith("/swagger-ui") || 
+				path.startsWith("/v3/api-docs") || path.startsWith("/swagger-resources") || path.startsWith("/webjars") || 
+				path.startsWith("/configuration")){
+			chain.doFilter(request, response);
+			return;
+		}
+		
+		
 		final String authorizationHeader = request.getHeader("Authorization");
 		
 		String username = null;

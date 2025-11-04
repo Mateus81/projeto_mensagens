@@ -30,6 +30,7 @@ import io.github.mateus81.mensagensapi.model.dto.RefreshTokenRequest;
 import io.github.mateus81.mensagensapi.model.dto.TokenResponse;
 import io.github.mateus81.mensagensapi.model.dto.UsuarioDTO;
 import io.github.mateus81.mensagensapi.model.entity.Usuario;
+import io.github.mateus81.mensagensapi.model.service.UserDetailsServiceImpl;
 import io.github.mateus81.mensagensapi.model.service.UsuarioService;
 import io.github.mateus81.mensagensapi.util.JwtUtil;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -43,6 +44,9 @@ public class UsuarioController {
 	
 	@Autowired
 	private JwtUtil jwtUtil;
+	
+	@Autowired
+	private UserDetailsServiceImpl userDetailsService;
 
 	// Busca todos os usuários
 	@GetMapping("/usuarios")
@@ -131,14 +135,29 @@ public class UsuarioController {
 	
 	// Método de refresh token para usuário
 	@PostMapping("/refresh-token")
-	public ResponseEntity<?> refreshToken(@RequestBody RefreshTokenRequest request) throws Exception {
-		try {
-			String newAccessToken = jwtUtil.refreshAccessToken(request.getRefreshToken());
-			return ResponseEntity.ok(new TokenResponse(newAccessToken));
-		} catch(ExpiredJwtException e) {
-			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid refresh token");
-		}	
-	}
+	public ResponseEntity<?> refreshToken(@RequestBody RefreshTokenRequest request){
+		 try {
+		        String refreshToken = request.getRefreshToken();
+		        System.out.println("Refresh token recebido: " + refreshToken);
+		        String username = jwtUtil.extractUsername(refreshToken);
+		        System.out.println("Username extraído: " + username);
+		        
+		        // Valida o refreshToken
+		        if (jwtUtil.validateToken(refreshToken, userDetailsService.loadUserByUsername(username))) {
+		            String newAccessToken = jwtUtil.generateToken(username);
+		            System.out.println("Novo access token gerado: " + newAccessToken);
+		            return ResponseEntity.ok(new TokenResponse(newAccessToken));
+		        } else {
+		        	System.out.println("Refresh token inválido");
+		            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid refresh token");
+		        }
+		    } catch (ExpiredJwtException e) {
+		        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Refresh token is invalid or expired");
+		    } catch (Exception e) {
+		    	e.printStackTrace();
+		        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred");
+		    }
+		}
 
 	// Deleta usuário por ID
 	@DeleteMapping("/usuarios/{id}")
